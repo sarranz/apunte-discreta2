@@ -1,0 +1,421 @@
+\begin{definition}
+Dado un grafo $G$, un \emph{matching}, \emph{apareamiento} o \emph{emparejamiento} en $G$ es un subgrafo M de G tal que 
+\begin{align}
+    \forall x\in V_M :: \exists! y\in V_M : xy \in E_M
+\end{align}
+\end{definition}
+
+\begin{definition}
+Un matching M es \emph{perfecto} si $\left| V_M \right| = \left| V_G \right|$.\\
+Un matching $M$ en $G$ es \emph{maximal} si $\nexists~ l \in E_G : (V_M, E_M \cup \{l\})$ es matching.\\
+Un matching $M$ en $G$ es \emph{máximo} si $\forall M'$ matching en $G : |E_{M'}| \le |E_M|$.\\
+Notar además que $M$ perfecto $\implies M$ máximo, y $M$ máximo $\implies M$ maximal.
+\end{definition}
+
+Restringimos nuestro estudio a hallar matchings máximos en grafos bipartitos, a los que denotaremos $G = (\mathcal{X} \cup \mathcal{Y}, E)$.
+
+\begin{theorem}[Isomorfismo entre flujos enteros y matchings]
+Hallar un matching en un grafo bipartito y hallar un flujo en un network son equivalentes.
+\end{theorem}
+\begin{proof}
+Sea $G = (\mathcal{X} \cup \mathcal{Y}, E)$ un grafo bipartito.
+Definiremos un network $N$ tal que dado un flujo en $N$, podamos construir un matching en $G$, y que dado un matching en $G$, podamos construir un flujo en $N$.
+Sean
+\begin{align}
+    V_N &= V_G \cup \{s,t\} && s,t\notin V_G\\
+    E_N &= \{\overrightarrow{sx} \mid x\in \mathcal{X}\} 
+    \cup 
+    \{\overrightarrow{xy} \mid x\in\mathcal{X} \wedge y\in\mathcal{Y} \wedge \overrightarrow{xy} \in E_G\}
+    \cup 
+    \{\overrightarrow{yt} \mid y\in \mathcal{Y}\}\\
+    C_N (l) &= 1 && \forall l \in E_N
+\end{align}
+
+Sea $M$ un matching en $G$. Definimos $F_M$ la siguiente función sobre los lados de $N$:
+\begin{align}
+    F_M(\overrightarrow{xy}) &=
+    \left\{
+    \begin{array}{cc}
+          1 & \mid xy \in E_M\\
+          0 & \mid xy \notin E_M
+    \end{array}\label{edges}
+    \right. \\
+    F_M(\overrightarrow{sx}) &= 
+    \left\{
+    \begin{array}{cc}
+        1  & \mid x \in V_M\\
+        0  & \mid x \notin V_M
+    \end{array}\label{edges_s}
+    \right. \\
+    F_M(\overrightarrow{yt}) &=
+    \left\{
+    \begin{array}{cc}
+        1  &\mid y \in V_M\\
+        0  &\mid y \notin V_M
+    \end{array}\label{edges_t}
+    \right.
+\end{align}
+
+Probemos que $F_M$ es un flujo de $s$ a $t$ en $N$.
+\begin{enumerate}
+    \item Restricción de capacidad: Es obvio que $\forall l \in E_N : 0 \le F_M(l) \le 1$.
+    \item Conservación: Sea $z \neq s,t$.
+    \begin{enumerate}
+        \item Si $z \in \mathcal{X}$, $\Gamma^-(z) = {s}$, $in_{F_M}(z) \le 1$.
+        \begin{itemize}
+            \item Si $in_{F_M}(z) = 0 \implies F_M(\overrightarrow{sz}) = 0 \implies z \notin V_M \implies \nexists y \in \mathcal{Y} : zy \in E_M \implies \forall y \in \mathcal{Y} : F_M(\overrightarrow{zy}) = 0 \implies out_{F_M}(z) = 0$
+            \item Si $in_{F_M}(z) = 1 \implies F_M(\overrightarrow{sz}) = 1 \implies z \in V_M \implies \exists! y \in \mathcal{Y} : zy \in E_M \implies \exists! y \in \mathcal{Y} : F_M(\overrightarrow{zy}) = 1 \implies out_{F_M} = 1$
+        \end{itemize}
+        \item Si $z \in \mathcal{Y}$, $\Gamma^+(z) = {t}$, $out_{F_M}(z) \le 1$. Un análisis similar al anterior vale.
+    \end{enumerate}
+    \item La fuente es productora. Como $\Gamma^-(s) = \varnothing$, $in_{F_M}(s) = 0$ y $in_{F_M}(z) \le out_{F_M}(z)$.
+    \item El resumidero es consumidor. Como $\Gamma^+(t) = \varnothing$, un análisis similar al anterior vale.
+    \end{enumerate}
+Es claro que es entero.
+
+Ahora dado $F$ un flujo entero de $s$ a $t$ en $N$, construyamos un matching en $G$.\\
+Sea $M_F$ el subgrafo de $G$ dado por:
+\begin{align}
+    V_{M_F} &= \{x\in\mathcal{X} \mid F(\overrightarrow{sx}) = 1\} \cup \{y\in\mathcal{Y}\mid F(\overrightarrow{yt}) = 1\}\\
+    E_{M_F} &= \{\overrightarrow{xy} \in G \mid x \in \mathcal{X} \wedge y \in \mathcal{Y} \wedge F(\overrightarrow{xy}) = 1\}
+\end{align}
+Veamos que $M_F$ es un matching:
+\begin{itemize}
+    \item Veamos para $\mathcal{X}$
+    \begin{align}
+    \forall x \in \mathcal{X} : d_{M_F}(x) &= \left| \{ y \in \mathcal{Y} : F(\overrightarrow{xy}) = 1 \} \right|\\
+    &= out_F(x) && \text{ya que $F(x) = 0, 1$}\\
+    &= in_F(x)  && \text{ya que $F$ es flujo}\\
+    &= 1 && \text{por construcción de $\mathcal{X}_{M_F}$}
+    \end{align}
+    \item Y para $\mathcal{Y}$
+    \begin{align}
+    \forall y \in \mathcal{Y} : d_{M_F}(y) &= \left| \{ x \in \mathcal{X} : F(\overrightarrow{xy}) = 1 \} \right|\\
+    &= \mathellipsis && \text{Como antes}
+    \end{align}
+\end{itemize}
+\end{proof}
+Es obvio que $M_{F_M} = M$ y $F_{M_F} = F$.
+
+\begin{proposition}\label{flujo_iso_matching}
+$v_F = \left| E_{M_F} \right|$ y $v_{F_M} = \left| E_{M} \right|$. 
+\end{proposition}
+\begin{proof}
+\begin{align}
+    v_{F}
+    &= out_{F}(s) - in_{F}(s)\\
+    &= out_{F}(s)\\
+    &= \sum_{x \in \mathcal{X}} F(\overrightarrow{sx})\\
+    &= \left| \{ x \in \mathcal{X} \mid in_F(x) = 1 \} \right|\\
+    &= \left| \{ x \in \mathcal{X} \mid out_F(x) = 1 \} \right|\\
+    &= \left| \{ y \in \mathcal{Y} \mid F(\overrightarrow{xy}) = 1 \} \right|\\
+    &= \left| \{ y \in \mathcal{Y} \mid xy \in M_F \} \right|\\
+    &= \left| E_{M_F} \right|
+\end{align}
+La otra parte es similar.
+\end{proof}
+
+\begin{proposition}
+Definir un flujo en base a un matching y un viceversa de la manera anterior induce una biyección entre flujos maximales y matchings maximales.
+\end{proposition}
+\begin{proof}
+\begin{itemize}
+    \item Sean $M$ un matching en $G$ y $F$ un flujo maximal en $N$.
+    \begin{align}
+        v_{F_M} &\le v_F\\
+        \left| E_M \right| &\le \left| E_{M_F} \right| &&  [\ref{flujo_iso_matching}]
+    \end{align}
+    \item Similarmente para el otro lado.
+\end{itemize}
+\end{proof}
+
+%La matriz de adyacencia queda estructurada de la siguiente manera:
+%\begin{align}
+%    \bordermatrix{~ & \mathcal{X} & \mathcal{Y} \cr
+%                  \mathcal{X} & 0 & A \cr
+%                  \mathcal{Y} & A^T & 0 \cr}
+%\end{align}
+%Es claro, que podemos quedarnos solo con la submatriz que contiene a $A$ (o a $A^T$).\\
+%Usaremos la submatriz $A$:
+%\begin{align}
+%\bordermatrix{~ & \mathcal{Y} \cr
+%              \mathcal{X} & A \cr}
+%\end{align}
+
+\begin{definition}
+Dado $S \subseteq V$,  definimos a $\Gamma(S) \doteq \bigcup_{x\in S} \Gamma(x)$
+\end{definition}
+
+\begin{definition} Sea $G$ un grafo bipartito, con partes $\mathcal{X}$ e $\mathcal{Y}$, llamamos a
+$M$ en $G$ un matching \emph{completo} de $\mathcal{X}$ a $\mathcal{Y}$ si cubre a $\mathcal{X}$, es decir:
+\begin{align}
+\mathcal{X} \subseteq V_M
+\end{align}
+Lo mismo para matchings \emph{completos} de $\mathcal{Y}$ a $\mathcal{X}$. Notemos que si un matching es completo en ambos sentidos es perfecto.
+\end{definition}
+
+\begin{definition}[Condición de Hall]
+Sea $G = (\mathcal{X} \cup \mathcal{Y}, E)$ un grafo bipartito y $M$ un matching completo de $\mathcal{X}$ a $\mathcal{Y}$.
+\begin{align}
+    \forall  S: S \subseteq \mathcal{X} : \left|S\right| \le \left|\Gamma(S)\right|
+\end{align}
+Esto surge de la siguiente observación: $M$ induce una función inyectiva de $\mathcal{X}$ a $\mathcal{Y}$, por lo que $|\mathcal{X}| \le |\mathcal{Y}|$, y lo mismo para cada subconjunto de $\mathcal{X}$. 
+\end{definition}
+
+\begin{theorem}[Teorema de Hall]
+Sea $G = (\mathcal{X} \cup \mathcal{Y}, E)$ un grafo bipartito. Existe un matching completo de $\mathcal{X}$ a $\mathcal{Y}$ si y solo si se cumple la condición de Hall.
+\end{theorem}
+\begin{proof}
+\begin{enumerate}
+    \item Si existe tal matching, es obvio que se cumple por la observación de la definición: Si el matching cubre a $\mathcal{X}$ entonces cubre a todo $S\subseteq \mathcal{X}$, y debe haber al menos $\left| S \right|$ vecinos de $S$.\\
+    $\therefore \left|S\right| \le \left|\Gamma(S)\right|$
+
+    \item Por otro lado, veamos que si $\forall S \subseteq \mathcal{X}: \left|S\right| \le \left| \Gamma(S) \right|$ entonces existe un matching completo. Probaremos la contrarrecíproca:
+    \begin{align}
+        \nexists M : \mathcal{X} \subseteq V_M \implies \exists S \subseteq \mathcal{X} : \left|S\right| > \left|\Gamma(S)\right|
+    \end{align}
+    Es decir, que si no existe un matching completo de $\mathcal{X}$ a $\mathcal{Y}$ entonces no se cumple la condición de Hall.\\
+    Sea $M$ un matching máximo. Como $M$ no es completo,
+    \begin{align}
+        S_0 = \{ x \in \mathcal{X} \mid x \notin V_M \} \neq \varnothing
+    \end{align}
+    Sean también, para $r \ge 1$:
+    \begin{align}
+        T_r &= \Gamma(S_{r-1}) - \bigcup \limits_{1 \le i < r} T_i\\
+        S_r &= \Gamma_M(T_r) = \{ x \in \mathcal{X} \mid \exists y \in T_r : xy \in E_M \}
+    \end{align}
+    Donde $\Gamma_M(A)$ son los vecinos de A en $M$. Vemos que $T_1 \subseteq V_M$ pues de lo contrario un vértice en $S_0$ podría añadirse al matching.
+    Observemos ahora las siguientes:
+    \begin{enumerate}
+        \item $i \neq j \implies T_i \cap T_j = \varnothing$ pues los $T_i$ excluyen por definición a los anteriores, suponiendo $i > j$
+        \begin{align}
+            T_i = \Gamma(S_{i-1}) - (T_1 \cup \mathellipsis \cup T_j \cup \mathellipsis \cup T_{i-1})
+        \end{align}\label{Ti}
+        y similarmente si $j > i$.
+        \item $T_r \neq \varnothing \implies S_r \neq \varnothing$, pues si un vértice en $T_r$ no tiene vecinos en $M$ (es decir si $S_r = \varnothing$), sería posible añadirlo junto su vecino en $S_{r-1}$ (pero $M$ es máximo).
+        \item Como los $S_r$ y $T_r$ surgen de su relación en $M$ (que es un matching), este último induce una función biyectiva entre los primeros. Podemos concluir
+        \begin{enumerate}
+            \item $\left| S_r \right| = \left| T_r \right|$ (obvio por ser biyectiva)
+            \item $i \neq j \implies S_i \cap S_j = \varnothing$ (pues los $T_i$ son disjuntos)
+        \end{enumerate}
+        \item $\bigcup \limits_{1 \le i \le r} T_i = \biggamma \left( \bigcup \limits_{0 \le i < r} S_i \right)$. Probemos esto por inducción en $r$:
+        \begin{itemize}
+            \item Si $r=1$, $T_1 = \Gamma(S_0)$ vale por definición.
+            \item Sabiendo que $\bigcup \limits_{1 \le i \le r-1} T_i = \biggamma \left( \bigcup \limits_{0 \le i < r-1} S_i \right)$ como hipótesis inductiva, probemos la proposición de igualdad por doble inclusión:
+            \begin{itemize}
+                \item Primero, es claro que de (\ref{Ti}) se sigue que $T_i = \Gamma(S_{i-1}) - \mathellipsis \implies T_i \subseteq \Gamma(S_{i-1}) \\ \therefore \bigcup \limits_{1 \le i \le r} T_i \subseteq \biggamma \left( \bigcup \limits_{0 \le i < r} S_i \right)$.
+                \item En el otro sentido: Sea $x \in \biggamma \Biggl( \bigcup \limits_{0 \le i < r} S_i \Biggr)$ vemos que:
+            \begin{align}
+                x \in \biggamma \Biggl( \bigcup \limits_{0 \le i < r} S_i \Biggr) &\iff 
+                x \in  \bigcup \limits_{0 \le i < r} \Gamma(S_i) \\
+                &\iff
+                x \in \left[\left(\bigcup \limits_{0 \le i < r-1} \Gamma (S_i) \right) \cup \Gamma(S_{r-1}) \right] \\
+                &\iff 
+                x \in \left[\left( \bigcup \limits_{1 \le i \le r-1} T_i \right) \cup \Gamma(S_{r-1}) \right] \\
+                &\iff x \in \bigcup \limits_{0 \le i \le r-1} T_i \, \veebar\, x \in \Gamma(S_{r-1})
+            \end{align}
+            Tenemos dos casos:
+            \begin{itemize}
+                \item $x \in \bigcup \limits_{1 \le i \le r-1} T_i$. Entonces es obvio que $x \in \bigcup \limits_{1 \le i \le r} T_i$.
+                \item $x \notin \bigcup \limits_{1 \le i \le r-1} T_i$. Entonces es obvio que $x \in S_{r-1}$, y por ende \\$x \in T_r = S_{r-1} - \bigcup \limits_{1 \le i \le r-1} T_i $.
+            \end{itemize}
+            \end{itemize}
+        \end{itemize}
+        \item $\exists k \in \mathbb{N} : T_k = \varnothing$, pues $\mathcal{Y}$ es finito y una vez que un vértice está en un $T_i$, no aparece en los siguientes (se resta). 
+    \end{enumerate}
+    Sea $k$ el mínimo natural tal que $T_{k+1} = \varnothing$ (existe por (e)). Notemos que
+    \begin{align}
+        S &= \bigcup \limits_{0 \le i \le k} S_i\\
+        \implies \Gamma(S) &= \Gamma \left( \bigcup \limits_{0 \le i \le k} S_i \right)\\
+        &= \bigcup \limits_{1 \le i \le k+1} T_i && \text{por (d)}\\
+        &= \bigcup \limits_{1 \le i \le k} T_i && \text{pues $T_{k+1} = \varnothing$}\\
+    \end{align}
+    Y entonces
+    \begin{align}
+        \left| S \right| - \left| \Gamma(S) \right|
+        &= \sum \limits_{0 \le i \le k} \left| S_i \right| - \left| \Gamma(S) \right| && \text{por (c) ii}\\
+        &= \sum \limits_{0 \le i \le k} \left| S_i \right| - \left| \bigcup \limits_{1 \le i \le k} T_i  \right|\\
+        &= \sum \limits_{0 \le i \le k} \left| S_i \right| - \sum \limits_{1 \le i \le k} \left| T_i \right| && \text{por (a)}\\
+        &= \sum \limits_{0 \le i \le k} \left| S_i \right| - \sum \limits_{1 \le i \le k} \left| S_i \right| && \text{por (c) i}\\
+        &= \left| S_0 \right|
+    \end{align}
+    Como $S_0 \neq \varnothing \implies \left| S_0 \right| > 0$, $\left| S \right| > \left| \Gamma(S) \right|$.
+%    Veamos la última corrida del algoritmo:\\
+%    Sea $S_0 =$ \{Filas sin matchear\}\\
+%    Sea $T_1 = \Gamma(S_0)$\\
+%    Sea $S_1 =$ \{filas matcheadas con $T_1$\}\\
+%    Sea $T_2 = \Gamma(S_1) - T_1$\\
+%    Sea $S_2 =$ \{filas matcheadas con $T_2$\}\\
+%    Sea $T_3 =  \Gamma(S_2) - (T_2 \cup T_1)$\\
+%    $\vdots$
+%    \begin{align}
+%        S_i &= \{\text{Filas matcheadas con $T_i$}\} \\
+%        T_{i+1} &= \Gamma(S_i) - \bigcup_{k=1}^{i} T_k = \Gamma(S_i) - (T_1 \cup \mathellipsis \cup T_i)
+%    \end{align}
+%    El algoritmo se detiene en un $k$ tal que $T_{k+1} = \varnothing$
+%    
+%    Observemos lo siguiente:
+%    \begin{enumerate}
+%        \item $\left|S_i\right| = \left|T_i\right|$ pues hay matching entre $S_i$ y $T_i$ 
+%        \item Los $T_i$ son disjuntos: $\forall i,j: i \neq j:  T_i \neq T_j$
+%        \item Los $S_i$ son disjuntos: $\forall i,j: i \neq j: S_i \neq S_j$
+%        \item $T_1 \cup \mathellipsis\cup T_{i+1} =\Gamma(S_0\cup \mathellipsis \cup S_i)$ \label{d}
+%    \end{enumerate}
+%    Probemos el (\ref{d}) por inducción:\\
+%    $i = 0$ : $T_1 = \Gamma(S_0)$\\
+%    $i \ge 1$ : Asumamos que vale para $i-1$.
+%    \begin{align}
+%        \forall j: T_j \subseteq \Gamma(S_{j-1})  \implies \\
+%        \forall i: i : \bigcup_{k=1}^{i+1} T_k \subseteq \bigcup_{k=0}^i \Gamma(S_k) =  \Gamma \left(\bigcup_{k=0}^i S_k\right)
+%    \end{align}
+%    Sea \begin{align}
+%        z\in \Gamma \left( \bigcup_{k=0}^i S_k \right) = \Gamma \left( \bigcup_{k=0}^{i-1} S_k \right) \cup \Gamma(S_i) \implies\\
+%        z\in \Gamma \left( \bigcup_{k=0}^i S_k \right)\ \veebar\ z \in \Gamma(S_i) 
+%    \end{align}
+%    \begin{enumerate}
+%        \item \begin{align}
+%            z \in \Gamma\left(\bigcup_{k=0}^{i-1} S_k\right) \implies
+%        \Gamma(\bigcup_{k=0}^{i-1} S_k) = \bigcup_{k=1}^{i}) T_k
+%        \end{align}
+%        \item Supongamos que a) no vale $\implies$\begin{align}
+%            z \in \Gamma(S_i) \wedge z \notin \Gamma(\bigcup_{k=1}^{i-1} S_k) \implies z\notin \bigcup_{k=1}^i T_k
+%         \\
+%        \therefore z\in\Gamma(S_i) - \bigcup_{k=1}^i T_k = \Gamma(S_i) - \bigcup_{k=1}^i T_k = T_{i+1}
+%        \end{align}
+%        \end{enumerate}
+%    Sea $\Gamma(S) = \bigcup_{j=0}^k S_j$ entonces:
+%    \begin{align}
+%        \left|\Gamma(S)\right| 
+%        &= \left|\bigcup_{j=0}^{k} S_j \right| \\
+%        &= \left|\bigcup_{j=1}^{k+1} T_j\right| \\
+%        &= \left|\bigcup_{j=1}^{k} T_j\right| \\
+%        &= \sum_{j=1}^{k} \left|T_j\right| \\
+%        &= \sum_{j=1}^{k} \left|S_j\right| < \sum_{j=0}^{k} \left|S_j\right| 
+%        = \left|\bigcup_{j=0}^k S_j\right| = \left| S \right|\\
+%        \therefore \left|\Gamma(S)\right| < \left| S \right|
+%    \end{align}
+%\end{enumerate
+\end{enumerate}
+\end{proof}
+
+\begin{theorem}[Teorema del matrimonio heterosexual]
+Sea $G = (\mathcal{X} \cup \mathcal{Y},E)$ un grafo bipartito regular. $G$ tiene matching perfecto.
+\end{theorem}
+\begin{proof}
+Probaremos que existe un matching completo de $\mathcal{X}$ a $\mathcal{Y}$, y de $\mathcal{Y}$ a $\mathcal{X}$ utilizando el teorema de Hall, probando así que $\left| \mathcal{X} \right| = \left| \mathcal{Y} \right|$, y por lo tanto todo matching completo será perfecto. Sea $W \subseteq V$, definimos:
+\begin{align}
+    E_W = \{uv\in E\mid u \in W \vee v\in W\}
+\end{align}
+Supongamos que $W \subseteq \mathcal{X}$ entonces:
+\begin{align}
+    E_W &= \{xy\in E\mid x\in W\}\\
+    \implies \left| E_W \right| &= \sum_{x \in W} d(x)\\
+    &= \sum_{x \in W} \Delta && \text{pues es regular}\\
+    &= \Delta \left| W \right|
+\end{align}
+Similarmente, si $W \subseteq \mathcal{Y}$ entonces $\left|E_W\right| = \Delta \left| W\right|$.\\
+Vemos que, si $S \subseteq \mathcal{X}$:
+\begin{align}
+    & \forall l \in E_S : \exists y \in \Gamma(S) : y \in l\\
+    \implies & E_S \subseteq E_{\Gamma(S)}\\
+    \implies & \left| E_S \right| \le \left| E_{\Gamma(S)} \right|\\
+    \implies & \Delta \left| S \right| \le \Delta \left| \Gamma(S) \right|\\
+    \implies & \left| S \right| \le \left| \Gamma(S) \right|
+\end{align}
+y por lo tanto existe un matching completo de $\mathcal{X}$ a $\mathcal{Y}$, y entonces $\left| \mathcal{X} \right| \le \left| \mathcal{Y} \right|$. Análogamente, también existe uno en el otro sentido, y $\left| \mathcal{X} \right| \ge \left| \mathcal{Y} \right|$. Así, un matching completo debe ser perfecto.
+%En particular, $E_\mathcal{X} = \Delta \left|\mathcal{X}\right|$ y $E_\mathcal{Y} = \Delta \left|\mathcal{Y}\right|$.\\
+%Pero como $G$ es bipartito, todo lado tiene un extremo en $\mathcal{X}$ y otro en $\mathcal{Y} \implies = E_{\mathcal{X}} = E_{\mathcal{Y}}$\\
+%\begin{align}
+%    \therefore \left|E_\mathcal{X}\right| = \Delta \left|\mathcal{X}\right| \wedge
+%    \left|E_\mathcal{Y}\right| = \Delta \left|\mathcal{Y}\right| \wedge 
+%    E_{\mathcal{X}} = E_{\mathcal{Y}} \implies \\
+%    \Delta \left|\mathcal{X}\right| &= \Delta \left|\mathcal{Y}\right| \iff\\
+%    \left|\mathcal{X}\right| &=  \left|\mathcal{Y}\right|
+%\end{align
+\end{proof}
+
+Sea $G = (\mathcal{X}\cup\mathcal{Y}, E, C)$ un grafo bipartito con pesos en sus lados, es decir con una función $C \colon E \to \mathbb{R}_{\ge 0}$.
+Podemos representar a la función de pesos C como una matriz en $M_{n \times n}(\mathbb{R}_{\ge 0} \cup \{\infty\})$. Buscaremos encontrar un matching máximo que minimice (o maximice, es equivalente) los costos.
+Hay 4 minimizaciones posibles:
+\begin{enumerate}
+    \item Minimizar el máximo costo: \\
+    Hallar matching tal que\begin{align}
+    [asd]
+    \end{align}
+    \item Minimizar la suma: \\
+    Hallar un matching tal que 
+    \begin{align}
+        [fgh]
+    \end{align}
+    \item Minimizar la suma de entre aquellos que minimizan el máximo costo.
+    \item Minimizar el mínimo de entre aquellos que minimizan la suma.
+\end{enumerate}
+
+\begin{definition}[Matching de ceros]
+Sea C una matriz de costos, 
+\end{definition}
+\begin{lemma}
+Sea $C$ una matriz de costos tal que $\forall i: C_{ij} \ge 1$.\\Supongamos que existe un matching de ceros,
+\end{lemma}
+
+\begin{definition}[Coloreo propio de lados]
+Sea $G = (V, E)$ un grafo, un coloreo propio de lados es una función $C : E \to \mathbb{N}$ tal que no hay dos lados incidentes o vecinos (es decir que compartan vértices) con el mismo color
+\begin{align}
+    \forall \ell_1, \ell_2 \in E &: \ell_1 = x_1 y_1 \wedge \ell_2 = x_2 y_2 \\
+    &: C(\ell_1) \neq C(\ell_2) \iff x_1 \neq x_2 \iff y_1 \neq y_2 \iff x_1 \neq y_2 \iff x_2 \neq y_1
+\end{align}
+\end{definition}
+
+\begin{definition}[Índice cromático]
+Sea G = (V,E) un grafo el índice cromático es el minimo numero de colores necesarios para colorear los lados de $G$ lo denotamos como $\chi^{'}(G)$
+\end{definition}
+
+A matching in a graph $G$ is a set of edges, no two of which are adjacent; a perfect matching is a matching that includes edges touching all of the vertices of the graph, and a maximum matching is a matching that includes as many edges as possible. In an edge coloring, the set of edges with any one color must all be non-adjacent to each other, so they form a matching. That is, a proper edge coloring is the same thing as a partition of the graph into disjoint matchings.
+
+\begin{theorem}[Vizing]
+Sea $G$ un grafo entonces 
+\begin{align}
+    \Delta \le \chi'(G) \le \Delta + 1
+\end{align}
+\end{theorem}
+
+\begin{theorem}[Kőnig]
+Sea $G$ un grafo bipartito.
+\begin{align}
+    \chi'(G) = \Delta
+\end{align}
+\end{theorem}
+\begin{proof}
+Por casos:
+\begin{itemize}
+    \item $G$ es regular. Probaremos el resultado por inducción en $\Delta$.
+    \begin{enumerate}
+        \item $\Delta = 1$. $G$ es un matching, y por ende es coloreable con 1 color.
+        \item $\Delta = k$. Como $G$ es bipartito regular, existe un matching perfecto $M$. Vemos que por HI, el grafo $G' = (V, E - E_M)$ es coloreable con $\Delta - 1$ colores. Ahora, como los lados en $M$ no comparten vértices, pueden ser coloreados con el mismo color. Así, podemos colorear $G$ con $\Delta$ colores.
+    \end{enumerate}
+    \item $G$ no es regular. Construiremos un grafo $G'$ bipartito regular, tal que $G$ es un subgrafo de $G'$, y $\Delta_G = \Delta_{G'}$. Como probamos que existe un coloreo propio de lados de $G'$ con $\Delta_{G'}$ colores, $\chi'(G) \le \Delta_{G'} = \Delta_G$. Por el teorema de Vizing, $\chi'(G) = \Delta_G$.\\
+    Sea $f$ tal que $f(G) = \overline{G}$ con
+    \begin{align}
+        \overline{V} &= \{ (0,x) \mid x \in V \} \cup \{ (1,x) \mid x \in V \}\\
+        \overline{E} &= \{ (j,x)(j,y) \mid x \in \mathcal{X}, y \in \mathcal{Y}, xy \in E, 0 \le j \le 1 \}
+        \cup \{ (0,x)(1,x) \mid d_G(x) < \Delta_G\}
+    \end{align}
+    Notemos que:
+    \begin{enumerate}
+        \item $\Delta_{\overline{G}} = \Delta_G$
+        \item $\delta_{\overline{G}} = \delta_G + 1$ (los vértices con grado $\delta_G$ tienen la misma cantidad de vecinos más el lado $(0,x)(1,x)$).
+        \item $\overline{G}$ es bipartito. Sean
+        \begin{align}
+            \overline{\mathcal{X}} &= \{ (0,x) \mid x \in \mathcal{X} \} \cup \{ (1,y) \mid y \in \mathcal{Y} \}\\
+            \overline{\mathcal{Y}} &= \{ (0,y) \mid y \in \mathcal{Y} \} \cup \{ (1,x) \mid x \in \mathcal{X} \}
+        \end{align}
+        Veamos los lados posibles en $\overline{E}$:
+        \begin{itemize}
+            \item $(0,x)(0,y)$ Aquí, $x \in \mathcal{X}$ y $y \in \mathcal{Y}$ (o al revés). Así, es un lado entre $\overline{\mathcal{X}}$ y $\overline{\mathcal{Y}}$.
+            \item $(1,x)(1,y)$ Similar a lo anterior.
+            \item $(0,x)(1,y)$ Aquí, $x = y$, y por ende $x \in \mathcal{X} \implies (0,x) \in \overline{\mathcal{X}} \wedge (1,x) \in \overline{\mathcal{Y}}$, y análogamente si $x \in \mathcal{Y}$.
+        \end{itemize}
+    \end{enumerate}
+    Sea ahora $G' = (f \circ \mathellipsis \circ f)(G)$ el resultado aplicar a $G$ la composición de $f$ $\Delta_G - \delta_G$ veces. Notemos que $\Delta_{G'} = \Delta_G$ por $(1)$. Además, por $(2)$, $\delta_{G'} = \delta_G + \Delta_G - \delta_G = \Delta_G$, por lo que $G'$ es regular. Y es bipartito, por $(3)$. Además, $G'[\{ (0,x) \mid x \in V \}] \sim G$.
+\end{itemize}
+\end{proof}

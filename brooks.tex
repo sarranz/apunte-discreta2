@@ -1,0 +1,181 @@
+% Descomentar si se compila solo esta sección.
+\begin{comment}
+\begin{proposition}\label{graph_cyclic_color}
+Un grafo cíclico $C_n$ con $n \ge 2$ es bipartito si $n$ es par y es $3$-coloreable si $n$ es impar. Es decir,
+\begin{align}
+    \chi(C_n) = 
+    \begin{cases}
+                2 & |\ \text{n es par} \\
+                3 & |\ \text{n es impar}
+    \end{cases}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Visto en clase.
+\end{proof}
+\end{comment}
+
+\begin{definition}
+Sea $G = (V, E)$ un grafo. Sea $W \subseteq V$ entonces se define a \begin{align}
+    G[W] = \left(W, \{xy \in E \mid x,y \in W\}\right)
+\end{align}
+el \emph{grafo inducido por $W$}.
+\end{definition}
+
+\begin{definition}
+Dado un coloreo $C$ de $G = (V,E)$ definimos a
+\begin{align}
+    H_{ij} = G\left[V_i \cup V_j\right]
+\end{align}
+el grafo inducido por los vértices de color $i$ o $j$.
+Es decir que se cumplen:
+\begin{align}
+    &\forall~ x \in V,~ (C(x) = i \vee C(x) = j) \implies x \in V_{H_{ij}}\\
+    &\forall~ x \in V_{H_{ij}},~ C(x) = i \vee C(x) = j
+\end{align}
+En el contexto de este subgrafo hablaremos de \emph{"caminos de color $ij$"}, que son simplemente caminos cuyos vértices tienen color $i$ o $j$.
+\end{definition}
+
+\begin{definition}
+Sea $G = (V, E)$, $x \in V$ con $C(x) = i$. Definimos a $CC^x_{ij}$ (la cadena de Kempe \footnote{\url{https://en.wikipedia.org/wiki/Kempe_chain}} de $x$ y $ij$) como la componente conexa de $H_{ij}$ que contiene a $x$.
+Es decir, $CC^x_{ij}$ tiene a $x$ y a todos los vértices alcanzables por un camino de color $ij$.
+
+Es importante notar que si $x,y \in V$, $C(x) = i$ y $C(y) = j$, $CC^x_{ij}$ no necesariamente es $CC^y_{ji}$, ya que $x$ e $y$ pueden estar en componentes conexas distintas de $H_{ij}$.
+\end{definition}
+
+\begin{definition}
+Un vértice $v$ en un grafo conexo $G$ se dice de \emph{corte} \footnote{\url{https://en.wikipedia.org/wiki/Biconnected_component}} si al eliminar a $v$, $G$ deja de ser conexo.
+\end{definition}
+
+\begin{lemma}\label{lema1}
+Sea C un coloreo propio de los vértices de $G$. Si intercambiamos los colores $i$ y $j$ en $G$, el coloreo sigue siendo propio.
+\end{lemma}
+\begin{proof}
+Obvio.
+\end{proof}
+
+\begin{lemma}\label{graph_cut_lemma}
+Sea $G$ conexo con $n > 2$ y con dos vértices $v$ y $w$ tales que $d(v) = d(w) = 1$. Entonces el primer vértice $z$ tal que $d(z) \ge 2$ en un camino de $v$ a $w$ es un vértice de corte.
+\end{lemma}
+\begin{proof}
+Dibujarlo.
+\end{proof}
+
+\begin{lemma}\label{G is chain}
+Sea $G$ un grafo conexo, con $\Delta = 2$ y $\delta = 1$. Entonces $G$ tiene exactamente $2$ vértices con grado $1$.
+\end{lemma}
+\begin{proof}
+Sea $v$ con $d(v) = 1$. Como $G$ es conexo, hay un camino desde $v$ hasta todo vértice de $G$, y en particular hasta cada vértice de grado $1$.
+Supongamos que hay otros $k \ge 2$ vértices de grado 1. Sean $x$ e $y$ dos de ellos. Tomemos caminos de $v$ a $x$ y de $v$ a $y$. Es obvio que estos caminos comparten al menos un vértice, $v$. Sean $v = w_0, \mathellipsis, w_k$ los vértices compartidos.
+
+Si $w_k \neq x$ y $w_k \neq y$, $w_k$ tiene dos vecinos hacia adelante (sino no sería el último), es decir que $d(w_k) \ge 3$. Absurdo.
+
+Si $w = x$, como $x \neq y$, todavía falta llegar a $y$. Pero como $d(x) = 1$, el camino se corta (el único vecino de $x$ es $w_{k-1}$), así que no llega a $y$. Si $w = y$, similarmente vemos que es absurdo.
+\end{proof}
+
+\begin{theorem}[Brooks \footnote{\url{https://en.wikipedia.org/wiki/Brooks\%27_theorem}}, 1941]
+Sea $G$ un grafo conexo, no completo ($G \neq K_n$) y no cíclico impar ($G \neq C_{2k+1}$). Entonces
+\begin{align}
+    \chi(G) \le \Delta
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Por casos:
+
+Caso A: $G$ no es regular (i.e. $\delta < \Delta$).\\
+Sea $x \in V$ tal que $d(x) = \delta$. Sea $x_1, \mathellipsis, x_n$ un orden de vértices tal que $BFS(x)$ los visita en órden $x = x_n, \mathellipsis, x_1$ (i.e. el orden inverso). Por propiedad de BFS, todo vértice (excepto $x_n$) tiene al menos un vecino más adelante en $x_1, \mathellipsis, x_n$. Es decir,
+    \begin{align}
+        \forall~ i < n,~ \exists~ j > i,~ x_ix_j \in E    
+    \end{align}
+Así, vemos que para cada vértice $x_i$ con $i < n$ vale lo siguiente: como $d(x_i) \le \Delta$ y tiene un vecino adelante, por detrás hay a lo sumo $\Delta - 1$ vecinos. Coloreando con greedy, vemos que $x_i$ tiene a lo sumo $\Delta - 1$ colores bloqueados, y que hay un color disponible en $\{1, \mathellipsis, \Delta\}$. Por último, como elegimos a $x = x_n$ tal que $d(x_n) = \delta < \Delta$ tenemos al menos un color libre en $\{1, \mathellipsis, \Delta\}$ para asignarle.\\
+
+Caso B: $G$ es regular (i.e. $\delta = \Delta$).
+\begin{enumerate}
+    \item $\Delta \le 2$.
+    \begin{enumerate}
+        \item $\Delta = 0$. Como $G$ es conexo, $G = K_1$, que por hipótesis es absurdo.
+        \item $\Delta = 1$. Como $G$ es conexo, $G = K_2$, que por hipótesis es absurdo.
+        \item $\Delta = 2$.
+        \begin{enumerate}
+            \item $G$ es un ciclo par. Por [\ref{graph_cyclic_color}], $\chi(G) = 2$.
+            \item $G$ es un ciclo impar. Imposible por hipótesis.
+        \end{enumerate}
+    \end{enumerate}
+
+    \item $\Delta \ge 3$.\\
+    Tomemos un $x \in V$ y coloreamos a $G$ como en el caso A. Vemos que se mantiene
+    \begin{align}
+        \forall~ 1 \le i < n,~ C(x_i) \in \{1, \mathellipsis, \Delta\}
+    \end{align}
+    y si $x$ tiene dos vecinos de un mismo color, hay uno sin usar en $\{1, \mathellipsis, \Delta\}$, ya que $x$ tiene $\Delta$ vecinos. Entonces coloreamos a $x$ con ese color y terminamos.
+
+    Asumamos entonces que cada vecino de $x$ tiene un color distinto. Llamaremos $x_i$ al vecino de $x$ de color $i$ (los $x_i$ ya no se refieren al orden). Así, $\Gamma(x) = \{x_i \mid 1 \le i \le \Delta\}$.
+
+    A partir de ahora, denotaremos $CC^{x_i}_{ij}$ como $CC_{ij}$ (omitimos el vértice, ya que su índice es su color).
+    \begin{enumerate}
+    \item \label{CCneq} $\exists~ 1 \le i,j \le \Delta$,~ $CC_{ij} \neq CC_{ji}$.\\
+    Esto quiere decir que $x_i$ está en una componente conexa distinta a $x_j$ en $H_{ij}$. Intercambiemos los colores $i$ y $j$ en $CC_{ij}$ (por el lema [\ref{lema1}] sabemos que el coloreo de $G$ sigue siendo propio). Ahora, $C(x_i) = C(x_j) = j$ por lo que $x$ tiene dos vecinos color $j$ y puedo colorearlo con el color $i$.
+    
+    \item $\forall~ 1 \le i,j \le \Delta,~ CC_{ij} = CC_{ji}$.
+    \begin{enumerate}
+    \item $x_i$ tiene más de un vecino en $CC_{ij}$, o bien $x_j$ tiene más de un vecino en $CC_{ij}$.\\
+    Si $x_i$ tiene $d > 1$ vecinos en $CC_{ij}$ entonces tiene $d$ vecinos de color $j$. Esto significa que $x_i$ tiene
+    \begin{itemize}
+        \item $d \ge 2$ vecinos de color $j$ (en $CC_{ij}$).
+        \item 1 vecino sin color ($x$).
+        \item $\Delta - d - 1$ vecinos con color en $\{1, \mathellipsis, \Delta\} - \{i, j\}$.
+    \end{itemize}
+    Como $d \ge 2$, hay a lo sumo $\Delta - 2 - 1$ colores distintos a $j$ usados por sus vecinos. Por lo tanto, hay al menos $2$ colores libres para colorear $x_i$, siendo $i$ uno de ellos. Si cambiamos el color de $x_i$ por otro de los libres, podemos colorear a $x$ con $i$.
+    
+    Si $x_j$ tiene más de un vecino en $CC_{ij}$ procedemos de manera análoga.
+    
+    \item $x_i$ y $x_j$ tienen un solo vecino en $CC_{ij}$.
+    \begin{itemize}
+        \item [$\mu.$] $\forall~ i,j: V_{CC_{ij}} = \{x_i, x_j\}$.\\
+        Este caso es imposible: Sabemos que en $\Gamma(x) = \{x_1, \mathellipsis, x_{\Delta}\}$ están todos los colores $\{1, \mathellipsis, \Delta\}$. Ahora, si $\forall~ k \in \{1, \mathellipsis, \Delta\} - \{i\},~ V_{CC_{ik}} = \{x_i, x_k\}$, $x_i$ es vecino de $x_k$ para todo $k$.
+        
+        Además, son sus únicos vecinos, pues $x_i$ tiene a $\{x_1, \mathellipsis, x_\Delta, x\} - \{x_i\}$ como vecinos y tiene grado $\Delta$.
+        
+        Vemos entonces que $G[\{x_1, \mathellipsis, x_\Delta, x\}]$ es una componente conexa de $G$. Pero $G$ tiene una sola componente conexa (por hipotesis). Se sigue que $G = G[\{x_1,\mathellipsis,x_\Delta, x\}] = K_n$. Absurdo por hipótesis.
+
+        \item[$\nu.$] \label{nu} $\exists~ 1 \le i,j \le \Delta,~ \{x_i,x_j\} \neq V_{CC_{ij}}$. Fijemos $i$ y $j$.
+        \begin{enumerate}
+            \item $\exists~ w \in V_{CC_{ij}},~ d(w) \ge 3$  en $CC_{ij}$.\\
+            Tomemos el primer vértice $w$ que cumple $d(w) \ge 3$ partiendo desde $x_i$, (es decir, un $w$ que cumpla esto y sea el más cercano a $x_i$). Por el lema [\ref{graph_cut_lemma}] vemos que $w$ es un vértice de corte en $CC_{ij}$, y que al eliminarlo, resultan dos componentes conexas de $CC_{ij}$ una que contiene a $x_i$ y otra a $x_j$. Si logramos esto, como $CC_{ij} \neq CC_{ji}$, estamos en el caso \ref{CCneq}.
+            
+            Si $C(w) = i$, la cantidad de vecinos de $w$ es:
+            \begin{itemize}
+                \item[*] $d$ en $CC_{ij}$ de color $j$ (en $CC_{ij}$).
+                \item[*] $\Delta - d$ con color en $\{1, \mathellipsis, \Delta\} - \{i,j\}$ (fuera de $CC_{ij}$).
+            \end{itemize}
+        Vemos que los vecinos de $w$ en $G$ usan a lo sumo $\Delta - d + 1$ colores.
+        Como $d \ge 3$, hay al menos 2 colores libres para colorear $w$, siendo $i$ uno de ellos. Cambiando el color de $w$, $CC_{ij}$ deja de ser conexa, que es lo que buscábamos.
+        
+        Si $C(w) = j$, procedemos análogamente.\\
+    
+        \item $\forall~ w \in V_{CC_{ij}},~ d(w) \le 2$ (por [\ref{G is chain}], $CC_{ij}$ es un camino).
+        \begin{itemize}
+            \item[$a.$] \label{CCdisjoint} $\exists~ 1 \le k \le \Delta,~ V_{CC_{ij}} \cap V_{CC_{ik}} \neq \{x_i\}$.\\
+            Es decir, el camino de color $ij$ de $x_i$ a $x_j$ y $CC_{ik}$ se cruzan en al menos un vértice que no es $x_i$. Sea $w$ el vértice en común. Es claro que $C(w) = i$. Además, asumamos que $CC_{ik}$ es también un camino, ya que en caso contrario, como $V_{CC_{ik}} \neq \{x_i, x_k\}$, estaríamos en el caso anterior.
+            
+            Consideremos los colores de los vecinos de $w$: 2 de color $j$ (en $CC_{ij}$), $2$ de color $k$ (en $CC_{ik}$) y $\Delta - 2 - 2$ con color en $\{1, \mathellipsis, \Delta\} - \{i, j, k\}$ (fuera de $CC_{ij}$ y de $CC_{ik}$).
+            
+            Lo anterior significa que los vecinos de $w$ ocupan $\Delta - 4 + 2 = \Delta - 2$ colores. Así, hay dos colores libres en para $w$, uno de ellos siendo $i$. Si lo coloreamos con el otro color, se divide $CC_{ij}$ y estamos en el caso \ref{CCneq}.
+
+    \item[$b.$] $\forall~ 1 \le k \le \Delta,~ V_{CC_{ij}} \cap V_{CC_{ik}} = \{x_i\}$.\\
+    Es decir, el camino de color $ij$ de $x_i$ a $x_j$ y $CC_{ik}$ se cruzan solo en $x_i$.
+    
+    Intercambiemos los colores $i$ y $k$ en $CC_{ik}$.  Ahora $C(x_i) = k$ y $C(x_k) = i$. Sean $CC^{*}$ la cadenas de Kempe de $G$ luego de este cambio.
+    
+    Si $CC_{ij}^{*} \ne CC_{ji}^{*}$ o bien $CC_{kj}^{*} \neq CC_{jk}^{*}$ estamos en el caso \ref{CCneq}. Similarmente, asumamos que no estamos en ninguno de los casos anteriores a \ref{nu}$\nu$.
+    
+    Ahora, llamemos $w$ al vecino de $x_i$ en $CC_{ij}$. Es claro que $C(w) = j$, y que los colores de $V_{CC_{ij}} - \{x_i\}$ no cambiaron. Como $x_i \in V_{CC_{jk}^{*}}$ y $C(w) = j$, $w \in V_{CC_{kj}^{*}}$. Por otro lado, como los colores de $V_{CC_{ij}} - \{x_i\}$ no cambiaron, hay un camino de color $ij$ de $w$ a $x_j$ luego del cambio. Y como $x_j \in V_{CC_{ij}^{*}}$, $w \in V_{CC_{ij}^{*}}$. Estamos entonces en el caso anterior (\ref{CCdisjoint}a).
+\end{itemize}
+\end{enumerate}
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{proof}

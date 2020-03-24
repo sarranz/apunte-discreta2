@@ -1,0 +1,244 @@
+\begin{definition}
+Un \textbf{problema de decisión} es aquel cuya únicas respuestas son "SI" o "NO".
+Por ejemplo, los siguientes son problemas de decisión:
+\begin{itemize}
+    \item Dada una matrix cuadrada, decidir si es inversible.
+    \item Dado un grafo y un natural $k$, decidir si es coloreable con $k$ colores. Este problema se suele llamar $k$-color.
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+Llamamos \textbf{P} a la clase de complejidad de los problemas de decisión para los cuales existe un algoritmo determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
+\end{definition}
+
+\begin{definition}
+Llamamos \textbf{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo no determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
+Veremos luego que la siguiente es una definición equivalente: llamamos \textbf{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo determinístico, que dado $X$ una posible solución para el $SI$, verifica en tiempo polinomial en el tamaño de $X$ si es o no una respuesta válida. 
+\end{definition}
+
+\begin{definition}
+\textbf{co-NP} es la clase de complejidad complementaria a \textbf{NP}. Es decir son los problemas cuyas posibles respuestas por $NO$ son verificables en tiempo polinomial.
+\end{definition}
+
+\begin{proposition}
+$P \subseteq NP \cap co-NP$
+\end{proposition}
+\begin{proof}
+Obvio.
+\end{proof}
+
+\begin{conjecture}
+$P = NP \cap CO-NP$
+\end{conjecture}
+
+\begin{proposition}
+$1$-color $\in P$.
+\end{proposition}
+\begin{proof}
+Simplemente debemos determinar si $E = \varnothing$.
+\end{proof}
+
+\begin{proposition}
+$2$-color $\in P$.
+\end{proposition}
+
+\begin{proof}
+Como vimos antes: corriendo BFS desde algún vértice de cada componente conexa, asignamos como color a cada vértice la paridad de su nivel. Luego, verificamos si este coloreo es propio.\\
+Este algoritmo es $\mathcal{O}(n+m) + \mathcal{O}(n+m)$.
+\end{proof}
+
+\begin{definition}[Reducción polinomial]
+???
+\end{definition}
+
+\begin{definition}[$NP-Completo$]
+Un problema de decisión $C$ es \textbf{$NP-completo$} si:
+\begin{itemize}
+    \item $C \in NP$
+    \item Todo problema en $NP$ es reducible tiempo polinomial a $C$:
+    $\forall D \in NP : D \le_{P} C$
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+Un \textbf{literal} es una variable o una negación de variable.
+Una \textbf{cláusula} es una disyunción o conjunción de literales.
+Una \textbf{fórmula} es una expresión booleana.
+Una fórmula está en \textbf{forma conjuntiva normal} o $CNF$ si es una conjunción de cláusulas disyuntivas.
+Una fórmula está en \textbf{forma disyuntiva normal} o $DNF$ si es una disyunción de cláusulas conjuntivas.
+\end{definition}
+
+\begin{definition}[$SAT$]
+Dada una fórmula $B$, el problema de satisfactibilidad booleana o $SAT$ es un problema de decisión que consiste en determinar si existe una semántica (ie. una asignación de variables o una valuación) tal que $B$ sea verdadera 
+\end{definition}
+
+\begin{definition}
+literales, CNF, DNF, ANF, dado $b \in \mathbb{Z}_2^n, B(b)$ es evaluar $B$ en $b$, considerar a $B$ como una función.
+\end{definition}
+\begin{definition}[$CNF-SAT, DNF-SAT, k-SAT$]
+$CNFSAT$ o $CNF-SAT$ es el mismo problema que $SAT$ pero con $B$ en $CNF$.\\
+$DNFSAT$ o $DNF-SAT$ es el mismo problema que $SAT$ pero con $B$ en $DNF-SAT$.\\
+$k-SAT$ es el mismo problema que $CNFSAT$ tal que cada clausula de $B$ contiene a lo sumo $k$ literales.
+\end{definition}
+\begin{proposition}
+Ambos problemas se reducen a $SAT$:
+\begin{itemize}
+    \item $CNF-SAT \le_{P} SAT$
+    \item $DNF-SAT \le_{P} SAT$
+\end{itemize}
+\end{proposition}
+\begin{proof}
+Obvio.
+\end{proof}
+
+\begin{theorem}
+$DNF-SAT \in P$
+\end{theorem}
+
+\begin{theorem}
+$2-CNF-SAT \in P$
+\end{theorem}
+
+\begin{theorem}
+$CNF-SAT \le_P SAT$
+\end{theorem}
+
+\begin{theorem}
+$CNF-SAT \le_P SAT$
+\end{theorem}
+
+\begin{theorem}
+$CNF-SAT \le_P 3-CNF-SAT$
+\end{theorem}
+\begin{proof}
+Cuando tenga tiempo.
+\end{proof}
+
+\begin{proposition}
+$3-color \le_P 3-CNF-SAT$.
+\end{proposition}
+\begin{proof}
+Debemos probar que dada B en $3-CNF-SAT$, podemos construir en tiempo polinomial un grafo $G$ tal que:
+\begin{align}
+    B \text{ es satisfacible} \iff \chi(G) = 3
+\end{align}
+Primero, una intuición:
+\begin{itemize}
+    \item Necesitaremos crear un grafo que dado un coloreo con 3 colores, retenga información sobre la semántica que debemos crear. Asimismo, dado una semántica que satisfaga $B$, debe haber una forma de plasmar esta información en un coloreo del grafo.
+    \item Para lo anterior, debemos contar con una codificación de los valores posibles para una variable (1 o 0). Solo necesitaremos codificar 1, y lo codificaremos con un color especial.
+    \item La estructura que usaremos para dado un coloreo extraer una semántica podría ser definir un vértice por literal en $B$. Esto no nos servirá para el otro problema: no siempre estos vértices estarán coloreados con el color especial. Así, definiendo no solo los literales en $B$ como vértices sino todos los literales posibles (llamaremos a estos vértices $v_{x_k}$s y $v_{\overline{x}_k}$s), y conectando un vértice de una variable con su negación y con un vértice extra, nos aseguramos que en este triángulo aparezcan los 3 colores. Es decir, el especial debe estar. Conectaremos otro vértice cuyo color tomaremos como aquel color especial (al que llamaremos $s$) con este vértice extra (al que llamaremos $t$), de modo que o bien una variable tiene el color especial o bien su negación lo tiene.
+    \item Lo anterior se encarga de poder definir la semántica, pero debemos definirla en base a la estructura de $B$. Para esto, debemos incorporar también una serie de 3-uplas de vértices, que representen los 3 literales de cada disyunción (llamaremos a estos vértices $p$s). Al hacer esto, debemos procurar que cada uno de estos vértices este relacionado con el vértice que definimos antes (el $v_{x_k}$ o $v_{\overline{x}_k}$) correspondiente con su literal. No solo esto: para que cualquier 3-coloreo nos provea de una semántica que satisfaga $B$, debemos hacer que todo coloreo asigne colores a los $p$s de modo que alguno de los 3 correspondientes a cada disyunción haga que su $v_l$ asociado deba colorearse con el color especial, haciendo que la semántica lo haga verdadero y la disyunción sea verdadera.
+    \item Para lograr lo anterior utilizamos de nuevo la estrategia de antes: conectando todos los $p$s con el vértice de color especial $s$, y conectándolos también con un triángulo (a los vértices de este triangulo los llamaremos $g$s), nos aseguramos que algún $g$ tenga el color de $t$, y como su $p$ asociado esta conectado con $s$, debe colorearse con el tercer color. Esto impacta en el $v_l$ asociado: sabemos que está conectado con $t$, así que solo le queda una opción: colorearse con el color especial (el de $s$). Así, sin importar el coloreo, siempre habrá un $p$ con color distinto al de $t$ y al de $s$, lo que hará que su $v_l$ tenga color $s$ y sea verdadero en la semántica.
+\end{itemize}
+Sean $x_1, x_2, \mathellipsis, x_n$ las variables en $B$, y  $B = (l_{11} \vee l_{12} \vee l_{13}) \wedge \mathellipsis \wedge (l_{m1} \vee l_{m2} \vee l_{m3})$.\\
+Sean:
+\begin{align}
+    V &= \{ s, t \} \cup \{ v_{x_k}, v_{\overline{x}_k} \mid 1 \le k \le n \} \cup \{ p_{ij}, g_{ij} \mid 1 \le i \le m, 1 \le j \le 3 \}\\
+    E &= \{ st \}
+        \cup \{ tv_{x_k}, tv_{\overline{x}_k}, v_{x_k}v_{\overline{x}_k} \mid 1 \le k \le n \}\\
+        &\cup \{ sp_{ij}, p_{ij}g_{ij}, p_{ij}v_{l_{ij}}
+        \mid 1 \le i \le m, 1 \le j \le 3 \}\\
+        &\cup \{ g_{i1}g_{i2}, g_{i2}g_{i3}, g_{i3}g_{i1} \mid 1 \le i \le m \}
+\end{align}
+Y sea $G = (V, E)$.\\
+Podemos construir este grafo en tiempo polinomial: Solo debemos saber la cantidad de variables y la cantidad de términos.\\
+\begin{definition}
+Sean $b \in \mathbb{Z}_2^n$ y $C$ un coloreo propio de $G$. Diremos que $b$ y $C$ son compatibles si:
+\begin{itemize}
+    \item $x_k(b) = 1 \iff C(v_{x_k}) = C(s)$
+    \item $x_k(b) = 0 \iff C(v_{\overline{x}_k}) = C(s)$
+\end{itemize}
+\end{definition}
+
+\begin{proposition}
+Si $b$ y $C$ son compatibles, $l(b) = 1 \iff C(v_l) = C(s)$.
+\end{proposition}
+\begin{proof}
+Por casos:
+\begin{itemize}
+    \item Si $l = x_k$, $C(v_{x_k}) = C(s) \iff x_k(b) = 1 \iff l(b) = 1$
+    \item Si $l = \overline{x}_k$, $C(v_{\overline{x}_k}) = C(s) \iff x_k(b) = 0 \iff \overline{x}_k(b) = 0 \iff l(b) = 1$
+\end{itemize}
+\end{proof}
+
+\begin{enumerate}
+    \item Caso 1: $B$ es satisfacible $\implies \chi(G) = 3$.\\
+    Sea $b \in \mathbb{Z}_2^n$ tal que $B(b) = 1$. Colorearemos $G$ con 3 colores: $r,s,t$. Naturalmente los colores de $s$ y $t$ son sus ídems, y $r$ es el (r)estante.
+    \begin{align}
+    C(s) = s\\
+    C(t) = t\\
+    C(v_l) =
+    \left\{
+        \begin{array}{cc}
+            s & l(b) = 1\\
+            r & l(b) = 0\\
+        \end{array}
+    \right.\\
+    \end{align}
+    Es fácil ver que el lado $st$ no causa problemas. Tapoco lo causan los [triangulitos] $t, v_{x_k}, v_{\overline{x}_k}$, ya que cada uno tiene un color distinto.\\
+    Además, estamos construyendo un coloreo compatible con $b$.\\
+    Ahora, observemos que como $B(b) = 1$, para cada término de la conjunción existe al menos un literal $l_{ij}$ tal que $l_{ij}(b) = 1$. Sea $j_i$ el mínimo $j$ tal que $l_{ij}(b) = 1$.
+    \begin{align}
+    C(p_{ij}) =
+    \left\{
+        \begin{array}{cc}
+            r & j = j_i\\
+            t & j \neq j_i
+        \end{array}
+    \right.
+    \end{align}
+    Aquí también es fácil ver que los lados $sp_{ij}$ no causan problemas, y que los lados $v_lp_{ij}$ tampoco:
+    \begin{itemize}
+        \item Si $j = j_i$, $l_{ij}(b) = 1$ y como $b$ y $C$ son compatibles, $C(v_l) = s$, y no hay problemas pues $C(p_{ij}) \neq s$.
+        \item Si $j \neq j_i$, $C(p_{ij}) = t$ y no hay problemas pues $C(v_{l_{ij}}) \neq t$..
+    \end{itemize}
+    Por último,
+    \begin{align}
+    C(g_{ij}) =
+    \left\{
+        \begin{array}{cc}
+            t & j = j_i\\
+            r,s & j \neq j_i \text{ y según corresponda}
+        \end{array}
+    \right.
+    \end{align}
+    Aquí coloreamos $g_{ij}$ con el color $t$, si $j = j_i$. A los otros dos $g_{ij}$'s, los coloreamos con $r$ a uno y con $s$ al otro. Es entonces claro que el [triangulito] $g_{i1}g_{i2},g_{i2}g_{i3},g_{i3}g_{i1}$ no causa problemas.\\
+    Además, dado un lado $p_{ij}g_{ij}$:
+    \begin{itemize}
+        \item Si $j = j_i$, $C(p_{ij}) = r$, pero $C(g_{ij}) = t$.
+        \item Si $j \neq j_i$, $C(p_{ij}) = t$, pero $C(g_{ij}) = r,s$.
+    \end{itemize}
+    Dimos un coloreo propio de $G$ con 3 colores. Es decir, $G$ es 3-coloreable.
+    
+    \item Caso 2: $\chi(G) = 3 \implies B$ es satisfacible.\\
+    Dado un coloreo de G con 3 colores $C$, construyamos $b \in \mathbb{Z}_2^n$ tal que $B(b) = 1$. Llamémosle como antes a los colores: $s$ al de $s$, $t$ al de $t$ y $r$ al restante.\\
+    Definamos $b$ de manera que
+    \begin{align}
+        x_k(b) =
+        \left\{
+        \begin{array}{cc}
+        1 & \text{ si } C(v_{x_k}) = s\\
+        0 & \text{ si } C(v_{x_k}) \neq s
+        \end{array}
+        \right.
+    \end{align}
+    Es fácil ver que $b$ y $C$ son compatibles:
+    \begin{itemize}
+        \item Por construcción, $C(v_{x_k}) = s \iff x_k(b) = 1$.
+        \item Además, $C(v_{\overline{x}_k}) = s \implies C(v_{x_k}) \neq s$, ya que $v_{x_k}$ y $v_{\overline{x}_k}$ son vecinos. Entonces, $x_k(b) = 0$. Y por construcción, $x_k(b) = 0 \implies C(v_{x_k}) \neq s$, y como $v_{\overline{x}_k}$ es vecino de $t$ y de $v_{x_k}$, $C(v_{\overline{x}_k}) = s$.
+    \end{itemize}
+    También es fácil ver que no hay contradicciones:
+    \begin{itemize}
+        \item $C(t) \neq C(s) \wedge C(t) \neq C(v_l) \wedge C(v_{x_k}) \neq C(v_{\overline{x}_k}) \implies (C(v_{x_k}) = s \iff C(v_{\overline{x}_k}) \neq s)$. Así, si a una variable se le asigna 1, a su negación 0, y viceversa.
+    \end{itemize}
+    Ya definimos entonces $b$. Veamos ahora que $B(b) = 1$.\\
+    
+    Como en $G[g_{i1},g_{i2},g_{i3}]$ están presentes los 3 colores, debe existir un $j_i$ tal que $C(g_{ij_i} = t)$ para cada $i$. Por lo tanto, su vecino $p_{ij_i}$ tiene color $r$ (es decir, distinto al de $s$ y al de $t$) ya que es vecino de $s$ también. Vemos también que $p_{ij_i}$ es vecino de un $v_l$. Esto quiere decir que $l$ es el $j_i$-ésimo literal de la $i$-ésima disyunción. Como $C(p_{ij_i}) = r$ y $v_l$ es vecino de $t$, $C(v_l) = s$, y entonces $l(b) = 1$. Por lo tanto la $i$-ésima disyunción $D_i$ cumple $D_i(b) = 1$, y $B(b) = (D_1 \wedge)(b) \mathellipsis (\wedge D_m)(b) = 1$
+    \end{enumerate}
+\end{proof}
+
+\begin{theorem}[Cook, 1973]
+$CNF-SAT \in NP-Completo$
+\end{theorem}
+
+Entonces todo lo anterior (3-color, etc.) es $NP-Completo$.

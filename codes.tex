@@ -1,0 +1,540 @@
+\begin{definition}
+Un \textbf{código de bloque} $(\boldsymbol{block\ code})$ $C$ de longitud $n$ sobre un alfabeto $A$ es un subconjunto de $A^n$ ie. $C \subseteq A^n$.\\
+En general, usaremos $A = \{0,1\}$, en cuyo caso los códigos se llaman \textbf{binarios}.\\
+De aquí en adelante, nos referiremos a códigos binarios de bloque, es decir, palabras de $n$ bits.
+\end{definition}
+
+Acordaremos sobre el canal de transmisión:
+\begin{enumerate}
+\item No se pierden bits, solo se alteran.
+\item La probabilidad de que un bit cambie es uniforme e independiente respecto de otros bits.
+\item La probabilidad de que un bit cambie es $0 < p < \frac{1}{2}$.
+\end{enumerate}
+\begin{definition}
+Recordemos que $\mathbb{Z}_2 = (\{0,1\}, \oplus, \odot)$ es un cuerpo, y ${\mathbb{Z}_2^n} = (\{0,1\}^n, \oplus, \odot)$ es un espacio vectorial de dimension $n$.
+\end{definition}
+
+\begin{definition}[Peso de Hamming]
+Sea $x = (x_0,\mathellipsis, x_{n-1}) \in \mathbb{Z}_2^n$ llamamos \textbf{peso de Hamming} a: \begin{align}
+|x| = \#\{x_i \mid \forall i: 0\le i < n : x_i = 1\}
+\end{align}
+Es decir, el peso de Hamming es la cantidad de $1$s en el vector $x$.
+\end{definition}
+
+\begin{definition}[Distancia de Hamming]
+Dados $x,y \in \mathbb{Z}_2^n$, definimos a la \textbf{distancia de Hamming} como
+\begin{align}
+d(x,y) = |x\oplus y|
+\end{align}
+Esto es, la cantidad de bits en los que difieren.
+\end{definition}
+
+\begin{proposition}
+Dados $x,y \in \mathbb{Z}_2^n$ se cumple: \begin{align}
+d(x,y) = \#\{i\mid x_i \neq y_i\}
+\end{align}
+\end{proposition}
+\begin{proof}
+\begin{align}
+d(x,y) &= |x\oplus y| \\
+&= \#\{(x\oplus y)_i \mid \forall i : 0 \le i < n: (x\oplus y)_i = 1\} \\
+&= \#\{(x\oplus y)_i \mid \forall i : 0 \le i < n: (x_i = 1 \wedge y_i = 0) \vee (x_i = 0 \wedge y_i = 1)\} \\
+&= \#\{(x\oplus y) \mid \forall i: 0 \le i < n: x_i \neq y_i\}\\
+&= \#\{i \mid \forall i: 0 \le i < n: x_i \neq y_i\}
+\end{align}
+\end{proof}
+
+\begin{proposition}
+La distancia de Hamming, es propiamente una distancia, es decir:
+\begin{enumerate}
+\item $d(x,y) \ge 0$
+\item $d(x,y) = 0 \iff x = y$
+\item $d(x,y) = d(y,x)$
+\item $d(x,y) \le d(x,z) +d(y,z)$
+\end{enumerate}
+\end{proposition}
+
+\begin{proof} Veamos uno por uno:
+\begin{enumerate}
+\item Obvio.
+\item Ídem
+\item Ídem.
+\item Sean $x,y,z \in \mathbb{Z}_2^n$.\\
+Sean $A = \{i \mid x_i = y_i\}$, 
+$B = \{i \mid x_i = z_i\}$ y $C = \{i \mid y_i = z_i\}$\\
+Es claro que:
+\begin{itemize}
+    \item $d(x,y) = \left| \overline{A} \right| = \# \{i \mid x_i \neq y_i \}$
+    \item $d(x,z) = \left| \overline{B} \right| = \# \{i \mid x_i \neq z_i \}$
+    \item $d(y,z) = \left| \overline{C} \right| = \# \{i \mid y_i \neq z_i \}$
+\end{itemize}
+Veamos lo siguiente:
+\begin{align}
+& i \in B \cap C \implies x_i = y_i = z_i \implies i \in A\\
+& \therefore B \cap C \subset A
+\end{align}
+Y
+\begin{align}
+B \cap C \subset A
+&\iff \overline{A} \subset \overline{B \cap C}\\
+&\iff \overline{A} \subset \overline{B} \cup \overline{C}\\
+\end{align}
+Luego
+\begin{align}
+\left| \overline{A} \right| & \le \left| \overline{B}\cup\overline{C} \right|\\
+d(x,y) &\le \left| \overline{B} \right| + \left| \overline{C} \right|\\
+d(x,y) &\le d(x,z) + d(y,z)
+\end{align}
+\end{enumerate}
+\end{proof}
+
+\begin{definition}
+Sea $x\in {\mathbb{Z}_2}^n, r \in \mathbb{R}_{\ge 0}$ definimos al \textbf{disco de tamaño $\boldsymbol{r}$ centrado en $\boldsymbol{x}$} como \begin{align}
+D_r(x) = \{y \in {\mathbb{Z}_2}^n\mid d(x,y) \le r\}
+\end{align}
+\end{definition}
+
+\begin{definition}
+Un código $C \subseteq {\mathbb{Z}_2}^n$ \textbf{detecta $\boldsymbol{r}$ errores} si \begin{align}
+\forall x\in C: D_r(x) \cap C = \{x\}
+\end{align}
+Es decir, todas las palabras del código están separadas en al menos una distancia $r$ (en este caso $r$ bits).
+\end{definition}
+
+\begin{definition}
+Un código \textbf{corrige $\boldsymbol{r}$ errores} si \begin{align}
+\forall x,y \in C : x\neq y: D_r(x) \cap D_r(y) = \varnothing
+\end{align}
+Es decir que un elemento en $\mathbb{Z}_2^n$ no puede estar a distancia menor o igual a $r$ de dos (o más) palabras del código.
+\end{definition}
+
+\begin{definition}
+\begin{align}
+    \delta_C = min \{ d(x,y) \mid x,y \in C: x \neq y \}
+\end{align}
+Es decir, la mínima distancia entre palabras del código.
+\end{definition}
+
+\begin{theorem}
+Sea $C \subseteq \mathbb{Z}_2^n$ un código tal que $C \neq \varnothing \wedge |C| \ge 2$.
+\begin{enumerate}
+\item
+    \begin{enumerate}
+        \item $C$ detecta $\delta - 1$ errores
+        \item $C$ no detecta $\delta$ errores
+    \end{enumerate}
+\item
+    \begin{enumerate}
+        \item $C$ corrige $\left\lfloor{\frac{\delta - 1}{2}}\right\rfloor$
+        \item $C$ no corrige $\left\lfloor{\frac{\delta - 1}{2}}\right\rfloor + 1$ errores
+    \end{enumerate}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Probaremos cada punto por separado.
+\begin{enumerate}
+\item
+    \begin{enumerate}
+        \item Sea $x\in C$. Como $\delta$ es la mínima distancia entre dos palabras del código, $\nexists y \in C : x \neq y : y \in D_{\delta-1}(x)$, por lo que $D_{\delta-1}(x) \cap C = \{ x \}$, es decir $C$ detecta $\delta - 1$ errores.
+        \item Por definición de $\delta$, existen $x,y \in C : x \neq y : d(x,y) = \delta$. Así, $y \in D_{\delta}(x) \cap C$.
+    \end{enumerate}
+
+\item Sea $t = \left\lfloor{\frac{\delta - 1}{2}}\right\rfloor$
+    \begin{enumerate}
+        \item Supongamos que C no corrige $t$ errores: $\exists x,y \in C, z \in \mathbb{Z}_2^n: x \neq y : z \in D_t(x) \cap D_t(y)$. Vemos que
+        \begin{align}
+            d(x,y) &\le d(x,z) + d(z,y)\\
+            & \le 2t\\
+            & \le 2 \left\lfloor{\frac{\delta - 1}{2}}\right\rfloor\\
+            & \le \delta - 1\\
+            & < \delta
+        \end{align}
+        lo cual es absurdo pues $\delta$ es mínimo.
+        
+        \item Veamos que $D_{t+1}(x) \cap D_{t+1}(y) \neq \varnothing$. Sean $x,y \in C$, tales que $d(x,y) = \delta$. Sean $e = x \oplus y$ y $\overline{e}$ un vector con $0$s donde $e$ tenga $0$s y peso $t+1$, y $z = x \oplus \overline{e}$.
+        \begin{align}
+        d(x,z)
+        &= |\overline{e}| = t+1 \implies z \in D_{t+1}(x)\\
+        d(y,z)
+        &= |y \oplus z|\\
+        &= |y \oplus x \oplus \overline{e}|\\
+        &= |e \oplus \overline{e}|\\
+        &= d(e, \overline{e})\\
+        &= \delta - (t+1)
+        \end{align}
+            \begin{enumerate}
+            \item Si $\delta$ es impar:
+            \begin{align}
+            d(y,z) &= \delta - \left(\left\lfloor{\frac{\delta - 1}{2}}\right\rfloor + 1\right)\\
+            &= \delta - \frac{\delta-1}{2} - 1\\
+            &= \frac{\delta-1}{2} - 1\\
+            &\le \frac{\delta-1}{2}\\
+            &\le t + 1\\
+            &\therefore z \in D_{t+1}(y)
+            \end{align}
+            \item Si $\delta$ es par:
+            \begin{align}
+            d(y,z)
+            &= \delta - \left(\left\lfloor{\frac{\delta - 1}{2}}\right\rfloor + 1\right)\\
+            &= \delta - \frac{\delta-2}{2} - 1\\
+            &= \frac{\delta}{2}\\
+            &\le \frac{\delta+1}{2}\\
+            &\le \frac{\delta-1}{2} + 1\\
+            &\le t + 1\\
+            &\therefore z \in D_{t+1}(y)
+            \end{align}
+            \end{enumerate}
+        \end{enumerate}
+    Asi,
+    \begin{align}
+    z \in D_{t+1}(x) \wedge z \in D_{t+1}(y)
+    \end{align}
+    Concluimos que $C$ no corrige $t+1$ errores.
+    \end{enumerate}
+\end{proof}
+
+\begin{theorem}[Cota de Hamming]
+Sea $C \subset {\mathbb{Z}_2}^n$ un código binario de bloque de longitud $n$, con $\delta = \delta_C$ y sea $t = \left\lfloor{\frac{\delta - 1}{2}} \right\rfloor$ entonces:
+\begin{align}
+\left| C \right| \le \frac{2^n}{\displaystyle \sum\limits_{k=0}^{t} \displaystyle\binom{n}{k}}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Sea \begin{align}
+A = \bigcup_{x\in C} D_t(x)
+\end{align}
+Como $C$ corrige $t$ errores, esta unión es disjunta.
+\begin{align}
+\left|A\right| = \sum_{x\in C} \left|D_t(x)\right|
+\end{align}
+Vemos que definiendo $S_r(x) = \{y \in \mathbb{Z}_2^n \mid d(x,y) = r\}$,
+\begin{align}
+D_t(x) = \bigcup_{r=0}^t S_r(x) \implies \left|D_t(x)\right| = \sum_{r=0}^t \left|S_r(x)\right|
+\end{align}
+puesto que los $S_r(x)$ disjuntos. También,
+\begin{align}
+y \in S_r(x) &\iff d(x,y) = r \iff \left|x\oplus y\right| = r\\
+    &\iff d(x\oplus y, 0) = r \iff x\oplus y \in S_r(0)
+\end{align}
+Observemos que $\forall x: y \mapsto x \oplus y $ es una biyección $\therefore\# S_r(x) = \# S_r(0)$.\\
+Veamos: $z \in S_r(0) \iff |z| = r \iff z$ tiene exactamente $r$ 1s.
+%sea $z \in \mathbb{Z}_2^n$ con peso $r$, y fijo $x$, $y$ tal que $x \oplus y = z$ queda determinado por $x \oplus y$.
+Así, 
+\begin{align}
+|S_r(x)| = \left| \{y \in \mathbb{Z}_2^n \mid d(x,y) = r\} \right| = \left|\{e : |e| = r\}\right| = {\binom{n}{r}}
+\end{align}
+pues $\binom{n}{r}$ es la cantidad de formas de elegir $r$ lugares donde haya un $1$ entre los $n$ bits posibles.
+
+Entonces,
+\begin{align}
+\left|A\right| &= \sum_{x\in C} \left|D_r(x)\right| = \sum_{x\in C} \sum_{r=0}^t \left|S_r(x)\right|
+= \sum_{x\in C}\sum_{r=0}^t {\binom{n}{r}}
+= \left|C\right| \sum_{r=0}^t {\binom{n}{r}} 
+\implies\\
+\left|C\right| &= \frac{\left|A\right|}
+{\sum\limits_{r=0}^t {\binom{n}{r}}} \le \frac{2^n}{\sum\limits_{r=0}^t {\binom{n}{r}}}
+\end{align}
+Pues $A\subseteq \mathbb{Z}_2^n$, $\left|A\right| \le 2^n$.
+\end{proof}
+
+\begin{definition}[Códigos perfectos]
+Sea $C$ un código de longitud $n$ y $t = \left\lfloor{\frac{\delta - 1}{2}}\right\rfloor$, $C$ se dice \textbf{perfecto} si tiene cardinalidad máxima, es decir si alcanza la cota de Hamming:
+\begin{align}
+|C| = \frac{\displaystyle{2^n}}{\displaystyle\sum\limits_{k=0}^t {\displaystyle\binom{n}{k}}}
+\end{align}
+\end{definition}
+
+\subsection{Códigos lineales}
+
+\begin{definition}
+Sea $(V, \oplus, \odot)$ un espacio vectorial sobre un cuerpo $\mathbb{K}$.\\
+Sea $W \subseteq V$, $W \neq \varnothing$ decimos que $(W, \oplus, \odot)$ es subespacio vectorial de $V$ si:
+\begin{enumerate}
+\item $\forall x, y \in W : x \oplus y \in W$
+\item $\forall w \in W, k \in \mathbb{K} : k\odot w \in W$
+\end{enumerate}
+\end{definition}
+\begin{definition}
+Un código $C$ es \textbf{lineal} si es un subespacio vectorial de ${\mathbb{Z}_2^n}$ sobre $\mathbb{Z}_2$.
+\end{definition}
+Puesto que el cuerpo $\mathbb{K} = \{0,1\}$ tenemos que:
+\begin{enumerate}
+\item Como $C$ no es vacio, $\exists x \in C \wedge \forall x \in C: x \oplus x = 0 \therefore 0 \in C$
+\item $\forall w \in C: 1\odot w = w$ \\
+$\forall w \in C: 0 \odot w = 0$\\
+$\therefore \forall k \in \{0,1\} : k \odot w \in C$
+\end{enumerate}
+
+\begin{proposition}
+$C$ es lineal $\implies \exists k \in \mathbb{N}_0 : \left|C\right| = 2^k$\\
+es decir, si $C$ es lineal entonces tiene \textbf{dimensión} igual a una potencia de 2.
+\end{proposition}
+\begin{proof}
+Como $C$ es lineal, trivialmente es un subespacio de si mismo. Como $C \subseteq \mathbb{Z}_2^n$ entonces $C$ tiene dimensión finita y la denotamos con $k = dim(C)$.\\
+Sea $\{\alpha_1, \mathellipsis, \alpha_k\}$ una base de $C$ entonces
+\begin{align}
+    \forall x\in C :: \exists!\,b_1, \mathellipsis, b_k \in \mathbb{Z}_2 : x = b_1\alpha_1 \oplus \mathellipsis \oplus b_k \alpha_k
+\end{align}
+Por lo tanto $x$ queda determinado por el vector $(b_1, \mathellipsis, b_k) \in \mathbb{Z}_2^k$.\\
+$\therefore C$ es isomorfo a $\mathbb{Z}_2^k \implies |C| = 2^k$
+\end{proof}
+
+\begin{proposition}
+Sea $C$ un codigo lineal.
+\begin{align}
+\delta_C = min\{\left|x\right| : x\in C \wedge x \neq 0\}
+\end{align}
+\end{proposition}
+\begin{proof}
+Sea $m = min\{\left|x\right| : x\in G \wedge x \neq 0\}$.\\
+Sean $x,y \in C$ tales que $d(x,y) = \delta$. Vemos que como $C$ es lineal, $x \oplus y \in C$, y $\left| x \oplus y \right| = \delta$. Así, $m \le \delta$.\\
+ Sea $x$ de peso mínimo. Sabemos que $\left|x\right| = d(x,0)$, y como $x,0 \in C$, entonces $\delta \le m$.
+\end{proof}
+
+\begin{definition}
+Un código lineal $C$ puede ser caracterizado por una 3-upla $(n, k, \delta)$ tal que C es subespacio de $\mathbb{Z}_2^n$ con $dim(C) = k$ y tal que $\delta = \delta_C$.
+\end{definition}
+
+\begin{definition}[Matriz generadora]
+Dado un código lineal $C$ de longitud $n$ y $dim(C) = k$, una \textbf{matriz generadora} de $C$ es una matriz $k \times n$ cuyas filas generan (son una base de) $C$.\\
+\end{definition}
+
+\begin{definition}[Mensaje codificado]
+Sea $u \in \mathbb{Z}_2^n$ un mensaje. Codificaremos $u$ como $u \cdot G$.
+\end{definition}
+
+\begin{proposition}
+Sea $T \colon V \to W$ una transformación lineal entonces:
+\begin{align}
+    Nu(T) = \{x \in V \mid T(x) = 0\}
+\end{align}
+\end{proposition}
+Si $H$ es una matriz en $M_{n \times m}(\mathbb{K})$, definimos la transformación $T_H(x) = H x^T$ y definir $Nu(H) = Nu(T_H) = \{x \in M_{k \times m}(\mathbb{K}) \mid H x^T = 0\}$.
+
+\begin{definition}
+Una matriz H es una \textbf{matriz de chequeo} de un código lineal $C$ si $C = Nu(H)$.\\
+Una matriz de chequeo permite verificar rápidamente si un $x \in \mathbb{Z}_2^n$ está o no en $C$, y por lo tanto, es fundamental para detectar rápidamente si hubo errores de transmisión.
+\end{definition}
+
+\begin{theorem}
+Sean $C$ un código lineal de longitud $n$ y dimensión $k$, $r = n-k$ y $A \in M_{k \times r}(\mathbb{Z}_2)$, y
+\begin{align}
+    G &= \underbrace{[A \mid I_{k\times k} ]}_{k\times n}\\
+    H &= \underbrace{[I_{r\times r} \mid A^T]}_{r \times n}
+\end{align}
+Entonces
+\begin{align}
+    G \text{ es matriz generadora de } C \iff H \text{ es matriz de chequeo de C }
+\end{align}
+Igualmente vale que $[I_{k\times k} \mid A]$ es generadora $\iff [A^T \mid I_{r\times r}]$ es matriz de chequeo.
+\end{theorem}
+
+\begin{proposition}
+Sea $C$ un código lineal, y $H$ su matriz de chequeo. Si $H$ no tiene columnas nulas ni columnas repetidas entonces corrige al menos un error, es decir, $\delta \ge 3$.
+\end{proposition}
+\begin{proof}
+Acotando $\delta$:
+\begin{enumerate}
+    \item $\delta \neq 1$\\
+    Supongamos $\delta = 1$. Entonces $\exists x \in C : \left| x \right| = 1$. Como $x \in C$, $Hx^t = 0$. Observemos que como $\left| x \right| = 1$, $Hx^t = H^i$ para algún $i$. Pero entonces $H$ tiene una columna nula, lo que es absurdo.
+    \item $\delta \neq 2$\\
+    Supongamos $\delta = 2$. Entonces $\exists x \in C : \left| x \right| = 2$. Como $x \in C$, $Hx^t = 0$. Observemos que como $\left| x \right| = 2$, $Hx^t = H^i \oplus H^j$ para algunos $i,j$. Pero entonces $H^i = H^j$, lo que es absurdo.
+\end{enumerate}
+\end{proof}
+
+
++++++++++++++++++++++++++++++++++++++++++++++\\
+PASARON COSAS FALTAN DEFINICIONES Y ETCÉTERAS\\
++++++++++++++++++++++++++++++++++++++++++++++\\
+
+\begin{theorem}
+Sea $C$ un código lineal, $H$ su matriz de chequeo, y $m$ el mínimo número de columnas linealmente dependientes de $H$. Entonces $\delta_C = m$.
+\end{theorem}
+
+\begin{proof}
+Probemos las dos siguientes:
+\begin{enumerate}
+\item $\delta \le m$\\
+Sean $H^{k_1}, \mathellipsis, H^{k_m}$ columnas linealmente dependientes de $H$. Por definición, existen $c_i$ con $1 \le i \le m$ tales que:
+\begin{itemize}
+    \item $\exists i : 1 \le i \le m : c_i \neq 0$
+    \item $\sum_{i=0}^m c_i * H^{k_i} = 0$
+\end{itemize}
+Sea $v = e_{k_1} \oplus \mathellipsis \oplus e_{k_m}$. Vemos que $Hv^t = H^{k_1} \oplus \mathellipsis \oplus H^{k_m} = 0$, por lo que $v^t \in Nu(H)$, y $v \in C$. Así, como $\forall x \in C : \delta \le \left| x \right|$, $\delta \le \left| v \right| = m$.
+
+\item $m \le \delta$\\
+Sea $x \in C$ tal que $\left| x \right| = \delta$. Como $Hx^t = 0$, deben existir $k_1, \mathellipsis, k_\delta$ tales que $H^{k_1} \oplus \mathellipsis \oplus H^{k_\delta} = 0$. Esto significa que $H^{k_1}, \mathellipsis, H^{k_\delta}$ son linealmente dependientes. Así, $m \le \delta$.
+\end{enumerate} 
+\end{proof}
+
+\begin{definition}
+Un código de Hamming $\mathcal{H}_r$ es un código con matriz de chequeo $r\times (2^r -1)$ que tiene todas las columnas no nulas posibles con $r$ filas.\\
+Ejemplos:\\
+$\mathcal{H}_3 = \begin{bmatrix}
+1 &0 &0 &1 &0 &1 &1\\
+0 &1 &0 &1 &1 &0 &1\\
+0 &0 &1 &0 &1 &1 &1
+\end{bmatrix}\\
+\mathcal{H}_4 = 
+\begin{bmatrix}
+1 &0 &0 &0 &1 &1 &1 &0 &1 &0 &0 &1 &1 &0 &1\\
+0 &1 &0 &0 &1 &1 &0 &1 &1 &1 &0 &0 &0 &1 &1\\
+0 &0 &1 &0 &1 &0 &1 &1 &0 &1 &1 &0 &1 &0 &1\\
+0 &0 &0 &1 &0 &1 &1 &1 &0 &0 &1 &1 &0 &1 &1
+\end{bmatrix}
+$
+\end{definition}
+\begin{proposition}
+Los códigos de Hamming son perfectos.
+\end{proposition}
+
+\subsection{Códigos cíclicos}
+\begin{definition}
+Definimos a un \textbf{anillo polinomial en $X$, álgebra conmutativa o álgebra polinomial} sobre un cuerpo K, como el conjunto de expresiones, a las que llamamos \textbf{polinomios en $X$}, tales que:
+\begin{align}
+    K[X] \doteq \{p = p_0 + p_1 X + p_2 X^2 + \mathellipsis + p_{m-1}X^{m-1} + p_m X^m\}
+\end{align}
+donde $p_0, p_1,\mathellipsis, p_m \in K$ son los \textbf{coeficientes de p}. $X$ es una \textbf{variable o indeterminada}.
+\end{definition}
+
+\begin{definition}
+Dada una palabra $w = (w_0,\mathellipsis, w_{n-1})$ en $\mathbb{Z}_2^n$, definimos a $ROT(w) = (w_{n-1}, w_1, \mathellipsis , w_{n-2})$ como la \textbf{rotación} (hacia la derecha) de $w$. 
+\end{definition}
+
+\begin{definition}
+Un código $C$ es cíclico si:
+\begin{itemize}
+    \item $C$ es lineal
+    \item $\forall w \in C : ROT(w) \in C$
+\end{itemize}
+\end{definition}
+
+Representaremos las palabras de un código con polinomios:
+\begin{align}
+    w = (w_0, \mathellipsis, w_{n-1}) \sim w_0 + w_1 x + \mathellipsis + w_{n-1} x^{n-1}
+\end{align}
+
+%Ejemplos:
+%\begin{itemize}
+%    \item $v_0 v_1 \mathellipsis v_{n-1} \longleftrightarrow v_0 + v_1 x + \mathellipsis + v_{n-1} x^{n-1}$
+%    \item $101001 \longleftrightarrow 1 + x^2 + x^5$
+%    \item $01101001 \longleftrightarrow x + x^2 + x^4 + x^7$
+%\end{itemize}
+
+\begin{definition}
+Dados dos palabras $p(x), q(x) \in C$ de longitud $n$, definimos
+\begin{align}
+    p(x) \odot q(x) \doteq p(x) q(x) \mod{(1+x^n)}
+\end{align}
+\end{definition}
+
+\begin{proposition}
+Sea $w(x)$ una palabra de longitud $n$ entonces $ROT(w) = x \odot w(x)$.
+\end{proposition}
+\begin{proof}
+\begin{align}
+    x \odot w(x)
+    &= xw(x) &&\mod{(1+x^n)}\\
+    &= x(w_0 + w_1 x + \mathellipsis + w_{n-1} x^{n-1}) &&\mod{(1+x^n)}\\
+    &= (w_0 x + w_1 x^2 + \mathellipsis + w_{n-1} x^{n-1}) &&\mod{(1+x^n)}\\
+    &= w_0 x + w_1 x^2 + \mathellipsis + w_{n-2} x^{n-1} + (w_{n-1} x^{n+1} \mod{(1+x^n)})\\
+    &= w_0 x + w_1 x^2 + \mathellipsis + w_{n-2} x^{n-1} + w_{n-1}\\
+    &= ROT(w)
+\end{align}
+\end{proof}
+
+%\begin{corollary}
+%Sea C un código cíclico y $w \in C$ entonces
+%$\forall k \in \mathbb{N} : x^k \odot w \in C$ y como $C$ es lineal
+%\begin{align}
+%    \sum_{k \in \mathbb{N}} a_k x^k \cdot w \in C \implies
+%    \forall p(x) : p(x) \odot w \in C
+%\end{align}
+%\end{corollary}
+
+\begin{definition}
+Dado $C$ un código cíclico, llamamos polinomio generador de $C$ a aquel polinomio no nulo de mínimo grado. Solemos denotarlo $g(x)$.
+\end{definition}
+
+\begin{proposition}
+Sean $C \subseteq{\mathbb{Z}_2^n}$ un código lineal, existe un único polinomio de grado mínimo.
+\end{proposition}
+\begin{proof}
+Sean $m$ el mínimo grado de los polinomios en $C$, y $v, w \in C$ de grado $m$. Vemos que
+\begin{align}
+    v &= v_0 + v_1 x + \mathellipsis + x^m\\
+    w &= w_0 + w_1 x + \mathellipsis + x^m
+\end{align}
+Como $C$ es lineal, $v+w \in C$, y:
+\begin{align}
+    v + w &= \sum_{i=0}^m (v_i + w_i) x^i\\
+    &= (v_0 + w_0) + (v_1 + w_1) x + \mathellipsis + (v_{m-1} + w_{m-1}) x^{m-1} + (v_m + w_m) x^m\\
+    &= (v_0 + w_0) + \mathellipsis + (1 + 1) x^m
+\end{align}
+Por lo tanto, $gr(v+w) < m$. Como $m$ es mínimo, $v+w = 0$ y $v = w$.
+\end{proof}
+
+\begin{theorem}
+Sea $C$ un código cíclico de dimensión $k$ y longitud $n$ y sea $g(x)$ su polinomio generador. Sea también $t = gr(g(x))$.
+\begin{enumerate}
+    \item $C = \{ q(x) \odot g(x) \mid q(x) \in \mathbb{Z}_2^n\} = \{ q(x)g(x) \mid gr(q(x)) \le n - t - 1 \}$
+    \item $k = n - t$
+    \item $g(x) \mid 1+x^n$
+    \item $g_0 = 1$
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+En orden:
+\begin{itemize}
+    \item Sean
+    \begin{enumerate}
+        \item $A = \{ q(x) \odot g(x) \mid q(x) \in \mathbb{Z}_2^n\}$ 
+        \item $B = \{ q(x)g(x) \mid gr(q(x)) \le n - t - 1 \}$ 
+    \end{enumerate}
+    Probemos $C \subseteq B \subseteq A \subseteq C$.
+    \begin{enumerate}
+        \item $A \subseteq C$.\\
+        Primero, notemos que $g(x) \in C$. Luego,
+        \begin{align}
+            x \odot g(x) = ROT(g(x)) \implies x g(x) \in C\\
+            x^2 \odot g(x) = ROT(ROT(g(x))) \implies x^2 g(x) \in C\\
+        \end{align}
+        Y así, $\forall i : x^ig(x) = rot^i(g(x)) \implies x^i g(x) \in C$. Sea entonces $p(x) = \sum_{i=0}^n c_ix^i \in A$. Vemos que $p(x)g(x) = \sum_{i=0}^n c_ix^ig(x)$, y como $x^ig(x) \in C$, $\sum_{i=0}^n c_ix^ig(x) \in C$ ya que $C$ es lineal.
+        \item $B \subseteq A$\\
+        Sea $q(x)g(x) \in B$. Vemos que como $gr(q(x)) \le n - t - 1$, $gr(q(x)g(x)) \le n - 1$, y $q(x) \odot g(x) = q(x)g(x) \mod 1+x^n = q(x)g(x)$. Por esto, $q(x)g(x) \in A$.
+        \item $C \subseteq B$\\
+        Sean $p(x) \in C$, y $q(x), r(x)$ tales que $p(x) = q(x)g(x) + r(x)$, con $gr(r(x)) < t$. Notemos que $gr(p(x)) \le n - 1 \implies gr(q(x)g(x)) \le n - 1 \implies gr(q(x)) \le n - t -1$. Además,
+        \begin{align}
+            p(x) \mod{1+x^n} = q(x)g(x) + r(x) \mod{1+x^n}\\
+            p(x) = q(x) \odot g(x) + r(x)\\
+            r(x) = q(x) \odot g(x) + p(x)
+        \end{align}
+        Pues $gr(p(x)) < n$ y lo mismo para $r(x)$.\\
+        Vemos que $q(x) \odot g(x) \in A \subseteq C$, por lo que $q(x) \odot g(x) \in C$. Como $p(x) \in C$ y $C$ es lineal, $r(x) \in C$. Veamos ahora que $gr(r(x)) < t$, pero $g(x)$ es por definición el polinomio no nulo de menor grado en $C$. Por lo tanto, $r(x) = 0$ y $p(x) = q(x)g(x) \in B$.
+    \end{enumerate}
+    \item $k = n - t$\\
+    Primero, notemos que como $C$ es lineal, $\left| C \right| = 2^k$. Además, notemos que como $C = \{ q(x)g(x) \mid gr(q(x)) \le n - t - 1 \}$,
+    \begin{align}
+         \left| C \right|
+         &= \left| \{ q(x)g(x) \mid gr(q(x)) \le n - t - 1 \} \right| \\
+         &= \left| \{ q(x) \mid gr(q(x)) \le n - t - 1 \} \right|
+    \end{align}
+    Como $gr(q(x)) \le n - t - 1$, y en cada posición puede haber un $1$ o un $0$, hay $2^{n-t-1+1}$ posibles $q(x)$.\\
+    Así, $2^k = 2^{n-t-1+1} \implies k = n-t$.
+    \item $g(x) \mid 1+x^n$\\
+    Sean $q(x)$ y $r(x)$ tales que $1+x^n = q(x)g(x)+r(x)$ con $gr(r(x)) < t$.
+    \begin{align}
+       1+x^n \mod{1+x^n} = q(x)g(x) + r(x) \mod{1+x^n}\\
+       0 = q(x) \odot g(x) + r(x)\\
+       r(x) = q(x) \odot g(x)
+    \end{align}
+    Pues $gr(r(x)) < gr(g(x)) \le n-1$. Podemos concluir que como $q(x) \odot g(x) \in C$, $r(x) \in C$. Pero como $gr(r(x)) < gr(g(x))$ y $g(x)$ es el polinomio de menor grado en $C$, $r(x) = 0$ y $g(x) \mid 1+x^n$.
+    \item $g_0 = 1$\\
+    Como $g(x) \mid 1+x^n$, $\exists q(x) : q(x)g(x) = 1+x^n$, y el término independiente de $q(x)g(x)$ es $q_0g_0$, que es el término independiente de $1+x^n$, $1$.
+    \end{itemize}
+\end{proof}
+\subsubsection{Codificación}
+\subsubsection{Error-Trapping}
