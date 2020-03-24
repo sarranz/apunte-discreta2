@@ -152,20 +152,20 @@ Un coloreo se dice \emph{propio} si $xy \in E \implies C(x) \neq C(y)$. En ciert
 \begin{definition}
 El \emph{número cromático} de $G = (V,E)$:
 \begin{align}
-    \chroma{G} = min\left\{k \mid \text{existe un $k$-coloreo propio de los vértices de G}\right\}
+    \chi{G} = min\left\{k \mid \text{existe un $k$-coloreo propio de los vértices de G}\right\}
 \end{align}
 Para demostrar que un grafo tiene número cromático $k$, es necesario probar que es $k$-coloreable, y que es imposible colorearlo con $k-1$ colores.
 \end{definition}
 
 \begin{proposition}
-$0 \le \chroma{G}\le n$.
+$0 \le \chi{G}\le n$.
 \end{proposition}
 \begin{proof}
 Obvio.
 \end{proof}
 
 \begin{definition}
-Un grafo $G$ se dice \emph{bipartito} si $\chroma{G} = 2$.
+Un grafo $G$ se dice \emph{bipartito} si $\chi{G} = 2$.
 \end{definition}
 
 \begin{proposition}\label{graph_cyclic_color}
