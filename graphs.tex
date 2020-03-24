@@ -1,35 +1,40 @@
 \subsection{Introducción}
 
 \begin{definition}
-Un \emph{grafo} (no dirigido) es un par $(V, E)$ donde $V$ es un conjunto y $E \subseteq \left\{\left\{x,y\right\} \mid x,y \in V \wedge x \neq y \right\}$.
+  Un \emph{grafo} (no dirigido) es un par $(V, E)$ donde $V$ es un conjunto y
+  $E \subseteq \left\{\left\{x,y\right\} \mid x,y \in V \wedge x \neq y \right\}$.
 \end{definition}
 
 \begin{notation}
-Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
+  Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
 
-Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
+  Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
 
-El lado $\{x,y\}$ se denota $xy$ o $yx$.
+  El lado $\{x,y\}$ se denota $xy$ o $yx$.
 
-Se suele llamar $n$ a $|V|$ y $m$ a $|E|$.
+  Se suele llamar $n$ a $|V|$ y $m$ a $|E|$.
 
-Denotamos $\Gamma(x) = \left\{y \in V \mid xy \in E \right\}$ al conjunto de \emph{vecinos} de $x$.
+  Denotamos $\Gamma(x) = \left\{y \in V \mid xy \in E \right\}$ al conjunto de
+  \emph{vecinos} de $x$.
 
-Denotamos $d(x) = |\Gamma(x)|$ al \emph{grado} del vértice $x$.
+  Denotamos $d(x) = |\Gamma(x)|$ al \emph{grado} del vértice $x$.
 
-Denotamos $\delta = min\{d(x) \mid x\in V\}$ al grado del nodo con el menor grado, y $\Delta = max\{d(x) \mid x\in V\}$ al grado del nodo con mayor grado.
+  Denotamos $\delta = min\{d(x) \mid x\in V\}$ al grado del nodo con el menor
+  grado, y $\Delta = max\{d(x) \mid x\in V\}$ al grado del nodo con mayor grado.
+
 \end{notation}
 
 \begin{definition}
-Un grafo es \emph{regular} si $\delta = \Delta$, es decir todos los nodos tienen la misma cantidad de vecinos.\\
+  Un grafo es \emph{regular} si $\delta = \Delta$, es decir todos los nodos
+  tienen la misma cantidad de vecinos.
 \end{definition}
 
 \begin{definition}
-Un \emph{subgrafo} de $G = (V_G,E_G)$ es un grafo $H = (V_H,E_H)$ tal que 
-\begin{itemize}
+  Un \emph{subgrafo} de $G = (V_G,E_G)$ es un grafo $H = (V_H,E_H)$ tal que 
+  \begin{itemize}
     \item $V_H \subseteq V_G$
     \item $E_H \subseteq E_G$
-\end{itemize}
+  \end{itemize}
 \end{definition}
 
 \begin{definition}
