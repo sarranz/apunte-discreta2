@@ -1,25 +1,29 @@
 \begin{definition}
-Un \emph{network} o \emph{red de flujo}  N es un grafo dirigido con capacidades en los lados.
-Es decir, una $3$-upla $(V, E, C)$ donde $V$ es un conjunto, $E \subseteq V \times V$ y $C \colon E \to \mathbb{R}_{\ge 0}$.
+  Un \emph{network} o \emph{red de flujo}  N es un grafo dirigido con capacidades
+  en los lados. Es decir, una $3$-upla $(V, E, C)$ donde $V$ es un conjunto,
+  $E \subseteq V \times V$ y $C \colon E \to \R_{\ge 0}$.
 
-No consideraremos networks con lados $(x,x)$ o con lados $(x,y)$ y $(y,x)$.
+  No consideraremos networks con lados $(x,x)$ o con lados $(x,y)$ y $(y,x)$.
 \end{definition}
 
 \begin{notation}
-Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
+  Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
 
-Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
+  Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
 
-$C$ se dice función de \emph{capacidad}.
+  $C$ se dice función de \emph{capacidad}.
 
-Escribiremos $\overrightarrow{xy}$ para denotar el lado $(x,y)$.
+  Escribiremos $\overrightarrow{xy}$ para denotar el lado $(x,y)$.
 \end{notation}
 
 \begin{definition}[Vecindad dirigida]
-Sea G = (V,E) un grafo dirigido, definimos a: \\
-La \emph{vecindad hacia adelante} de $x$ como
-$\Gamma^{+}(x) = \{y\mid \overrightarrow{xy} \in E\}$\\
-La \emph{vecindad hacia atrás} de $x$ como $\Gamma^{-}(x) = \{y\mid \overrightarrow{yx} \in E\}$
+  Sea G = (V,E) un grafo dirigido, definimos:
+  \begin{itemize}
+  \item La \emph{vecindad hacia adelante} de $x$ como
+    $\Gamma^{+}(x) = \{y\mid \overrightarrow{xy} \in E\}$
+  \item La \emph{vecindad hacia atrás} de $x$ como
+    $\Gamma^{-}(x) = \{y\mid \overrightarrow{yx} \in E\}$
+  \end{itemize}
 \end{definition}
 
 \begin{definition}[Camino dirigido]

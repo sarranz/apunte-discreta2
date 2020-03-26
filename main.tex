@@ -14,6 +14,8 @@
 \usepackage{listings}
 \usepackage{hyperref}
 
+\input{symbols.tex}
+
 \geometry{left=1.0in}
 
 \setlength{\parindent}{0pt} %sangría
@@ -43,9 +45,6 @@
 
 \algnewcommand{\LeftComment}[1]{\Statex \(\triangleright\) #1}
 
-\newcommand{\biggamma}{\raisebox{-.35\baselineskip}{\huge\ensuremath{\Gamma}}}
-\newcommand{\biggammab}{\makebox{\huge\ensuremath{\Gamma}}}
-
 \title{Matemática Discreta II}
 \author{Santiago Arranz Olmos, Franco Vaca}
 \date{2019}
@@ -68,10 +67,10 @@
 
 \section{Grafos}
 \input{graphs.tex}
-%\pagebreak
+\pagebreak
 
-%\section{Networks}
-%\input{networks.tex}
+\section{Networks}
+\input{networks.tex}
 %\pagebreak
 
 %\section{Matchings en grafos bipartitos}
