@@ -33,8 +33,8 @@ Dado un coloreo $C$ de $G = (V,E)$ definimos a
 el grafo inducido por los vértices de color $i$ o $j$.
 Es decir que se cumplen:
 \begin{align}
-    &\forall~ x \in V \colon (C(x) = i \vee C(x) = j) \implies x \in V_{H_{ij}}\\
-    &\forall~ x \in V_{H_{ij}} \colon C(x) = i \vee C(x) = j
+    &\forall x \in V \colon (C(x) = i \vee C(x) = j) \implies x \in V_{H_{ij}}\\
+    &\forall x \in V_{H_{ij}} \colon C(x) = i \vee C(x) = j
 \end{align}
 En el contexto de este subgrafo hablaremos de \emph{"caminos de color $ij$"}, que son simplemente caminos cuyos vértices tienen color $i$ o $j$.
 \end{definition}
@@ -89,7 +89,7 @@ Por casos:
 Caso A: $G$ no es regular (i.e. $\delta < \Delta$).\\
 Sea $x \in V$ tal que $d(x) = \delta$. Sea $x_1, \mathellipsis, x_n$ un orden de vértices tal que $BFS(x)$ los visita en órden $x = x_n, \mathellipsis, x_1$ (i.e. el orden inverso). Por propiedad de BFS, todo vértice (excepto $x_n$) tiene al menos un vecino más adelante en $x_1, \mathellipsis, x_n$. Es decir,
     \begin{align}
-        \forall~ i < n \colon \exists~ j > i \colon x_ix_j \in E    
+        \forall i < n \colon \exists j > i \colon x_ix_j \in E    
     \end{align}
 Así, vemos que para cada vértice $x_i$ con $i < n$ vale lo siguiente: como $d(x_i) \le \Delta$ y tiene un vecino adelante, por detrás hay a lo sumo $\Delta - 1$ vecinos. Coloreando con greedy, vemos que $x_i$ tiene a lo sumo $\Delta - 1$ colores bloqueados, y que hay un color disponible en $\{1, \mathellipsis, \Delta\}$. Por último, como elegimos a $x = x_n$ tal que $d(x_n) = \delta < \Delta$ tenemos al menos un color libre en $\{1, \mathellipsis, \Delta\}$ para asignarle.\\
 
@@ -109,7 +109,7 @@ Caso B: $G$ es regular (i.e. $\delta = \Delta$).
     \item $\Delta \ge 3$.\\
     Tomemos un $x \in V$ y coloreamos a $G$ como en el caso A. Vemos que se mantiene
     \begin{align}
-        \forall~ 1 \le i < n \colon C(x_i) \in \{1, \mathellipsis, \Delta\}
+        \forall 1 \le i < n \colon C(x_i) \in \{1, \mathellipsis, \Delta\}
     \end{align}
     y si $x$ tiene dos vecinos de un mismo color, hay uno sin usar en $\{1, \mathellipsis, \Delta\}$, ya que $x$ tiene $\Delta$ vecinos. Entonces coloreamos a $x$ con ese color y terminamos.
 
@@ -117,10 +117,10 @@ Caso B: $G$ es regular (i.e. $\delta = \Delta$).
 
     A partir de ahora, denotaremos $CC^{x_i}_{ij}$ como $CC_{ij}$ (omitimos el vértice, ya que su índice es su color).
     \begin{enumerate}
-    \item \label{CCneq} $\exists~ 1 \le i,j \le \Delta \colon CC_{ij} \neq CC_{ji}$.\\
+    \item \label{CCneq} $\exists 1 \le i,j \le \Delta \colon CC_{ij} \neq CC_{ji}$.\\
     Esto quiere decir que $x_i$ está en una componente conexa distinta a $x_j$ en $H_{ij}$. Intercambiemos los colores $i$ y $j$ en $CC_{ij}$ (por el lema [\ref{lema1}] sabemos que el coloreo de $G$ sigue siendo propio). Ahora, $C(x_i) = C(x_j) = j$ por lo que $x$ tiene dos vecinos color $j$ y puedo colorearlo con el color $i$.
     
-    \item $\forall~ 1 \le i,j \le \Delta \colon CC_{ij} = CC_{ji}$.
+    \item $\forall 1 \le i,j \le \Delta \colon CC_{ij} = CC_{ji}$.
     \begin{enumerate}
     \item $x_i$ tiene más de un vecino en $CC_{ij}$, o bien $x_j$ tiene más de un vecino en $CC_{ij}$.\\
     Si $x_i$ tiene $d > 1$ vecinos en $CC_{ij}$ entonces tiene $d$ vecinos de color $j$. Esto significa que $x_i$ tiene
@@ -135,16 +135,16 @@ Caso B: $G$ es regular (i.e. $\delta = \Delta$).
     
     \item $x_i$ y $x_j$ tienen un solo vecino en $CC_{ij}$.
     \begin{itemize}
-        \item [$\mu.$] $\forall~ i,j: V_{CC_{ij}} = \{x_i, x_j\}$.\\
-        Este caso es imposible: Sabemos que en $\Gamma(x) = \{x_1, \mathellipsis, x_{\Delta}\}$ están todos los colores $\{1, \mathellipsis, \Delta\}$. Ahora, si $\forall~ k \in \{1, \mathellipsis, \Delta\} - \{i\} \colon V_{CC_{ik}} = \{x_i, x_k\}$, $x_i$ es vecino de $x_k$ para todo $k$.
+        \item [$\mu.$] $\forall i,j: V_{CC_{ij}} = \{x_i, x_j\}$.\\
+        Este caso es imposible: Sabemos que en $\Gamma(x) = \{x_1, \mathellipsis, x_{\Delta}\}$ están todos los colores $\{1, \mathellipsis, \Delta\}$. Ahora, si $\forall k \in \{1, \mathellipsis, \Delta\} - \{i\} \colon V_{CC_{ik}} = \{x_i, x_k\}$, $x_i$ es vecino de $x_k$ para todo $k$.
         
         Además, son sus únicos vecinos, pues $x_i$ tiene a $\{x_1, \mathellipsis, x_\Delta, x\} - \{x_i\}$ como vecinos y tiene grado $\Delta$.
         
         Vemos entonces que $G[\{x_1, \mathellipsis, x_\Delta, x\}]$ es una componente conexa de $G$. Pero $G$ tiene una sola componente conexa (por hipotesis). Se sigue que $G = G[\{x_1,\mathellipsis,x_\Delta, x\}] = K_n$. Absurdo por hipótesis.
 
-        \item[$\nu.$] \label{nu} $\exists~ 1 \le i,j \le \Delta \colon \{x_i,x_j\} \neq V_{CC_{ij}}$. Fijemos $i$ y $j$.
+        \item[$\nu.$] \label{nu} $\exists 1 \le i,j \le \Delta \colon \{x_i,x_j\} \neq V_{CC_{ij}}$. Fijemos $i$ y $j$.
         \begin{enumerate}
-            \item $\exists~ w \in V_{CC_{ij}} \colon d(w) \ge 3$  en $CC_{ij}$.\\
+            \item $\exists w \in V_{CC_{ij}} \colon d(w) \ge 3$  en $CC_{ij}$.\\
             Tomemos el primer vértice $w$ que cumple $d(w) \ge 3$ partiendo desde $x_i$, (es decir, un $w$ que cumpla esto y sea el más cercano a $x_i$). Por el lema [\ref{graph_cut_lemma}] vemos que $w$ es un vértice de corte en $CC_{ij}$, y que al eliminarlo, resultan dos componentes conexas de $CC_{ij}$ una que contiene a $x_i$ y otra a $x_j$. Si logramos esto, como $CC_{ij} \neq CC_{ji}$, estamos en el caso \ref{CCneq}.
             
             Si $C(w) = i$, la cantidad de vecinos de $w$ es:
@@ -157,16 +157,16 @@ Caso B: $G$ es regular (i.e. $\delta = \Delta$).
         
         Si $C(w) = j$, procedemos análogamente.\\
     
-        \item $\forall~ w \in V_{CC_{ij}} \colon d(w) \le 2$ (por [\ref{G is chain}], $CC_{ij}$ es un camino).
+        \item $\forall w \in V_{CC_{ij}} \colon d(w) \le 2$ (por [\ref{G is chain}], $CC_{ij}$ es un camino).
         \begin{itemize}
-            \item[$a.$] \label{CCdisjoint} $\exists~ 1 \le k \le \Delta \colon V_{CC_{ij}} \cap V_{CC_{ik}} \neq \{x_i\}$.\\
+            \item[$a.$] \label{CCdisjoint} $\exists 1 \le k \le \Delta \colon V_{CC_{ij}} \cap V_{CC_{ik}} \neq \{x_i\}$.\\
             Es decir, el camino de color $ij$ de $x_i$ a $x_j$ y $CC_{ik}$ se cruzan en al menos un vértice que no es $x_i$. Sea $w$ el vértice en común. Es claro que $C(w) = i$. Además, asumamos que $CC_{ik}$ es también un camino, ya que en caso contrario, como $V_{CC_{ik}} \neq \{x_i, x_k\}$, estaríamos en el caso anterior.
             
             Consideremos los colores de los vecinos de $w$: 2 de color $j$ (en $CC_{ij}$), $2$ de color $k$ (en $CC_{ik}$) y $\Delta - 2 - 2$ con color en $\{1, \mathellipsis, \Delta\} - \{i, j, k\}$ (fuera de $CC_{ij}$ y de $CC_{ik}$).
             
             Lo anterior significa que los vecinos de $w$ ocupan $\Delta - 4 + 2 = \Delta - 2$ colores. Así, hay dos colores libres en para $w$, uno de ellos siendo $i$. Si lo coloreamos con el otro color, se divide $CC_{ij}$ y estamos en el caso \ref{CCneq}.
 
-    \item[$b.$] $\forall~ 1 \le k \le \Delta \colon V_{CC_{ij}} \cap V_{CC_{ik}} = \{x_i\}$.\\
+    \item[$b.$] $\forall 1 \le k \le \Delta \colon V_{CC_{ij}} \cap V_{CC_{ik}} = \{x_i\}$.\\
     Es decir, el camino de color $ij$ de $x_i$ a $x_j$ y $CC_{ik}$ se cruzan solo en $x_i$.
     
     Intercambiemos los colores $i$ y $k$ en $CC_{ik}$.  Ahora $C(x_i) = k$ y $C(x_k) = i$. Sean $CC^{*}$ la cadenas de Kempe de $G$ luego de este cambio.

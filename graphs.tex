@@ -38,10 +38,11 @@
 \end{definition}
 
 \begin{definition}
-Un \emph{camino} de $x_0$ a $x_t$ en un grafo $G = (V,E)$ es una sucesión de vértices $x_0, x_1, \mathellipsis, x_t$ tal que:
+  Un \emph{camino} de $x_0$ a $x_t$ en un grafo $G = (V,E)$ es una sucesión de
+  vértices $x_0, x_1, \mathellipsis, x_t$ tal que:
 \begin{enumerate}
-    \item $\forall~0 \le i < t \colon x_i x_{i+1} \in E$
-    \item $\forall~0 \le i, j \le t \colon x_i \neq x_j$
+    \item $\forall 0 \le i < t \colon x_i x_{i+1} \in E$
+    \item $\forall 0 \le i, j \le t \colon x_i \neq x_j$
 \end{enumerate}
 
 Definimos la \emph{relación} $\sim$ de la siguiente manera: $x \sim y$ sii existe un camino de $x$ a $y$.
@@ -51,7 +52,7 @@ Definimos la \emph{relación} $\sim$ de la siguiente manera: $x \sim y$ sii exis
 $x \sim y$ es una relación de equivalencia.
 \end{proposition}
 \begin{proof}
-Veamos que $\forall~ x,y,z \in V,$
+Veamos que $\forall x,y,z \in V,$
 \begin{enumerate}
     \item $x \sim x$. La sucesión de $x$ es el camino vacío.
     
@@ -60,9 +61,9 @@ Veamos que $\forall~ x,y,z \in V,$
 \end{enumerate}
 \end{proof}
 \begin{definition}
-La \emph{componente conexa} de $x$ es la clase de equivalencia a la que pertenece. Es decir, la componente conexa de $x$ es el subgrafo más grande $H$ de $G$, tal que $\forall~v \in V_H \colon v \sim x$.
+La \emph{componente conexa} de $x$ es la clase de equivalencia a la que pertenece. Es decir, la componente conexa de $x$ es el subgrafo más grande $H$ de $G$, tal que $\forall v \in V_H \colon v \sim x$.
 
-$G=(V,E)$ es un grafo \emph{conexo} si tiene una única componente conexa. Esto es, $\forall~x,y \in V \colon x \sim y$.
+$G=(V,E)$ es un grafo \emph{conexo} si tiene una única componente conexa. Esto es, $\forall x,y \in V \colon x \sim y$.
 \end{definition}
 
 \begin{proposition}[Lema del apretón de manos]
@@ -140,7 +141,7 @@ Eligiendo $n$ vértices de $K_{n+1}$, vemos que están unidos por todos los lado
 Un grafo es \emph{ciclico} $C_n = (V,E)$ si cumple:
 \begin{align}
     V &= \left\{v_1,\mathellipsis,v_n\right\}\\
-    E &= \left\{ \left\{v_i,v_{i+1}\right\} \mid \forall~i \colon 1 \le i < n\right\} \bigcup \left\{x_n,x_1\right\}\\
+    E &= \left\{ \left\{v_i,v_{i+1}\right\} \mid \forall i \colon 1 \le i < n\right\} \bigcup \left\{x_n,x_1\right\}\\
 \end{align}
 Vemos que este es un grafo regular, con $\Delta = \delta = 2$.
 \end{definition}
@@ -244,12 +245,12 @@ Si no es posible colorear a $H$ con menos de $\chi(H)$ colores, entonces clarame
 \begin{lemma}\label{3colores_cicloimpar}
 Un grafo $3$-coloreable tiene a un grafo ciclo impar como subgrafo:
 \begin{align}
-    3 \le \chi(G) \implies \exists~ k \colon C_{2k+1} \subseteq G 
+    3 \le \chi(G) \implies \exists k \colon C_{2k+1} \subseteq G 
 \end{align}
 \end{lemma}
 
 \begin{proof}
-Corriendo \Call{bipartito}{$G$} veremos que ese coloreo no es propio. Esto es, $\exists\, yz \in E : C(y) = C(z)$. Como $yz \in E$, $y$ y $z$ están en la misma componente conexa.
+Corriendo \Call{bipartito}{$G$} veremos que ese coloreo no es propio. Esto es, $\exists yz \in E : C(y) = C(z)$. Como $yz \in E$, $y$ y $z$ están en la misma componente conexa.
 
 BFS determinó los colores de $y$ y $z$ según niveles:
 \begin{align}
@@ -260,7 +261,7 @@ Llamemos $x$ a la raíz de la componente conexa de $y$ y $z$. Como $y \in BFS(x)
 
 Vemos así que hay dos caminos que comienzan en $x$ pero que terminan en vértices distintos $y$ y $z$. Por lo tanto, estos caminos se separan en algún punto:
 \begin{align}
-    \exists~0 \le j \le min\{r,t\} \colon y_j = z_j \wedge y_{j+1} \neq z_{j+1}
+    \exists 0 \le j \le min\{r,t\} \colon y_j = z_j \wedge y_{j+1} \neq z_{j+1}
 \end{align}
 Aquí vemos que $y_j, y_{j+1}, \mathellipsis, y_r, z_t, z_{t-1}, \mathellipsis, z_{j+1}, z_{j}$ es un ciclo.
 Consideremos los lados:
@@ -290,9 +291,9 @@ Obvio.
 
 \begin{lemma}\label{cicloimpar_3colores}
 Si un grafo G tiene un subgrafo ciclo impar entonces tengo que colorearlo como mínimo con 3 colores.
-Así mismo, si un grafo G que tiene a un subgrafo completo de r vértices, entonces necesito como mínimo r colores para colorearlo. Es decir $\forall~ r \in \N$,
+Así mismo, si un grafo G que tiene a un subgrafo completo de r vértices, entonces necesito como mínimo r colores para colorearlo. Es decir $\forall r \in \N$,
 \begin{align}
-        C_{2r+1} \subseteq G &\implies 3 \le \chi(G) \\
+        C_{2r+1} \subseteq G &\implies 3 \le \chi(G)\\
         K_r \subseteq G      &\implies r \le \chi(G)
 \end{align}
 \end{lemma}
@@ -304,7 +305,7 @@ Usando el lema [\ref{chi_subgrafo}] y las proposiciones [\ref{3colores_cicloimpa
  Un grafo $G$ necesita como mínimo 3 colores para colorearse si y solo si hay un ciclo impar en $G$.
 
 \begin{align}
-    3 \le \chi(G) \iff \exists~ k \in \N \colon C_{2k+1} \subseteq G
+    3 \le \chi(G) \iff \exists k \in \N \colon C_{2k+1} \subseteq G
 \end{align}
 \end{proposition}
 
@@ -367,7 +368,7 @@ Por inducción sobre la propiedad $P(i)$ = ``greedy colorea a $V_{j_1} \cup \mat
     
     \item Caso inductivo: Supongamos que $P(i)$ vale.
     
-    Asumamos que $P(i+1)$ no vale, y lleguemos a un absurdo. Es decir, greedy colorea a $V_{j_1} \cup \mathellipsis \cup V_{j_i}$ con $i$ colores, pero a $V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}}$ con más de $i + 1$ colores. Se sigue que $\exists~x \in V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}} \colon C(x) = i + 2$. Considerando la definición de greedy, como $C(x) = i + 2$ se sigue que  $\exists~y \in \Gamma(x) \colon C(y) = i + 1$ e $y$ se colorea antes de $x$. Como $y$ es vecino de $x$, $y \not\in V_{j_{i+1}}$ (definición de $V_{j_{i+1}}$) y entonces $y \in V_{j_1} \cup \mathellipsis \cup V_{j_i}$. Pero como $P(i)$ vale, $y \not\in V_{j_1} \cup \mathellipsis \cup V_{j_i}$, ya que $C(y) > i$.
+    Asumamos que $P(i+1)$ no vale, y lleguemos a un absurdo. Es decir, greedy colorea a $V_{j_1} \cup \mathellipsis \cup V_{j_i}$ con $i$ colores, pero a $V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}}$ con más de $i + 1$ colores. Se sigue que $\exists x \in V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}} \colon C(x) = i + 2$. Considerando la definición de greedy, como $C(x) = i + 2$ se sigue que  $\exists y \in \Gamma(x) \colon C(y) = i + 1$ e $y$ se colorea antes de $x$. Como $y$ es vecino de $x$, $y \not\in V_{j_{i+1}}$ (definición de $V_{j_{i+1}}$) y entonces $y \in V_{j_1} \cup \mathellipsis \cup V_{j_i}$. Pero como $P(i)$ vale, $y \not\in V_{j_1} \cup \mathellipsis \cup V_{j_i}$, ya que $C(y) > i$.
  \end{itemize}
 \end{proof}
 
@@ -397,7 +398,7 @@ Sea G = (V,E) un grafo, un \emph{clique} C es un subconjunto de vértices de G t
     C \subseteq V \text{es clique} &\iff G[C] = K_{|C|}
 \end{align}
 Una \emph{clique máxima} C es un clique tal que no existe otra clique en G que tenga más vértices. \begin{align}
-    C \text{ clique máxima} \iff \forall~ D \text{ clique} \subseteq V \colon |D| \le |C|
+    C \text{ clique máxima} \iff \forall D \text{ clique} \subseteq V \colon |D| \le |C|
 \end{align}
 Dado un grafo $G = (V,E)$ y $C$ una clique máxima de $G$, definimos el \emph{número de clique} $\omega(G)$ como el número de vértices en $C$.
 \end{definition}
@@ -430,7 +431,7 @@ Sea $\chi(G) = k$. Para probar que el número cromático de un grafo es $k+1$, d
     Sea $C$ un coloreo de $G$ con $k$ colores. Vemos que $v_i$ y $u_i$ no son vecinos, y que los vecinos de $u_i$ son exactamente los de $v_i$. Esto significa que los colores bloqueados para $u_i$ son los mismos que para $v_i$. Extendamos entonces $C(u_i) = C(v_i)$. Por último, coloreemos $C(w) = k+1$. Es fácil ver que este coloreo es propio.
     
     \item Una prueba de que no se puede colorear con menos de $k+1$ colores.\\
-    Por absurdo: Supongamos que tenemos $C$ un coloreo de $\mu(G)$ con $k$ colores. Notemos que $\forall~ i \colon C(w) \neq C(u_i)$. Es decir, que los $u_i$ deben colorearse con \emph{menos} de $k$ colores, para dejar el de $w$ libre. Si esto fuese así, podríamos definir $C'$ un $k$-$1$-coloreo de $G$ de la siguiente forma
+    Por absurdo: Supongamos que tenemos $C$ un coloreo de $\mu(G)$ con $k$ colores. Notemos que $\forall i \colon C(w) \neq C(u_i)$. Es decir, que los $u_i$ deben colorearse con \emph{menos} de $k$ colores, para dejar el de $w$ libre. Si esto fuese así, podríamos definir $C'$ un $k$-$1$-coloreo de $G$ de la siguiente forma
     \begin{align}
            C'(v_i) =
         \begin{cases}
@@ -446,10 +447,10 @@ Sea $\chi(G) = k$. Para probar que el número cromático de un grafo es $k+1$, d
 \begin{proposition}
 Existen grafos con número cromático arbitrariamente grande y sin triángulos. En símbolos:
 \begin{align}
-    \forall~ r \colon \exists~ G \colon \chi(G) \ge r \wedge \omega(G) = 2.
+    \forall r \colon \exists G \colon \chi(G) \ge r \wedge \omega(G) = 2.
 \end{align}
 \end{proposition}
 
 \begin{proof}
-Simplemente partimos del grafo $M_2 = (\{\star, \circ\}, \{\star\circ\}$) (esto es $K_2$) y definimos $M_i = \mu({M_{i-1})}$ para $i \ge 3$. Por la proposición [\ref{Mycielski_aumenta_chi}] está claro que $\forall~ i \colon 2 \le i : \chi(M_i) = i$. Y por la proposición [\ref{Mycielski_triangle_free}], inductivamente vemos que no hay triángulos en $M_i$.
+Simplemente partimos del grafo $M_2 = (\{\star, \circ\}, \{\star\circ\}$) (esto es $K_2$) y definimos $M_i = \mu({M_{i-1})}$ para $i \ge 3$. Por la proposición [\ref{Mycielski_aumenta_chi}] está claro que $\forall i \colon 2 \le i : \chi(M_i) = i$. Y por la proposición [\ref{Mycielski_triangle_free}], inductivamente vemos que no hay triángulos en $M_i$.
 \end{proof}

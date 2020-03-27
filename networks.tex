@@ -16,7 +16,7 @@
   Escribiremos $\overrightarrow{xy}$ para denotar el lado $(x,y)$.
 \end{notation}
 
-\begin{definition}[Vecindad dirigida]
+\begin{definition}
   Sea G = (V,E) un grafo dirigido, definimos:
   \begin{itemize}
   \item La \emph{vecindad hacia adelante} de $x$ como
@@ -26,11 +26,12 @@
   \end{itemize}
 \end{definition}
 
-\begin{definition}[Camino dirigido]
-Sea G = (V,E) un grafo dirigido, un \emph{camino dirigido} entre $x_0$ y $x_r$ es una sucesión de vértices $\{x_0,\mathellipsis, x_r\}$ tal que
-\begin{align}
+\begin{definition}
+  Sea G = (V,E) un grafo dirigido, un \emph{camino dirigido} entre $x_0$ y $x_r$
+  es una sucesión de vértices $\{x_0,\mathellipsis, x_r\}$ tal que
+  \begin{align}
     \forall i: 0\le i < r : \overrightarrow{x_i,x_{i+1}} \in E
-\end{align}
+  \end{align}
 \end{definition}
 
 \begin{definition}[Flujo]
