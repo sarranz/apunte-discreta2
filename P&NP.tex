@@ -1,23 +1,24 @@
 \begin{definition}
-Un \textbf{problema de decisión} es aquel cuya únicas respuestas son "SI" o "NO".
+Un \emph{problema de decisión} es aquel cuya únicas respuestas son ``SI" o ``NO".
 Por ejemplo, los siguientes son problemas de decisión:
 \begin{itemize}
-    \item Dada una matrix cuadrada, decidir si es inversible.
+    \item Dada una matriz cuadrada, decidir si es inversible.
     \item Dado un grafo y un natural $k$, decidir si es coloreable con $k$ colores. Este problema se suele llamar $k$-color.
 \end{itemize}
 \end{definition}
 
 \begin{definition}
-Llamamos \textbf{P} a la clase de complejidad de los problemas de decisión para los cuales existe un algoritmo determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
+Llamamos \emph{P} a la clase de complejidad de los problemas de decisión para los cuales existe un algoritmo determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
 \end{definition}
 
 \begin{definition}
-Llamamos \textbf{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo no determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
-Veremos luego que la siguiente es una definición equivalente: llamamos \textbf{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo determinístico, que dado $X$ una posible solución para el $SI$, verifica en tiempo polinomial en el tamaño de $X$ si es o no una respuesta válida. 
+Llamamos \emph{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo no determinístico de tiempo polinomial en el tamaño de la entrada que lo resuelve.
+
+Veremos luego que la siguiente es una definición equivalente: llamamos \emph{NP} a la clase de complejidad de los problemas para los cuales existe un algoritmo determinístico, que dado $X$ una posible solución para el $SI$, verifica en tiempo polinomial en el tamaño de $X$ si es o no una respuesta válida. 
 \end{definition}
 
 \begin{definition}
-\textbf{co-NP} es la clase de complejidad complementaria a \textbf{NP}. Es decir son los problemas cuyas posibles respuestas por $NO$ son verificables en tiempo polinomial.
+\emph{co-NP} es la clase de complejidad complementaria a \emph{NP}. Es decir son los problemas cuyas posibles respuestas por $NO$ son verificables en tiempo polinomial.
 \end{definition}
 
 \begin{proposition}
@@ -28,7 +29,7 @@ Obvio.
 \end{proof}
 
 \begin{conjecture}
-$P = NP \cap CO-NP$
+$P = NP \cap co-NP$
 \end{conjecture}
 
 \begin{proposition}
@@ -48,11 +49,14 @@ Este algoritmo es $\mathcal{O}(n+m) + \mathcal{O}(n+m)$.
 \end{proof}
 
 \begin{definition}[Reducción polinomial]
-???
+Una \emph{reducción en tiempo polinomial} o \emph{transformación polinomial} de un problema de decisión $A$ a un problema $B$ es un algoritmo de tiempo polinomial que transforma las entradas del problema A en entradas del problema B, tal que el problema transformado tiene las mismas salidas que el problema original.
+
+Por lo tanto, una instancia $X$ de un problema A puede ser resuelto de la siguiente manera: aplicando esa transformación a $X$ obtenemos una instancia $Y$ del problema B y mediante un algoritmo para el problema B obtenemos una salida. Esta salida es a su vez solución de $Y$. 
+Una reducción de este tipo se denota por $A \le_{p} B$.
 \end{definition}
 
 \begin{definition}[$NP-Completo$]
-Un problema de decisión $C$ es \textbf{$NP-completo$} si:
+Un problema de decisión $C$ es \emph{$NP-completo$} si:
 \begin{itemize}
     \item $C \in NP$
     \item Todo problema en $NP$ es reducible tiempo polinomial a $C$:
@@ -61,23 +65,27 @@ Un problema de decisión $C$ es \textbf{$NP-completo$} si:
 \end{definition}
 
 \begin{definition}
-Un \textbf{literal} es una variable o una negación de variable.
-Una \textbf{cláusula} es una disyunción o conjunción de literales.
-Una \textbf{fórmula} es una expresión booleana.
-Una fórmula está en \textbf{forma conjuntiva normal} o $CNF$ si es una conjunción de cláusulas disyuntivas.
-Una fórmula está en \textbf{forma disyuntiva normal} o $DNF$ si es una disyunción de cláusulas conjuntivas.
-\end{definition}
+Un \emph{literal} es una variable o una negación de variable.
 
-\begin{definition}[$SAT$]
-Dada una fórmula $B$, el problema de satisfactibilidad booleana o $SAT$ es un problema de decisión que consiste en determinar si existe una semántica (ie. una asignación de variables o una valuación) tal que $B$ sea verdadera 
+Una \emph{cláusula} es una disyunción o conjunción de literales.
+
+Una \emph{fórmula} es una expresión booleana.
+
+Una fórmula está en \emph{forma conjuntiva normal} o $CNF$ si es una conjunción de cláusulas disyuntivas.
+
+Una fórmula está en \emph{forma disyuntiva normal} o $DNF$ si es una disyunción de cláusulas conjuntivas.
 \end{definition}
 
 \begin{definition}
-literales, CNF, DNF, ANF, dado $b \in \mathbb{Z}_2^n, B(b)$ es evaluar $B$ en $b$, considerar a $B$ como una función.
+Dada una fórmula $B$, el \emph{problema de satisfactibilidad booleana} o \emph{$SAT$} es un problema de decisión que consiste en determinar si existe una semántica (ie. una asignación de variables o una valuación) tal que $B$ sea verdadera 
 \end{definition}
-\begin{definition}[$CNF-SAT, DNF-SAT, k-SAT$]
+
+\begin{definition}
+Dado $b \in \mathbb{Z}_2^n, B(b)$ es evaluar $B$ en $b$, considerar a $B$ como una función.
+\end{definition}
+\begin{definition}
 $CNFSAT$ o $CNF-SAT$ es el mismo problema que $SAT$ pero con $B$ en $CNF$.\\
-$DNFSAT$ o $DNF-SAT$ es el mismo problema que $SAT$ pero con $B$ en $DNF-SAT$.\\
+$DNFSAT$ o $DNF-SAT$ es el mismo problema que $SAT$ pero con $B$ en $DNF$.\\
 $k-SAT$ es el mismo problema que $CNFSAT$ tal que cada clausula de $B$ contiene a lo sumo $k$ literales.
 \end{definition}
 \begin{proposition}
