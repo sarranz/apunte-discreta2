@@ -9,22 +9,23 @@
 \end{definition}
 
 \begin{notation}
+
   Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
 
   Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
 
   $C$ se dice función de \emph{capacidad}.
 
-  Escribiremos $\overrightarrow{xy}$ para denotar el lado $(x,y)$.
+  Escribiremos $\ora{xy}$ para denotar el lado $(x,y)$.
 \end{notation}
 
 \begin{definition}
   Sea G = (V,E) un grafo dirigido, definimos:
   \begin{itemize}
   \item La \emph{vecindad hacia adelante} de $x$ como
-    $\Gamma^{+}(x) = \{y\mid \overrightarrow{xy} \in E\}$
+    $\Gamma^{+}(x) = \{y\mid \ora{xy} \in E\}$
   \item La \emph{vecindad hacia atrás} de $x$ como
-    $\Gamma^{-}(x) = \{y\mid \overrightarrow{yx} \in E\}$
+    $\Gamma^{-}(x) = \{y\mid \ora{yx} \in E\}$
   \end{itemize}
 \end{definition}
 
@@ -32,137 +33,139 @@
   Sea G = (V,E) un grafo dirigido, un \emph{camino dirigido} entre $x_0$ y $x_r$
   es una sucesión de vértices $\{x_0,\mathellipsis, x_r\}$ tal que
   \begin{align}
-    \forall i: 0\le i < r : \overrightarrow{x_i,x_{i+1}} \in E
+    \forall 0 \le i < r \colon \ora{x_i,x_{i+1}} \in E
   \end{align}
 \end{definition}
 
-\begin{definition}[Flujo]
-Sean $s,t \in V$, un \emph{flujo} de $s$ a $t$ en un network $N = (V, E, C)$
-es una función $F : E \to \mathbb{R}_{\ge 0}$ tal que se cumple:
-\begin{enumerate}
-    \item Feasibility o restricción de capacidad:\\
-        $\forall \overrightarrow{xy} \in E : 0 \le F(\overrightarrow{xy}) \le C(\overrightarrow{xy})$ \label{feasible} 
-    \item Conservación:\\
-        $\forall x \neq s,t : \sum_{\substack{y\in V \\ \overrightarrow{xy} \in E}} F\left(\overrightarrow{xy}\right) = \sum_{\substack{y\in V \\ \overrightarrow{yx} \in E}} F\left(\overrightarrow{yx}\right)$  \label{conservacion}
-    \item La fuente es productora:\\
-        $\sum_{x\in V} F(\overrightarrow{sx}) - \sum_{x\in V} F\left(\overrightarrow{xs}\right) \ge 0$ \label{fuente}
-    \item El sumidero es consumidor: \\
-        $\sum_{x\in V} F(\overrightarrow{xt}) - \sum_{x\in V} F(\overrightarrow{tx}) \ge 0$ \label{sumidero}
-    \end{enumerate}
+\begin{definition}
+  Sean $s,t \in V$, un \emph{flujo} de $s$ a $t$ en un network $N = (V, E, C)$
+  es una función $F \colon E \to \mathbb{R}_{\ge 0}$ tal que se cumple:
+  \begin{enumerate}
+  \item Feasibility o restricción de capacidad: \label{feasible}
+    $\forall \ora{xy} \in E \colon 0 \le F(\ora{xy}) \le C(\ora{xy})$
+
+  \item Conservación: \label{conservacion}
+    $\forall x \neq s,t \colon \sum_{\substack{\ora{xy} \in E}} F\left(\ora{xy}\right)$
+    $= \sum_{\substack{\ora{yx} \in E}} F\left(\ora{yx}\right)$
+
+  \item La fuente es productora: \label{fuente}
+    $\sum_{x \in V} F(\ora{sx}) - \sum_{x \in V} F\left(\ora{xs}\right) \ge 0$
+
+  \item El sumidero es consumidor: \label{sumidero}
+    $\sum_{x \in V} F(\ora{xt}) - \sum_{x \in V} F(\ora{tx}) \ge 0$
+  \end{enumerate}
 \end{definition}
 
-Así también, sea $A \subseteq V, B \subseteq V$ y $f : E \to \mathbb{R}$ definimos:\begin{align}
-    f(A,B) \doteq \sum_{\substack{x \in A \\ y \in B \\ \overrightarrow{xy} \in E}} f(\overrightarrow{xy})
+\begin{definition}
+Sean $A \subseteq V$, $B \subseteq V$ y $F$ un flujo, definimos:
+\begin{align}
+  F(A, B) = \sum_{\substack{x \in A \\ y \in B \\ \ora{xy} \in E}} F(\ora{xy})
 \end{align}
+\end{definition}
 
 \begin{proposition}
-Sean $B$ y $C$ disjuntos $(B \cap C = \varnothing)$ entonces
+  Sean $B$ y $C$ disjuntos, entonces
 \begin{align}
-g(A, B\cup C) &= g(A,B) + g(A,C)\\
-g(B\cup C, A) &= g(B,A) + g(C,A)    
+  g(A, B \cup C) &= g(A,B) + g(A,C)\\
+  g(B \cup C, A) &= g(B,A) + g(C,A)    
 \end{align}
 \end{proposition}
 
 \begin{proof}
-???
+  ===== COMPLETAR =====
 \end{proof}
 
 \begin{definition}\label{in/out}
+  Para un vértice $x \in V$, definimos
 \begin{align}
-out_{F}(x) = F(\{x\}, V) = F(\{x\}, V)\\
-in_{F}(x) = F(V, \{x\}) = F(V, \{x\})    
+  out_{F}(x) &= F(\{x\}, V)\\
+  in_{F}(x) &= F(V, \{x\})
 \end{align}
 \end{definition}
 
 Podemos usar esto y redefinir (\ref{conservacion}), (\ref{fuente}) y (\ref{sumidero}).
 \begin{align}
-    \forall x \neq s,t : out(x) = in(x)\\
-    out(s) - in(s) \ge 0 \\
+    \forall x \neq s,t \colon out(x) = in(x)\\
+    out(s) - in(s) \ge 0\\
     in(t) - out(t) \ge 0
 \end{align}
 
 En muchos casos, ocurrirá que $in(s) = 0$ y $out(t) = 0$.
 
-
 \begin{proposition}
-Si $F$ es flujo de $s$ a $t$ en un network N entonces
+Si $F$ es flujo de $s$ a $t$ en un network $(V, E, C)$, entonces
 \begin{align}
-    in(t) - out(t) \ge 0\\
     in(t) - out(t) = out(s) - in(s)
 \end{align}
 \end{proposition}
+
 \begin{proof}
 \begin{align}
-    0 = F(V,V) - F(V,V) &= \sum_{x\in V} F(\overrightarrow{xv}) - \sum_{x\in V} F(\overrightarrow{vx}) \\
-                        &= \sum_{x\in V} F(\overrightarrow{xv}) - F(\overrightarrow{vx}) \\
-                        &= \sum_{x\in V} out(x) - in(x) \\
-                        &= \sum_{\substack{x\in V \\ x\neq s,t}} 0 + \sum_{\substack{x\in V \\ x = s,t}} out(x) - in(x) \\
-                        &= out(s) - in(s) + out(t) - in(t) \implies \\
-      in(t) - out(t) &= out(s) - in(s) \ge 0 &&\text{por (\ref{conservacion})}
+  0 = F(V,V) - F(V,V)
+  &= \sum_{x \in V} F(V, \{x\}) - \sum_{x\in V} F(\{x\}, V)\\
+  &= \sum_{x \in V} F(V, \{x\}) - F(\{x\}, V)\\
+  &= \sum_{x \in V} out(x) - in(x)\\
+  &= \sum_{\substack{x \in V \\ x \neq s,t}} out(x) - in(x) + \sum_{\substack{x \in \{s,t\}}} out(x) - in(x)\\
+  &= \sum_{\substack{x \in \{s,t\}}} out(x) - in(x) &&\text{por (\ref{conservacion})}\\
+  &= out(s) - in(s) + out(t) - in(t)
+\end{align}
+Concluimos,
+\begin{align}
+  in(t) - out(t) &= out(s) - in(s)
 \end{align}
 \end{proof}
 
-\begin{definition}[Valor del flujo]
-El \emph{valor del flujo} F de $s$ a $t$ se define como 
-\begin{align}
-    v_F = in(t) - out(t) = out(s) - in(s) = F(\{s\}, V) = F(V, \{t\})
-\end{align}
-\end{definition}
-
-\begin{definition}[Flujo maximal]
-Un flujo F es \emph{maximal} si su valor del flujo es maximal ie.
-$\forall G: G \text{ es flujo} : v_G \le v_F$
+\begin{definition}
+  El \emph{valor del flujo} F de $s$ a $t$ se define $V(F) = out(s) - in(s)$.
 \end{definition}
 
 \begin{definition}
-Sea N = (V,E,C) un network, un lado $\overrightarrow{xy} \in E$ se dice saturado si F($\overrightarrow{xy}$) = C($\overrightarrow{xy}$) 
+  Un flujo F es \emph{maximal} si su valor es maximal. Es decir, si
+  $\forall G \text{ flujo} \colon V(G) \le V(F)$.
+\end{definition}
+
+\begin{definition}
+  Sea $N = (V,E,C)$ un network, y $F$ un flujo. Un lado $\ora{xy} \in E$ se dice
+  saturado si $F(\ora{xy})$ = $C(\ora{xy})$.
 \end{definition}
 
 \begin{algorithm}
-\caption{Algoritmo de Ford-Fulkerson}
-\begin{algorithmic}
-\Require network $N=(V,E,C)$, vértices ordenados $v_1,\mathellipsis, v_n$
-\Ensure  $F $ flujo maximal
-\Function{greedy}{$network\ N$}
-    \State $F = 0$;
-    \While{$\exists\text{ camino dirigido de $s$ a $t$ sin lados saturados}$} 
-    \State Elijo un camino dirigido $x_0,\mathellipsis,x_r$ de $s$ a $t$
-    \State $\varepsilon = min\{\varepsilon_i \mid \forall i: 0\le i < r: \varepsilon_i = C(\overrightarrow{x_i x_{i+1}}) - F(\overrightarrow{x_i x_{i+1}})\}$
-    \State $F = F + \varepsilon$
+  \caption{Algoritmo de Ford-Fulkerson}
+  \begin{algorithmic}
+    \Function{Ford-Fulkerson}{$network\ N$}
+    \State Sea $F$ un flujo nulo
+    \While{$\exists \text{ un camino dirigido de $s$ a $t$ sin lados saturados}$} 
+    \State Sea $x_0, \mathellipsis, x_r$ un camino dirigido de $s$ a $t$
+    \State $\varepsilon = \min_{0 \le i < r} \{C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}})\}$
+    \State Mandar $\varepsilon$ unidades de flujo por el camino
     \EndWhile
-    \LeftComment{Inv: $F$ es flujo}
-    \LeftComment{$\forall$}
-\State \Return{$F$}
-\EndFunction
-\end{algorithmic}
+    \EndFunction
+  \end{algorithmic}
 \end{algorithm}
 
-\begin{definition}[Corte]
-Dado un network $N = (V, E, C)$, un  \emph{corte} es una partición de V en dos conjuntos disjuntos: $S$ y $T$. \\Particularmente, nosotros llamaremos (s-t) \emph{corte} al conjunto $S \subseteq V$ que contiene a la fuente $s$ y no contiene al sumidero $t$ esto es:
-\begin{itemize}
-    \item $s\in S$
-    \item $t\not\in S$
-\end{itemize}
-Notar que $t \not\in S \equiv t \in S^c \equiv t\in V-S$.
+\begin{definition}
+  Dado un network $N = (V, E, C)$, un \emph{corte} $S$ es un subcojunto de $V$
+  que contiene a $s$ y no contiene a $t$. Es decir,
+  \begin{align}
+    S &\subseteq V\\
+    s &\in S\\
+    t &\not\in S
+  \end{align}
 \end{definition}
 
 \begin{definition}
-Sea $N = (V, E, C)$ un network
-la \emph{capacidad} de un corte S se define como:
-\begin{align}
-    cap(S) = C(S,S^c) = \sum_{\substack{x\in S\\y\not\in S\\xy\in E}} C(\overrightarrow{xy})
-\end{align}
+  Sea $N = (V, E, C)$ un network. La \emph{capacidad} de un corte S se define:
+  \begin{align}
+    cap(S) = C(S, S^c) = \sum_{\substack{x\in S \\ y \not\in S \\ xy \in E}} C(\ora{xy})
+  \end{align}
 \end{definition}
 
 \begin{definition}
-Un corte $S$ en $V$ de un network $N$ es \emph{minimal} si su capacidad es minimal. ie.\\
-$\forall\ T\ corte: cap(S) \le cap(T)$.\\
-
-Sea $S$ un corte minimal llamemos $\emph{mincutcap}_S$ a su capacidad.
-\begin{align}
-    mincutcap_S = min\{cap(S) \mid S\ \text{es corte}\}
-\end{align}
+  Un corte $S$ de un network $(V, E, C)$ se dice \emph{minimal} si su
+  capacidad es minimal. Es decir, si
+  $\forall T \text{ corte} \colon cap(S) \le cap(T)$.
 \end{definition}
+
 
 \subsection{Edmonds-Karp}
 
@@ -170,9 +173,9 @@ Sea $S$ un corte minimal llamemos $\emph{mincutcap}_S$ a su capacidad.
 Sea $N = (V,E,C)$ un network y $F$ un flujo de $s$ a $t$, definimos a un \emph{camino $\boldsymbol{F}$-aumentante} como una sucesión de vértices $\{x_0,\mathellipsis, x_r\}$ tales que: $\forall i: 0 \le i < r :$
 \begin{itemize}
     \item
-    $x_{i+1} \in \Gamma^{+}(x_i) \equiv \overrightarrow{x_i x_{i+1}} \in E$ (es lado "\emph{forward}") si $F(\overrightarrow{x_i x_{i+1}}) < C(\overrightarrow{x_i x_{i+1}})$ (se puede enviar aún más flujo)
+    $x_{i+1} \in \Gamma^{+}(x_i) \equiv \ora{x_i x_{i+1}} \in E$ (es lado "\emph{forward}") si $F(\ora{x_i x_{i+1}}) < C(\ora{x_i x_{i+1}})$ (se puede enviar aún más flujo)
     \item
-    $x_{i+1} \in \Gamma^{-}(x_i) \equiv \overrightarrow{x_{i+1} x_i} \in E$ (es lado "\emph{backward}") si $F(\overrightarrow{x_{i+1} x_i}) > 0$ (se puede devolver flujo)
+    $x_{i+1} \in \Gamma^{-}(x_i) \equiv \ora{x_{i+1} x_i} \in E$ (es lado "\emph{backward}") si $F(\ora{x_{i+1} x_i}) > 0$ (se puede devolver flujo)
 \end{itemize}
 \end{definition}
 
@@ -180,9 +183,9 @@ Sea $N = (V,E,C)$ un network y $F$ un flujo de $s$ a $t$, definimos a un \emph{c
 Sea $N$ un network, $F$ un flujo, y $\{x_0,\mathellipsis,x_r\}$ un camino $F$-aumentante entre $s$ y $t$. Enviar $\varepsilon$ unidades de flujo a través de ese camino consiste en:\\
 Definir una función $F^* \colon E \to \mathbb{R}_{\ge 0}$ tal que:
 \begin{align}
-    F^*(\overrightarrow{xy}) &= F(\overrightarrow{xy}) &\text{ si $\overrightarrow{xy}$ no está en el camino aumentante} \\
-    F^*(\overrightarrow{x_i x_{i+1}}) &= F(\overrightarrow{x_i x_{i+1}}) + \varepsilon & x_{i+1} \in \Gamma^{+}(x_i) \\
-    F^*(\overrightarrow{x_i x_{i+1}}) &= F(\overrightarrow{x_i x_{i+1}}) - \varepsilon & x_{i+1} \in \Gamma^{-}(x_i)
+    F^*(\ora{xy}) &= F(\ora{xy}) &\text{ si $\ora{xy}$ no está en el camino aumentante} \\
+    F^*(\ora{x_i x_{i+1}}) &= F(\ora{x_i x_{i+1}}) + \varepsilon & x_{i+1} \in \Gamma^{+}(x_i) \\
+    F^*(\ora{x_i x_{i+1}}) &= F(\ora{x_i x_{i+1}}) - \varepsilon & x_{i+1} \in \Gamma^{-}(x_i)
 \end{align}
 \end{definition}
 
@@ -191,8 +194,8 @@ Sea $F$ un flujo en un network $N$ entre $s$ y $t$ y sea $\{x_0,\mathellipsis,x_
 Definimos $\forall i: 0\le i < r:$  \begin{align}
     \varepsilon_i = \left\{
     \begin{array}{cc}
-         C(\overrightarrow{x_i x_{i+1}}) - F(\overrightarrow{x_i x_{i+1}}) &\text{ si } x_{i+1} \in \Gamma^{+}(x_i)\\
-         F(\overrightarrow{x_{i+1} x_i}) &\text{ si } x_{i+1} \in \Gamma^{-} (x_i)
+         C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) &\text{ si } x_{i+1} \in \Gamma^{+}(x_i)\\
+         F(\ora{x_{i+1} x_i}) &\text{ si } x_{i+1} \in \Gamma^{-} (x_i)
     \end{array}
     \right.
 \end{align}
@@ -207,10 +210,10 @@ Entonces, al enviar $\varepsilon$ unidades de flujo por el camino $F$-aumentante
 Probaremos \textit{feasibility} y conservación:\\
 \textit{Feasibility}: 
 \begin{enumerate} 
-\item $0 \le F^{*}(\overrightarrow{xy})$ siempre que $F(\overrightarrow{xy}) \le F^{*}(\overrightarrow{xy})$. (caso forward)\\
-Cuando esto no pasa,  $F^{*}(\overrightarrow{x_{i+1} x_i}) = F(\overrightarrow{x_{i+1} x_i}) - \varepsilon \ge 0$ pues $\varepsilon \le \varepsilon_{i} = F(\overrightarrow{x_{i+1} x_i})$ (caso backward)
-\item $F^{*}(\overrightarrow{xy}) \le C(\overrightarrow{xy})$ se cumple siempre que $F^{*}(\overrightarrow{xy}) \le F(\overrightarrow{xy}) \le C(\overrightarrow{xy})$. (caso backward) \\
-Si no, $F^*(\overrightarrow{x_i x_{i+1}}) = F(\overrightarrow{x_i x_{i+1}}) + \varepsilon \le F(\overrightarrow{x_i x_{i+1}}) + C(\overrightarrow{x_i x_{i+1}})- F(\overrightarrow{x_i x_{i+1}}) \le C(\overrightarrow{x_i x_{i+1}})$.  (caso forward)
+\item $0 \le F^{*}(\ora{xy})$ siempre que $F(\ora{xy}) \le F^{*}(\ora{xy})$. (caso forward)\\
+Cuando esto no pasa,  $F^{*}(\ora{x_{i+1} x_i}) = F(\ora{x_{i+1} x_i}) - \varepsilon \ge 0$ pues $\varepsilon \le \varepsilon_{i} = F(\ora{x_{i+1} x_i})$ (caso backward)
+\item $F^{*}(\ora{xy}) \le C(\ora{xy})$ se cumple siempre que $F^{*}(\ora{xy}) \le F(\ora{xy}) \le C(\ora{xy})$. (caso backward) \\
+Si no, $F^*(\ora{x_i x_{i+1}}) = F(\ora{x_i x_{i+1}}) + \varepsilon \le F(\ora{x_i x_{i+1}}) + C(\ora{x_i x_{i+1}})- F(\ora{x_i x_{i+1}}) \le C(\ora{x_i x_{i+1}})$.  (caso forward)
 \end{enumerate}
 Conservación:
 Si $x$ no pertenece al camino, no pasa nada.\\
@@ -225,8 +228,8 @@ Como
 \begin{align}
     \left.
     \begin{array}{cc}
-    F^*(\overrightarrow{x_i x_{i+1}}) = F(\overrightarrow{x_i x_{i+1}}) + \varepsilon\\
-    F^*(\overrightarrow{x_{i-1} x_i}) = F(\overrightarrow{x_{i-1} x_i}) + \varepsilon 
+    F^*(\ora{x_i x_{i+1}}) = F(\ora{x_i x_{i+1}}) + \varepsilon\\
+    F^*(\ora{x_{i-1} x_i}) = F(\ora{x_{i-1} x_i}) + \varepsilon 
     \end{array}
      \right\} \implies
      \begin{array}{cc}
@@ -241,8 +244,8 @@ Cambiaron los lados que entran y salen de $x_i$.
 \begin{align}
     \left.
     \begin{array}{cc}
-    F^*(\overrightarrow{x_i x_{i+1}}) = F(\overrightarrow{x_i x_{i+1}}) + \varepsilon\\
-    F^*(\overrightarrow{x_{i-1} x_i}) = F(\overrightarrow{x_i x_{i+1}}) - \varepsilon 
+    F^*(\ora{x_i x_{i+1}}) = F(\ora{x_i x_{i+1}}) + \varepsilon\\
+    F^*(\ora{x_{i-1} x_i}) = F(\ora{x_i x_{i+1}}) - \varepsilon 
     \end{array}
      \right\} \implies
      \begin{array}{cc}
@@ -257,8 +260,8 @@ Cambiaron dos lados que salen de $x_i$ y ninguno que entra a $x_i$ cambió.
 \begin{align}
     \left.
     \begin{array}{cc}
-    F^*(\overrightarrow{x_{i+1} x_i}) = F(\overrightarrow{x_{i+1} x_i}) - \varepsilon\\
-    F^*(\overrightarrow{x_{i-1} x_i}) = F(\overrightarrow{x_{i-1} x_i}) + \varepsilon 
+    F^*(\ora{x_{i+1} x_i}) = F(\ora{x_{i+1} x_i}) - \varepsilon\\
+    F^*(\ora{x_{i-1} x_i}) = F(\ora{x_{i-1} x_i}) + \varepsilon 
     \end{array}
      \right\} \implies
      \begin{array}{cc}
@@ -271,8 +274,8 @@ Cambiaron dos lados que salen de $x_i$ y ninguno que entra a $x_i$ cambió.
 \begin{align}
     \left.
     \begin{array}{cc}
-    F^*(\overrightarrow{x_i x_{i-1}}) = F(\overrightarrow{x_{i} x_{i-1}}) - \varepsilon\\
-    F^*(\overrightarrow{x_{i+1} x_{i}}) = F(\overrightarrow{x_{i+1} x_{i}}) - \varepsilon 
+    F^*(\ora{x_i x_{i-1}}) = F(\ora{x_{i} x_{i-1}}) - \varepsilon\\
+    F^*(\ora{x_{i+1} x_{i}}) = F(\ora{x_{i+1} x_{i}}) - \varepsilon 
     \end{array}
      \right\} \implies
      \begin{array}{cc}
@@ -360,21 +363,21 @@ Como $S$ es corte,
 \begin{align}
     v_F = F(S, S^c) - F(S^c, S)
 \end{align}
-Sea $x \in S$, $y \in S^c$, $\overrightarrow{xy} \in E$. Buscamos $F(xy)$, y vemos que:
+Sea $x \in S$, $y \in S^c$, $\ora{xy} \in E$. Buscamos $F(xy)$, y vemos que:
 \begin{itemize}
     \item $\exists$ un camino F-aumentante $(x_0, x_1,\mathellipsis, x_r)$ entre $s$ y $x$
     \item $\nexists$ un camino $F$-aumentante entre $s$ e $y$
 \end{itemize}
 Esto es, $(x_0, \mathellipsis, x_r, y)$ no es un camino $F$-aumentante.\\
-Como $(x_0, x_1, \mathellipsis, x_r)$ si lo es, y $\overrightarrow{xy} \in E$, concluimos que $\overrightarrow{xy}$ está saturado, ie. \\$F(\overrightarrow{xy}) = C(\overrightarrow{xy})$.
+Como $(x_0, x_1, \mathellipsis, x_r)$ si lo es, y $\ora{xy} \in E$, concluimos que $\ora{xy}$ está saturado, ie. \\$F(\ora{xy}) = C(\ora{xy})$.
 \begin{align}
-    \therefore \forall x,y: x \in S \wedge y \in S^c \wedge xy \in E : F(\overrightarrow{xy}) = C(\overrightarrow{xy})\\
-    F(S, S^c) = \sum_{\substack{x\in S\\ y \notin S \\\overrightarrow{xy} \in E}} F(\overrightarrow{xy}) = \sum_{\substack{x\in S\\ y \notin S\\ \overrightarrow{xy} \in E}} C(\overrightarrow{xy}) = C(S, S^c) = cap(S)\\
+    \therefore \forall x,y: x \in S \wedge y \in S^c \wedge xy \in E : F(\ora{xy}) = C(\ora{xy})\\
+    F(S, S^c) = \sum_{\substack{x\in S\\ y \notin S \\\ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\in S\\ y \notin S\\ \ora{xy} \in E}} C(\ora{xy}) = C(S, S^c) = cap(S)\\
 \end{align}
-Ahora, veamos el otro caso. Sea $x \in S^c, y \in S, \overrightarrow{xy} \in E$. Buscamos $F(\overrightarrow{xy})$. Con un análisis similar al anterior, teniendo en cuenta que ahora $x\in \Gamma^-(y)$, concluimos $xy$ está vacio ie. $F(\overrightarrow{xy}) = 0$.
+Ahora, veamos el otro caso. Sea $x \in S^c, y \in S, \ora{xy} \in E$. Buscamos $F(\ora{xy})$. Con un análisis similar al anterior, teniendo en cuenta que ahora $x\in \Gamma^-(y)$, concluimos $xy$ está vacio ie. $F(\ora{xy}) = 0$.
 \begin{align}
-    \therefore \forall x, y : x \in S^c \wedge y \in S \wedge xy \in E : F(\overrightarrow{xy}) = 0\\
-    F(S^c, S) = \sum_{\substack{x\not\in S\\ y \in S\\ \overrightarrow{xy} \in E}} F(\overrightarrow{xy}) = \sum_{\substack{x\not\in S\\ y \in S\\ \overrightarrow{xy} \in E}} 0 = 0
+    \therefore \forall x, y : x \in S^c \wedge y \in S \wedge xy \in E : F(\ora{xy}) = 0\\
+    F(S^c, S) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} 0 = 0
 \end{align}
 Así,
 \begin{align}
@@ -452,8 +455,8 @@ $F_{k+1}$ se construye a partir de $F_k$, cambiando en algunos lados el valor $F
     \varepsilon = \min\{\epsilon_i\}
 \end{align}
 y \begin{center}
-    $\epsilon_i = \begin{cases} C(\overrightarrow{x_i x_{i+1}}) - F(\overrightarrow{x_i x_{i+1}}) & \text{ si } \overrightarrow{x_i x_{i+1}} \text{ es lado forward}\\
-    F(\overrightarrow{x_{i+1} x_i}) & \text{ si } \overrightarrow{x_i x_{i+1}} \text{ es lado backward}
+    $\epsilon_i = \begin{cases} C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & \text{ si } \ora{x_i x_{i+1}} \text{ es lado forward}\\
+    F(\ora{x_{i+1} x_i}) & \text{ si } \ora{x_i x_{i+1}} \text{ es lado backward}
     \end{cases}$
 \end{center}
 Como las capacidades son todas enteras, $\epsilon_i$ es entero, $\varepsilon$  es entero y por lo tanto $F_{k+1}$.
@@ -510,19 +513,19 @@ $\forall i : 1 \le i \le \ell$ :\\
     Ahora la contradicción:\\
     Como existe un camino $(s, \mathellipsis, z, x)$, debe pasar $x \in \Gamma^+(z)$ o bien $x \in \Gamma^-(z)$. La razón por la que no existe un camino $F_{i-1}$ aumentante puede ser alguna de las siguientes:
     \begin{itemize}
-        \item $x \in \Gamma^+(z) \wedge F_{i-1}(\overrightarrow{zx}) = C(\overrightarrow{zx})$
-        \item $x \in \Gamma^-(z) \wedge F_{i-1}(\overrightarrow{zx}) = 0$ 
+        \item $x \in \Gamma^+(z) \wedge F_{i-1}(\ora{zx}) = C(\ora{zx})$
+        \item $x \in \Gamma^-(z) \wedge F_{i-1}(\ora{zx}) = 0$ 
     \end{itemize}
     Pero como el camino $F_i$-aumentante si existe,
     \begin{itemize}
-        \item $x \in \Gamma^+(z) \wedge F_{i-1}(\overrightarrow{zx}) = C(\overrightarrow{zx}) \wedge F_i(\overrightarrow{zx}) < C(\overrightarrow{zx})$
-        \item $x \in \Gamma^-(z) \wedge F_{i-1}(\overrightarrow{zx}) = 0 \wedge F_i(\overrightarrow{zx}) > 0$
+        \item $x \in \Gamma^+(z) \wedge F_{i-1}(\ora{zx}) = C(\ora{zx}) \wedge F_i(\ora{zx}) < C(\ora{zx})$
+        \item $x \in \Gamma^-(z) \wedge F_{i-1}(\ora{zx}) = 0 \wedge F_i(\ora{zx}) > 0$
     \end{itemize}
 
     La única forma en que esto puede ocurrir es que al pasar de $F_{i-1}$ a $F_i$ usemos un camino de la forma $(s, \mathellipsis, x, z)$, ya que:
     \begin{itemize}
-        \item Si el último lado es backward, $x \in \Gamma^+(z) \wedge F_{i}(\overrightarrow{zx}) < F_{i-1}(\overrightarrow{zx})$ (primer razón).
-        \item Si el último lado es forward, $x \in \Gamma^-(z) \wedge F_{i}(\overrightarrow{xz}) > F_{i-1}(\overrightarrow{xz})$ (segunda razón).
+        \item Si el último lado es backward, $x \in \Gamma^+(z) \wedge F_{i}(\ora{zx}) < F_{i-1}(\ora{zx})$ (primer razón).
+        \item Si el último lado es forward, $x \in \Gamma^-(z) \wedge F_{i}(\ora{xz}) > F_{i-1}(\ora{xz})$ (segunda razón).
     \end{itemize}
     Como usamos Edmonds-Karp, este camino tiene longitud mínima.
     Entonces $d_{i-1}(z) = d_{i-1}(x) + 1$. Pero sabemos que $d_{i-1}(x) + 1  = d_{i-1}(z) \le d_{i-1}(x) - 2$. Esto es una contradicción. Concluimos:
@@ -615,7 +618,7 @@ Cada corrida consiste en construir un $F_i$ mediante $BFS \in \mathcal{O}(m)$.\\
                 \State $i$ += $1$
             \ElsIf{$v \neq s$}
                 \Comment{No podemos llegar a $t$: Retroceder}
-                \State $E_L$ -= $\overrightarrow{P[i-1] P[i]}$
+                \State $E_L$ -= $\ora{P[i-1] P[i]}$
                 \State $i$ -= $1$
             \Else
                 \State \Return{$G$} \Comment{Solo terminamos cuando $\Gamma^+(s) = \varnothing$}
@@ -623,11 +626,11 @@ Cada corrida consiste en construir un $F_i$ mediante $BFS \in \mathcal{O}(m)$.\\
         \EndWhile
     
         \Comment{Llegamos a $t$: Incrementar}
-        \State $\varepsilon = \min_{0\le i < len} \{ C(\overrightarrow{P[i] P[i+1]}) - G(\overrightarrow{P[i] P[i+1]})\}$
+        \State $\varepsilon = \min_{0\le i < len} \{ C(\ora{P[i] P[i+1]}) - G(\ora{P[i] P[i+1]})\}$
         \For {$i \in \{0, \mathellipsis, len-1\}$}
-            \State $G(\overrightarrow{P[i] P[i+1]})$ += $\varepsilon$
-            \If {$C(\overrightarrow{P[i] P[i+1]}) = G(\overrightarrow{P[i] P[i+1]})$}
-                \State $E_L$ -= $\overrightarrow{P[i] P[i+1]}$
+            \State $G(\ora{P[i] P[i+1]})$ += $\varepsilon$
+            \If {$C(\ora{P[i] P[i+1]}) = G(\ora{P[i] P[i+1]})$}
+                \State $E_L$ -= $\ora{P[i] P[i+1]}$
             \EndIf
         \EndFor
     \EndWhile
@@ -639,7 +642,7 @@ Cada corrida consiste en construir un $F_i$ mediante $BFS \in \mathcal{O}(m)$.\\
 Un network $N = (V,E,C)$ es un \emph{network por niveles} si:
 \begin{align}
  V &= \bigcup_{i=0}^r V_i \\
- E &= \{\overrightarrow{xy} \mid \forall i: 0 \le i \le r : x \in V_i \wedge y \in V_{i+1}\}
+ E &= \{\ora{xy} \mid \forall i: 0 \le i \le r : x \in V_i \wedge y \in V_{i+1}\}
  \end{align}
  tal que $\forall i, j : 0 \le i < j \le r \wedge i \neq j : V_i \cap V_j = \varnothing$ \\
 Y con $V_0 = \{s\} \text{ y } V_r = \{t\}$
@@ -651,19 +654,19 @@ Es decir, solo hay lados entre vértices de distintos niveles siendo el primer n
 Dado un network $N = (V_N, E_N, C_N)$ y un flujo $F_N$, el \emph{network residual} $R$ = $R_F$ = $R_{F_N} = (V_R, E_R, C_R)$ es el network tal que:
 \begin{itemize}
     \item $V_R = V_N$
-    \item $(\overrightarrow{xz}) \in E_R \iff 
+    \item $(\ora{xz}) \in E_R \iff 
     \left\{ 
     \begin{array}{cc}
-    \overrightarrow{xz} \in E_N \wedge F_N(\overrightarrow{xz}) < C_N(\overrightarrow{xz})     & \text{caso \textit{forward}} \\
+    \ora{xz} \in E_N \wedge F_N(\ora{xz}) < C_N(\ora{xz})     & \text{caso \textit{forward}} \\
     \text{o bien}  & \\
-    \overrightarrow{zx} \in E_N \wedge F_N(\overrightarrow{zx}) > 0 & \text{caso \textit{backward}}
+    \ora{zx} \in E_N \wedge F_N(\ora{zx}) > 0 & \text{caso \textit{backward}}
     \end{array}
     \right.$
-    \item $C_R(\overrightarrow{xz}) = \left\{
+    \item $C_R(\ora{xz}) = \left\{
     \begin{array}{cc}
-        C_N(\overrightarrow{xz}) -
-        F_N(\overrightarrow{xz})   & \text{caso \textit{forward}}\\
-        F_N(\overrightarrow{zx})   & \text{caso \textit{backward}}
+        C_N(\ora{xz}) -
+        F_N(\ora{xz})   & \text{caso \textit{forward}}\\
+        F_N(\ora{zx})   & \text{caso \textit{backward}}
     \end{array}
     \right.
     $
@@ -674,7 +677,7 @@ Dado un network $N = (V_N, E_N, C_N)$ y un flujo $F_N$, el \emph{network residua
 Dado un network residual $R = R_F = R_{F_N} = (V_R, E_R, C_R)$ definimos al \emph{network auxiliar por niveles} o $\boldsymbol{level}$  $\boldsymbol{graph}\ L = L_F = (V_L, E_L, C_L)$ de la siguiente forma:
 \begin{itemize}
     \item $V_L = \{ x\in V_R \mid d_F(x) < d_F(t)\} \cup \{t\}$
-    \item $E_L = \{\overrightarrow{xy} \in E_R \mid d_F(x) + 1 = d_F(y)$\}
+    \item $E_L = \{\ora{xy} \in E_R \mid d_F(x) + 1 = d_F(y)$\}
     \item $C_L = C_R$
 \end{itemize}
 
@@ -713,9 +716,9 @@ Sea $s, x_1, \mathellipsis, x_{r-1}, t$ el mínimo camino dirigido no saturado e
     Entonces $d_A(t) \le d_A(x_i)$, ya que si la distancia fuese menor hubiera estado en $A$. Por el lema de E-K [\ref{distancias_no_decrecen_EK}], $d_A(x_i) \le d_B(x_i)$.\\
     Así, $d_{A}(t) \le d_{A}(x_i) \le d_{B}(x_i) < d_{B}(t)$ ($x_i$ está antes de $t$ en el camino en $B$). Así, $d_A(t) < d_B(t)$.
     
-    \item Caso 2: $\exists i : \overrightarrow{x_{i-1} x_i} \notin E_A$: falta un lado $\overrightarrow{x_{i-1} x_{i}}$ pero ningún vértice. 
+    \item Caso 2: $\exists i : \ora{x_{i-1} x_i} \notin E_A$: falta un lado $\ora{x_{i-1} x_{i}}$ pero ningún vértice. 
     Esto puede pasar por dos razones (correspondientes a la definición de $E_R$ y $E_A$). \\
-    Tomemos el mínimo $i$ tal que $\overrightarrow{x_{i-1} x_{i}} \notin E_A$:
+    Tomemos el mínimo $i$ tal que $\ora{x_{i-1} x_{i}} \notin E_A$:
     
     \begin{enumerate}
     \item Caso A: El lado está saturado o vacío (en $N$).\\
@@ -732,20 +735,20 @@ Sea $s, x_1, \mathellipsis, x_{r-1}, t$ el mínimo camino dirigido no saturado e
     Como en E-K.
     %$\left.
     %\begin{array}{cc}
-    %(\overrightarrow{x_{i-1} x_{i}}) \notin  E_{R_{A}}     &  \\
-    %(\overrightarrow{x_{i-1} x_{i}}) \in E_{R^*_{B}}     & 
+    %(\ora{x_{i-1} x_{i}}) \notin  E_{R_{A}}     &  \\
+    %(\ora{x_{i-1} x_{i}}) \in E_{R^*_{B}}     & 
     %\end{array}
     %\right\}$
-    %solo puede ocurrir si $(\overrightarrow{x_{i} x_{i-1}}) \in E_L$\\
+    %solo puede ocurrir si $(\ora{x_{i} x_{i-1}}) \in E_L$\\
     %Veamos lo anterior:\\
     %Supongamos que 
-    %$(\overrightarrow{x_{i+1} x_i}) \in E_L$, luego $d_A(x_{i+1}) + 1 = d_A(x_i)$\\
-    %Entonces, $d_A(t) = d_A(x_i) + b_A(x_i)$. Pero $\overrightarrow{(x_i x_{i+1}})$ es el primer %lado que no está en $E_L$
+    %$(\ora{x_{i+1} x_i}) \in E_L$, luego $d_A(x_{i+1}) + 1 = d_A(x_i)$\\
+    %Entonces, $d_A(t) = d_A(x_i) + b_A(x_i)$. Pero $\ora{(x_i x_{i+1}})$ es el primer %lado que no está en $E_L$
     %\begin{align}
-    %\forall k : 0 \le k < i &: (\overrightarrow{x_{k-1} x_{k}}) \in E_L \implies \\
+    %\forall k : 0 \le k < i &: (\ora{x_{k-1} x_{k}}) \in E_L \implies \\
     %\forall j : j < i &: d_A(x_j) = j 
     %\end{align}
-    %Entonces, $(\overrightarrow{x_{i-1} x_{i}}) \notin E_{R_A} \wedge (\overrightarrow{x_{i-1} x_{i}}) \in E_{R^{*}_B}$
+    %Entonces, $(\ora{x_{i-1} x_{i}}) \notin E_{R_A} \wedge (\ora{x_{i-1} x_{i}}) \in E_{R^{*}_B}$
          
     \item Caso B: El lado no está saturado ni vacío: $d_A(x_i) + 1 \neq d_A(x_{i-1})$\\
     Esto significa que $d_A(x_{i}) \le d_A(x_{i-1}) + 1$ (si no, como el lado no esta saturado ni vacío, estaría en $E_A$).
@@ -825,7 +828,7 @@ Tambien vimos que la complejidad del paso bloqueante es $\mathcal{O}(nm)$.
 
 \begin{definition}
 Un network $N = (V,E,C)$ se dice unitario si tiene capacidad $1$ en todos sus lados.\\
-$\forall \overrightarrow{xy} \in E : C(\overrightarrow{xy}) = 1$ \\
+$\forall \ora{xy} \in E : C(\ora{xy}) = 1$ \\
 $\forall x \neq s,t : |\Gamma^+(x)| = 1 \veebar |\Gamma^-(x)| = 1$
 \end{definition}
 \begin{theorem}
@@ -869,9 +872,9 @@ Sea $(x_0 = s, x_1, \mathellipsis, x_r = t)$ es el orden $BFS$ de la construcci�
 \State $A(x) = \varnothing$ \Comment{vértices que le mandan}
 \EndFor
 \For{$x \in \Gamma^+(s)$}
-\State $G(\overrightarrow{sx}) = C(\overrightarrow{sx})$
-\State $D(x)$ += $C(\overrightarrow{sx})$
-\State $D(s)$ -= $C(\overrightarrow{sx})$
+\State $G(\ora{sx}) = C(\ora{sx})$
+\State $D(x)$ += $C(\ora{sx})$
+\State $D(s)$ -= $C(\ora{sx})$
 \State $A(x) = \{s\}$
 \EndFor
 \While{$D(s) + D(t) \neq 0)$}
@@ -898,12 +901,12 @@ Sea $(x_0 = s, x_1, \mathellipsis, x_r = t)$ es el orden $BFS$ de la construcci�
 \If{B(z)}
 \State{$\Gamma^+(x) := \Gamma^+(x) - \{z\}$}
 \Else
-\State $m = min\{D(x), C(\overrightarrow{xz}) - G(\overrightarrow{xz})\}$
-\State $G(\overrightarrow{xz}$ += $m$
+\State $m = min\{D(x), C(\ora{xz}) - G(\ora{xz})\}$
+\State $G(\ora{xz}$ += $m$
 \State $D(x)$ -= $m$
 \State $D(z)$ += $m$
 \State $A(z) = A(z) \cup \{x\}$
-\If{$G(\overrightarrow{xz}) == C(\overrightarrow{xz})$}
+\If{$G(\ora{xz}) == C(\ora{xz})$}
 \State $\Gamma^+(x) := \Gamma^+(x) - \{z\}$
 \EndIf
 \If{$D(x) > 0$}
@@ -920,11 +923,11 @@ Sea $(x_0 = s, x_1, \mathellipsis, x_r = t)$ es el orden $BFS$ de la construcci�
 \Function{backwardBalance}{vertex x}
 \While{$D(x) > 0$}
 \State elegimos $z \in A(x)$
-\State $m = min\{D(x), G(\overrightarrow{zx})\}$
-\State $G(\overrightarrow{zx}$ -= $m$
+\State $m = min\{D(x), G(\ora{zx})\}$
+\State $G(\ora{zx}$ -= $m$
 \State $D(x)$ -= $m$
 \State $D(z)$ -= $m$
-\If{$G(\overrightarrow{zx}) == 0$}
+\If{$G(\ora{zx}) == 0$}
 \State $A(x) := A(x) - \{z\}$
 \EndIf
 \EndWhile
@@ -939,10 +942,10 @@ La complejidad del algoritmo de Wave es $\mathcal{O}(n^3)$
 \begin{proof}
 Wave es de tipo Dinic. Tiene $\mathcal{O}(n)$ networks auxiliares. Probemos que el paso bloqueante es $\mathcal{O}(n^2)$
 Al correr el paso bloqueante hacemos una serie de \Call{forwardBalance}{x} y \Call{backwardBalance}{x}.
-Al hacer \Call{ForwardBalance}{x} procesamos lados $\overrightarrow{xz}$ de dos categorias posibles:
+Al hacer \Call{ForwardBalance}{x} procesamos lados $\ora{xz}$ de dos categorias posibles:
 \begin{itemize}
-    \item Categoría T(otal): al procesarlo, $G(\overrightarrow{xz}) = C(\overrightarrow{xz})$. Es decir, se satura o vacía el lado.
-    \item Categoría P(arcial): al procesarlo, $G(\overrightarrow{xz}) < C(\overrightarrow{xz})$
+    \item Categoría T(otal): al procesarlo, $G(\ora{xz}) = C(\ora{xz})$. Es decir, se satura o vacía el lado.
+    \item Categoría P(arcial): al procesarlo, $G(\ora{xz}) < C(\ora{xz})$
 \end{itemize}
 En los T se remueve de $\Gamma^+(x)$. Solo se entra una vez a T.
 El total de lados de categoria T sobre todos los \Call{forwardBalance} sobre todos las olas es $\mathcal{O}(m)$.
@@ -968,8 +971,8 @@ Entonces:
 
 Olas hacia atrás:
 En los BB(x) también hay dos categorias:\begin{itemize}
-    \item T: $G(\overrightarrow{zx})  = 0$
-    \item P: $G(\overrightarrow{zx}) > 0$
+    \item T: $G(\ora{zx})  = 0$
+    \item P: $G(\ora{zx}) > 0$
 \end{itemize}
 Hay a lo sumo uno de tipo $P$ en cada BB(x).\\
 $\#$ tipo P $\le \#$ BB(x)
@@ -978,7 +981,7 @@ $\le \mathcal{O}(n) \cdot \#$ olas hacia adelante
 $\le \mathcal{O}(n) \cdot \mathcal{O}(n)$\\
 
 Tipo T:
-Si $\overrightarrow{zx}$ es de tipo T, $z$ se remueve de $A(x)$
+Si $\ora{zx}$ es de tipo T, $z$ se remueve de $A(x)$
 ¿Cuántas veces puedo agregar a $z$ a $A(x)$ luego de esto?
 Necesito que $z$ le mande flujo a $x$ para que pase.
 Pero solo hacemos BB(x) si $x$ está bloqueado y si $x$ está bloqueado, como nunca se desbloquea, $z$ no le puede mandar flujo.\\
