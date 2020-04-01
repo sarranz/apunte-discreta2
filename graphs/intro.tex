@@ -1,0 +1,115 @@
+\subsection{Introducción}
+
+\begin{definition}
+  Un \emph{grafo} (no dirigido) es un par $(V, E)$ donde $V$ es un conjunto y
+  $E \subseteq \left\{\left\{x,y\right\} \mid x,y \in V \wedge x \neq y \right\}$.
+\end{definition}
+
+\begin{notation}
+  Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
+
+  Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
+
+  El lado $\{x,y\}$ se denota $xy$ o $yx$.
+
+  Se suele llamar $n$ a $|V|$ y $m$ a $|E|$.
+
+  Denotamos $\Gamma(x) = \left\{y \in V \mid xy \in E \right\}$ al conjunto de
+  \emph{vecinos} de $x$.
+
+  Denotamos $d(x) = |\Gamma(x)|$ al \emph{grado} del vértice $x$.
+
+  Denotamos $\delta = min\{d(x) \mid x\in V\}$ al grado del nodo con el menor
+  grado, y $\Delta = max\{d(x) \mid x\in V\}$ al grado del nodo con mayor grado.
+
+\end{notation}
+
+\begin{definition}
+  Un grafo es \emph{regular} si $\delta = \Delta$, es decir todos los nodos
+  tienen la misma cantidad de vecinos.
+\end{definition}
+
+\begin{definition}
+  Un \emph{subgrafo} de $G = (V_G,E_G)$ es un grafo $H = (V_H,E_H)$ tal que 
+  \begin{itemize}
+    \item $V_H \subseteq V_G$
+    \item $E_H \subseteq E_G$
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  Un \emph{camino} de $x_0$ a $x_t$ en un grafo $G = (V,E)$ es una sucesión de
+  vértices $x_0, x_1, \mathellipsis, x_t$ tal que:
+\begin{enumerate}
+    \item $\forall 0 \le i < t \colon x_i x_{i+1} \in E$
+    \item $\forall 0 \le i, j \le t \colon x_i \neq x_j$
+\end{enumerate}
+
+Definimos la \emph{relación} $\sim$ de la siguiente manera: $x \sim y$ sii existe un camino de $x$ a $y$.
+\end{definition}
+
+\begin{proposition}
+$x \sim y$ es una relación de equivalencia.
+\end{proposition}
+\begin{proof}
+Veamos que $\forall x,y,z \in V,$
+\begin{enumerate}
+    \item $x \sim x$. La sucesión de $x$ es el camino vacío.
+    
+    \item $x \sim y \iff y \sim x$. Si $x_0, \mathellipsis, x_t$ es un camino de $x$ a $y$, entonces la sucesión $x_t, \mathellipsis, x_0$ es un camino de $y$ a $x$.
+    \item $x \sim y \wedge y \sim z \iff x \sim z$. Si $x_0, \mathellipsis, x_t$ es un camino de $x$ a $y$ y $x_{t}, \mathellipsis, x_{r}$ es un camino de $y$ a $z$, entonces es claro que la sucesión $x_0, \mathellipsis, x_t, \mathellipsis, x_r$ es un camino de $x$ a $z$.
+\end{enumerate}
+\end{proof}
+\begin{definition}
+La \emph{componente conexa} de $x$ es la clase de equivalencia a la que pertenece. Es decir, la componente conexa de $x$ es el subgrafo más grande $H$ de $G$, tal que $\forall v \in V_H \colon v \sim x$.
+
+$G=(V,E)$ es un grafo \emph{conexo} si tiene una única componente conexa. Esto es, $\forall x,y \in V \colon x \sim y$.
+\end{definition}
+
+\begin{proposition}[Lema del apretón de manos]
+\begin{align}
+\sum_{x\in V} d(x) = 2m \label{handshaking_lemma}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Cada uno de los $m$ lado del grafo conecta dos vértices. Es decir, incrementa sus grados en 1. Se sigue que la suma de todos los grados es $2m$.
+\end{proof}
+
+
+\begin{definition}
+  Vimos $BFS$ y $DFS$. Ambos algoritmos visitan todos los vértices de un
+  grafo, pero quizá en distinto orden. Para recorrer un grafo, $DFS$ visita
+  vértices hasta encontrar uno con todos sus vecinos visitados. Luego,
+  retrocede un paso y repite esto. En cambio, $BFS$ visita todos los vecinos
+  de un vértice, y luego hace esto con cada uno de los vecinos que visitó.
+
+  En pseudo-python:
+
+\begin{lstinputlisting}[language=python]{graphs/bfs.py}
+\end{lstinputlisting}
+\end{definition}
+
+%\begin{algorithm}
+%  \caption{Breadth-First Search}
+%  \begin{algorithmic}
+%    \Procedure{BFS}{$graph\ G$}
+%    \State $q = make\_queue()$;
+%    \For{$r \in V$}
+%      \If{not $r.visited()$}
+%        \State $q.enqueue(r)$;
+%        \State $r.visit()$;
+%        \While{not $q.is\_empty()$}
+%          \State $v = q.dequeue()$\;
+%          \For{$w \in \Gamma(v)$}
+%            \If{not $w.visited()$}
+%              \State $q.enqueue(w)$;
+%              \State $w.visit()$;
+%            \EndIf
+%          \EndFor
+%        \EndWhile
+%      \EndIf
+%    \EndFor
+%    \EndProcedure
+%  \end{algorithmic}
+%\end{algorithm}

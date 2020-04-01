@@ -1,0 +1,26 @@
+\subsection{Grafos notables}
+
+\begin{definition}
+Un grafo \emph{completo} $K_n = (V,E)$ es aquel que tiene todos sus vértices unidos por aristas, es decir, con todos los posibles lados:
+\begin{align}
+V &= \left\{v_1,\mathellipsis, v_n\right\}\\
+E &= \left\{ \{x,y\} \mid x,y \in V \wedge x\neq y\right\} 
+\end{align}
+Vemos que este es un grafo regular, con $\Delta = \delta = n-1$.
+\end{definition}
+
+\begin{proposition}
+$K_n \subseteq K_{n+1}$
+\end{proposition}
+\begin{proof}
+Eligiendo $n$ vértices de $K_{n+1}$, vemos que están unidos por todos los lados posibles. Esto es $K_n$.
+\end{proof}
+
+\begin{definition}
+Un grafo es \emph{ciclico} $C_n = (V,E)$ si cumple:
+\begin{align}
+    V &= \left\{v_1,\mathellipsis,v_n\right\}\\
+    E &= \left\{ \left\{v_i,v_{i+1}\right\} \mid \forall i \colon 1 \le i < n\right\} \bigcup \left\{x_n,x_1\right\}\\
+\end{align}
+Vemos que este es un grafo regular, con $\Delta = \delta = 2$.
+\end{definition}

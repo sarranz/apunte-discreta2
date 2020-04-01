@@ -11,15 +11,50 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{verbatim}
-\usepackage{listings}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
 
-\input{symbols.tex}
 
+% Page settings.
 \geometry{left=1.0in}
-
 \setlength{\parindent}{0pt} %sangría
 
+% Code.
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+\lstset{style=mystyle}
+
+\floatname{algorithm}{Procedure}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\algnewcommand{\LeftComment}[1]{\Statex \(\triangleright\) #1}
+
+% Extra symbols.
+\input{symbols.tex}
+
+% Maths.
 \newtheoremstyle{proposition}
   {\topsep}%
   {\topsep}%
@@ -37,19 +72,14 @@
 \newtheorem*{notation}{Notación}%[theorem]
 \renewcommand*{\proofname}{Demostración}
 
+\everymath{\displaystyle}
+
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\floatname{algorithm}{Procedure}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Output:}}
-
-\algnewcommand{\LeftComment}[1]{\Statex \(\triangleright\) #1}
 
 \title{Matemática Discreta II}
 \author{Santiago Arranz Olmos, Franco Vaca}
 \date{2019}
-
-\everymath{\displaystyle}
 
 \begin{document}
 \maketitle
@@ -66,11 +96,18 @@
 %\input{brooks.tex}
 
 \section{Grafos}
-\input{graphs.tex}
+\input{graphs/intro.tex}
+\input{graphs/notables.tex}
+\input{graphs/coloreo.tex}
+\input{graphs/brooks.tex}
+\input{graphs/extra.tex}
 \pagebreak
 
 \section{Networks}
-\input{networks.tex}
+\input{networks/intro.tex}
+%\input{networks/edmondskarp.tex}
+%\input{networks/dinic.tex}
+%\input{networks/wave.tex}
 %\pagebreak
 
 %\section{Matchings en grafos bipartitos}
@@ -81,7 +118,7 @@
 %\input{codes.tex}
 %\pagebreak
 
-%\section{Algoritmos genéticos}
+%\section{Algoritmos genticos}
 %\input{genetic.tex}
 %\pagebreak
 
