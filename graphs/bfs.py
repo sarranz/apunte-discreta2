@@ -8,9 +8,9 @@ def bfs(graph):
 
         while queue != []:
             v = queue.pop(0)
-            if v not in visited:
-                visited.append(v)
-                for w in v.neighbours():
+            for w in v.neighbours():
+                if v not in visited:
+                    visited.append(v)
                     queue.append(w)
 
     return visited

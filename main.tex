@@ -1,13 +1,16 @@
+%%%%%%%% MATEMÁTICA DISCRETA II %%%%%%%%
+
+% Document and page.
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+
+% Maths.
 \usepackage{mathtools}
-\usepackage{needspace}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{commath}
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{centernot}
+
+% Code.
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{verbatim}
@@ -15,12 +18,11 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+% Extra symbols.
+\input{symbols.tex}
 
-% Page settings.
-\geometry{left=1.0in}
-\setlength{\parindent}{0pt} %sangría
 
-% Code.
+% Code setup.
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -48,34 +50,28 @@
 \floatname{algorithm}{Procedure}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
-
 \algnewcommand{\LeftComment}[1]{\Statex \(\triangleright\) #1}
 
-% Extra symbols.
-\input{symbols.tex}
-
 % Maths.
-\newtheoremstyle{proposition}
-  {\topsep}%
-  {\topsep}%
-  {\itshape}{0pt}%
-  {\bfseries}{\newline}%
-  { }{}%
-\theoremstyle{proposition}
+\theoremstyle{plain}
+\newtheorem{conjecture}{Conjetura}[section]
+\newtheorem{corollary}{Corolario}[section]
+\newtheorem{lemma}{Lema}[section]
+\newtheorem{proposition}{Proposición}[section]
+\newtheorem{theorem}{Teorema}[section]
 
-\newtheorem{conjecture}{Conjetura}%[theorem]
-\newtheorem{corollary}{Corolario}%[theorem]
-\newtheorem{lemma}{Lema}%[theorem]
-\newtheorem{proposition}{Proposición}%[theorem]
-\newtheorem*{theorem}{Teorema}
-\newtheorem*{definition}{Definición}%[theorem]
-\newtheorem*{notation}{Notación}%[theorem]
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{notation}{Notación}
+
 \renewcommand*{\proofname}{Demostración}
 
 \everymath{\displaystyle}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 
+\binoppenalty=9999  % Try not to break math expressions.
+\relpenalty=9999  % Try not to break math expressions.
 
 \title{Matemática Discreta II}
 \author{Santiago Arranz Olmos, Franco Vaca}
@@ -105,7 +101,7 @@
 
 \section{Networks}
 \input{networks/intro.tex}
-%\input{networks/edmondskarp.tex}
+\input{networks/edmondskarp.tex}
 %\input{networks/dinic.tex}
 %\input{networks/wave.tex}
 %\pagebreak
