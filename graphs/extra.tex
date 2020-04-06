@@ -1,11 +1,12 @@
 \subsection{Extra}
 
 \begin{definition}
-Sea G = (V,E) un grafo, un \emph{clique} C es un subconjunto de vértices de G tal que el grafo inducido por C es un grafo completo. Esto es 
+Sea $G = (V,E)$ un grafo, un \emph{clique} C es un subconjunto de vértices de G tal que el grafo inducido por C es un grafo
+completo. Esto es 
 \begin{align}
     C \subseteq V \text{es clique} &\iff G[C] = K_{|C|}
 \end{align}
-Una \emph{clique máxima} C es un clique tal que no existe otra clique en G que tenga más vértices. \begin{align}
+Un \emph{clique máximo} C es un clique tal que no existe otro clique en G que tenga más vértices. \begin{align}
     C \text{ clique máxima} \iff \forall D \text{ clique} \subseteq V \colon |D| \le |C|
 \end{align}
 Dado un grafo $G = (V,E)$ y $C$ una clique máxima de $G$, definimos el \emph{número de clique} $\omega(G)$ como el número de vértices en $C$.

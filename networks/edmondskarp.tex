@@ -215,18 +215,18 @@
   \begin{align}
     \underbrace{F \text{ es maximal}}_{A} \iff 
     \underbrace{\nexists \text{ caminos } F\text{-aumentantes entre $s$ y $t$}}_{B} \iff
-    \underbrace{v_F = mincutcap_S}_{C}
+    \underbrace{V(F) = mincutcap_S}_{C}
   \end{align}
 \end{theorem}
 \begin{proof}
   $C \implies A:$\\
-  Asumamos $C)$. Sea $S$ un corte con $cap(S) = v_F$\\
+  Asumamos $C)$. Sea $S$ un corte con $cap(S) = V(F)$\\
   Sea $G$ otro flujo. Tenemos por [ref] que
-  \begin{align} v_G \le cap(S) = v_F \end{align}
+  \begin{align} V(G) \le cap(S) = V(F) \end{align}
   de lo que se sigue que $F$ es maximal.\\
   
   Notar que así mismo, $S$ es minimal pues dado un corte cualquiera $T$\begin{align}
-    cap(T) \ge v_F = cap(S)
+    cap(T) \ge V(F) = cap(S)
   \end{align}
   $B \implies C:$\\
   Sea $S = \{s\} \cup \{x \in V \mid \exists \text{ camino $F$-aumentante de $s$ a $x$}$\}.
@@ -234,7 +234,7 @@
   $\therefore S$ es corte.\\
   Como $S$ es corte,
   \begin{align}
-    v_F = F(S, S^c) - F(S^c, S)
+    V(F) = F(S, S^c) - F(S^c, S)
   \end{align}
   Sea $x \in S$, $y \in S^c$, $\ora{xy} \in E$. Buscamos $F(xy)$, y vemos que:
   \begin{itemize}
@@ -254,13 +254,13 @@
   \end{align}
   Así,
   \begin{align}
-    v_F = F(S, S^c) - F(S^c, S) = cap(S) - 0 = cap(S) = mincutcap_S
+    V(F) = F(S, S^c) - F(S^c, S) = cap(S) - 0 = cap(S) = mincutcap_S
   \end{align}
   Por último, $S$ es claramente minimal.
   
   $A \implies B$:\\
   Suponiendo $F$ maximal, supongamos que $B$ es falso, es decir, que existe un camino $F$-aumentante entre $s$ y $t$.\\
-  Por el lema [\ref{flujo_camino_aumentante}], es posible enviar $\varepsilon$ unidades de flujo por ese camino y obtener un flujo $F^*$ con $v_{F^*} = v_F + \varepsilon$. Esto es absurdo pues $F$ es maximal.
+  Por el lema [\ref{flujo_camino_aumentante}], es posible enviar $\varepsilon$ unidades de flujo por ese camino y obtener un flujo $F^*$ con $V({F^*}) = V(F) + \varepsilon$. Esto es absurdo pues $F$ es maximal.
 \end{proof}
 
 \begin{algorithm}
@@ -313,7 +313,7 @@
 \end{algorithm}
 
 \begin{theorem}[Teorema de integralidad]\label{integrality}
-  Sea $N=(V,E,C)$ un network tal que $\forall xy \in E : C(xy) \in \mathbb{Z}$ entonces $\exists$ flujo maximal entero.
+  Sea $N=(V,E,C)$ un network tal que $\forall xy \in E : C(xy) \in \mathbb{Z}$ entonces existe flujo maximal entero.
   
   En otras palabras, en un network con capacidades enteras encontraremos siempre un flujo maximal entero.
 \end{theorem}
@@ -328,8 +328,9 @@
     \varepsilon = \min\{\epsilon_i\}
   \end{align}
   y \begin{center}
-    $\epsilon_i = \begin{cases} C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & \text{ si } \ora{x_i x_{i+1}} \text{ es lado forward}\\
-      F(\ora{x_{i+1} x_i}) & \text{ si } \ora{x_i x_{i+1}} \text{ es lado backward}
+    $\epsilon_i = \begin{cases} 
+        C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & | \ora{x_i x_{i+1}} \text{ es lado forward}\\
+        F(\ora{x_{i+1} x_i}) & | \ora{x_i x_{i+1}} \text{ es lado backward}
     \end{cases}$
   \end{center}
   Como las capacidades son todas enteras, $\epsilon_i$ es entero, $\varepsilon$  es entero y por lo tanto $F_{k+1}$.
@@ -339,26 +340,29 @@
 \end{proof}
 
 \begin{definition}
-  Dados $a,b\in V$ y un flujo $F$ en un network $N = (V,E,C)$. Definimos a la \emph{distancia (respecto de $\boldsymbol{F}$) de $\boldsymbol{a}$ hasta $\boldsymbol{b}$} como:
+  Dados $a,b\in V$ y un flujo $F$ en un network $N = (V,E,C)$. Definimos a la 
+  \emph{distancia respecto de $F$ de $a$ hasta $b$} como:
   \begin{align}
     D_F(a,b) = \left\{
     \begin{array}{cc}
-      0 & a = b\\
-      \#\{x_i x_{i+1} \in E\mid 0\le i < r \}  &\text{si $\{x_0, \mathellipsis, x_r\}$ es el menor camino $F$-aumentante entre $a$ y $b$} \\ 
-      \infty &\text{si $\nexists$ camino $F$-aumentante entre $a$ y $b$}
+      0 & \ a = b\\
+      \#\{x_i x_{i+1} \in E\mid 0\le i < r \}  & | $\{x_0, \mathellipsis, x_r\}$
+        \text{ es el menor camino $F$-aumentante entre $a$ y $b$} \\ 
+      \infty & | $\nexists$ \text{camino $F$-aumentante entre $a$ y $b$}
     \end{array}
     \right.
   \end{align}
   Esto es, el numero de lados del menor camino aumentante relativo a $F$ entre $a$ y $b$.\\
-  Asimismo, definimos
+  Asimismo, abusando de la notación definimos
   \begin{itemize}
-  \item $d_F(x) \doteq D_F(s,x)$
-  \item $b_F(x) \doteq D_F(x,t)$
+  \item $d_F(x) = D_F(s,x)$
+  \item $b_F(x) = D_F(x,t)$
   \end{itemize}
 \end{definition}
 
 \begin{lemma}\label{distancias_no_decrecen_EK}
-  Sea $N=(V,E,C)$ un network y $F_1, F_2, \mathellipsis, F_\ell$ los flujos parciales obtenidos por Edmonds-Karp (supongamos que $F_0 = 0$ es el flujo inicial).\\
+  Sea $N=(V,E,C)$ un network y $F_1, F_2, \mathellipsis, F_\ell$ los flujos 
+  parciales obtenidos por Edmonds-Karp (supongamos que $F_0 = 0$ es el flujo inicial).\\
   Abreviaremos
   \begin{align}
     d_k(x) \doteq d_{F_k}(x) \\
@@ -374,11 +378,21 @@
   $\forall i : 1 \le i \le \ell$ :\\
   \begin{enumerate}
   \item
-    Sea $A_i \doteq \{x \in V \mid d_i(x) < d_{i-1}(x)\}$, queremos ver que $A_i = \varnothing$ comenzando por notar que $s \notin A_i$ ya que $\forall i: d_i(s) = 0$.\\
-    Supongamos que $\exists i : A_i \neq \varnothing$. Sea ese $i$ el mínimo posible. A su vez, sea $x = \min\{d_i(v) \mid v \in A_i \}$, ie. tal que $d_i(x)$ sea mínimo. Entonces, $\forall z : d_i(z) > d_i(x) \implies z\notin A_i$.\\
-    Como $d_i(x) < d_{i-1}(x) \le \infty$ tenemos que $d_i(x) < \infty$ y debe haber un camino $F_i$-aumentante de $s$ a $x$. Sea $(x_0, \mathellipsis, x_r)$ el camino mínimo (es decir, con $r = d_i(x)$).\\
-    Probemos ahora que $\nexists$ un camino $F_{i-1}$-aumentante de $s$ a $x$, y luego lleguemos a una contradicción.\\
-    Sea $z = x_{r-1}$. Como $(x_0,\mathellipsis, x_r)$ es el camino $F_i$-aumentante de menor longitud entre $s$ y $x$ entonces $(x_0, \mathellipsis, x_{r-1})$ es el camino $F_{i}$-aumentante de menor longitud entre $s$ y $z$. Así, como $d_i(z) = r-1$ se sigue que $z \notin A_i$. Concluimos que $d_{i-1}(z) \le d_i(z) < d_i(x) < d_{i-1}(x)$. \\
+    Sea $A_i \doteq \{x \in V \mid d_i(x) < d_{i-1}(x)\}$, queremos ver que 
+    $A_i = \varnothing$ comenzando por notar que $s \notin A_i$ ya que $\forall i: d_i(s) = 0$.\\
+    Supongamos que $\exists i : A_i \neq \varnothing$. Sea ese $i$ el mínimo posible. 
+    A su vez, sea $x = \min\{d_i(v) \mid v \in A_i \}$, ie. tal que $d_i(x)$ sea mínimo. 
+    Entonces, $\forall z : d_i(z) > d_i(x) \implies z\notin A_i$.\\
+    Como $d_i(x) < d_{i-1}(x) \le \infty$ tenemos que $d_i(x) < \infty$ y debe 
+    haber un camino $F_i$-aumentante de $s$ a $x$. 
+    Sea $(x_0, \mathellipsis, x_r)$ el camino mínimo (es decir, con $r = d_i(x)$).\\
+    Probemos ahora que $\nexists$ un camino $F_{i-1}$-aumentante de $s$ a $x$, 
+    y luego lleguemos a una contradicción.\\
+    Sea $z = x_{r-1}$. Como $(x_0,\mathellipsis, x_r)$ es el camino 
+    $F_i$-aumentante de menor longitud entre $s$ y $x$ entonces 
+    $(x_0, \mathellipsis, x_{r-1})$ es el camino $F_{i}$-aumentante de menor 
+    longitud entre $s$ y $z$. Así, como $d_i(z) = r-1$ se sigue que $z \notin A_i$. 
+    Concluimos que $d_{i-1}(z) \le d_i(z) < d_i(x) < d_{i-1}(x)$. \\
     $\therefore d_{i-1}(z) \le d_{i-1}(x)-2$.
     Pero consideremos que $d_{i-1}(x) \le d_{i-1}(z) + 1$, ya que se puede ir de $z$ a $x$.
     Como $d_{i-1}(z)+2 \le d_{i-1}(x)$, esto es absurdo.\\
