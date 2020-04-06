@@ -329,8 +329,8 @@
   \end{align}
   y \begin{center}
     $\epsilon_i = \begin{cases} 
-        C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & | \ora{x_i x_{i+1}} \text{ es lado forward}\\
-        F(\ora{x_{i+1} x_i}) & | \ora{x_i x_{i+1}} \text{ es lado backward}
+        C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & |\ \ora{x_i x_{i+1}} \text{ es lado forward}\\
+        F(\ora{x_{i+1} x_i}) & |\ \ora{x_i x_{i+1}} \text{ es lado backward}
     \end{cases}$
   \end{center}
   Como las capacidades son todas enteras, $\epsilon_i$ es entero, $\varepsilon$  es entero y por lo tanto $F_{k+1}$.
@@ -343,14 +343,12 @@
   Dados $a,b\in V$ y un flujo $F$ en un network $N = (V,E,C)$. Definimos a la 
   \emph{distancia respecto de $F$ de $a$ hasta $b$} como:
   \begin{align}
-    D_F(a,b) = \left\{
-    \begin{array}{cc}
-      0 & \ a = b\\
-      \#\{x_i x_{i+1} \in E\mid 0\le i < r \}  & | $\{x_0, \mathellipsis, x_r\}$
-        \text{ es el menor camino $F$-aumentante entre $a$ y $b$} \\ 
-      \infty & | $\nexists$ \text{camino $F$-aumentante entre $a$ y $b$}
-    \end{array}
-    \right.
+    D_F(a,b) = 
+    \begin{cases}
+      0 & |\ a = b\\
+      \#\{x_i x_{i+1} \in E\mid 0\le i < r \}  & |\ \{x_0, \mathellipsis, x_r\} \text{ es el menor camino $F$-aum. entre $a$ y $b$} \\ 
+      \infty & |\ \nexists~ \text{camino $F$-aumentante entre $a$ y $b$}
+    \end{cases}
   \end{align}
   Esto es, el numero de lados del menor camino aumentante relativo a $F$ entre $a$ y $b$.\\
   Asimismo, abusando de la notación definimos

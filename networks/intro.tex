@@ -145,7 +145,7 @@ Concluimos,
 \end{proof}
 
 \begin{definition}
-  El \emph{valor del flujo} F de $s$ a $t$ se define $V(F) = out(s) - in(s)$.
+  El \emph{valor del flujo} $F$ de $s$ a $t$ se define $V(F) = out(s) - in(s)$.
 \end{definition}
 
 \begin{proposition}
@@ -157,7 +157,7 @@ Concluimos,
 
 \begin{definition}
   Un flujo F es \emph{maximal} si su valor es maximal. Es decir, si
-  $\forall G \text{ flujo} \colon V(G) \le V(F)$.
+  $\forall G\text{ flujo} \colon V(G) \le V(F)$.
 \end{definition}
 
 \begin{definition}
@@ -166,13 +166,13 @@ Concluimos,
 \end{definition}
 
 \begin{definition}
-  Dado un network $N = (V, E, C)$, un \emph{corte} $S$ es un subcojunto de $V$
+  Dado un network $N = (V, E, C)$, un \emph{corte}\footnote{Para una definición más precisa y general: \url{https://www.wikiwand.com/en/Cut_(graph_theory)\#/Definition}} $S$ es un subconjunto de $V$
   que contiene a $s$ y no contiene a $t$. Es decir, $S \subseteq V$,
   $s \in S$, y $t \not\in S$.
 \end{definition}
 
 \begin{definition}
-  Sea $N = (V, E, C)$ un network. La \emph{capacidad} de un corte S se define:
+  Sea $N = (V, E, C)$ un network. La \emph{capacidad} de un corte $S$ se define:
   \begin{align}
     cap(S) = C(S, S^c) = \sum_{\substack{x\in S \\ y \not\in S \\ xy \in E}} C(\ora{xy})
   \end{align}
@@ -181,5 +181,5 @@ Concluimos,
 \begin{definition}
   Un corte $S$ de un network $(V, E, C)$ se dice \emph{minimal} si su
   capacidad es minimal. Es decir, si
-  $\forall T \text{ corte} \colon cap(S) \le cap(T)$.
+  $\forall X$ corte $ \colon cap(S) \le cap(X)$.
 \end{definition}
