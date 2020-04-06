@@ -1,0 +1,185 @@
+\subsection{Introducción}
+
+\begin{definition}
+  Un \emph{network} o \emph{red de flujo}  N es un grafo dirigido con capacidades
+  en los lados. Es decir, una $3$-upla $(V, E, C)$ donde $V$ es un conjunto,
+  $E \subseteq V \times V$ y $C \colon E \to \R_{\ge 0}$.
+
+  No consideraremos networks con lados $(x,x)$ o con lados $(x,y)$ y $(y,x)$.
+\end{definition}
+
+\begin{notation}
+
+  Los elementos de $V$ se llaman \emph{vértices} o \emph{nodos}.
+
+  Los elementos de $E$ se llaman \emph{lados} o \emph{aristas}.
+
+  $C$ se dice función de \emph{capacidad}.
+
+  Escribiremos $\ora{xy}$ para denotar el lado $(x,y)$.
+\end{notation}
+
+\begin{definition}
+  Sea G = (V,E) un grafo dirigido, definimos:
+  \begin{itemize}
+  \item La \emph{vecindad hacia adelante} de $x$ como
+    $\Gamma^{+}(x) = \{y\mid \ora{xy} \in E\}$.
+  \item La \emph{vecindad hacia atrás} de $x$ como
+    $\Gamma^{-}(x) = \{y\mid \ora{yx} \in E\}$.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  Sea G = (V,E) un grafo dirigido, un \emph{camino dirigido} entre $x_0$ y $x_r$
+  es una sucesión de vértices $\{x_0,\mathellipsis, x_r\}$ tal que
+  \begin{align}
+    \forall 0 \le i < r \colon \ora{x_i,x_{i+1}} \in E \nonumber
+  \end{align}
+\end{definition}
+
+\begin{definition}
+  Sean $s,t \in V$, un \emph{flujo} de $s$ a $t$ en un network $N = (V, E, C)$
+  es una función $F \colon E \to \mathbb{R}_{\ge 0}$ tal que se cumple:
+  \begin{enumerate}
+  \item Feasibility o restricción de capacidad:
+    \begin{align}
+      \forall \ora{xy} \in E \colon 0 \le F(\ora{xy}) \le C(\ora{xy}) \label{feasible}
+    \end{align}
+
+  \item Conservación:
+    \begin{align}
+      \forall x \neq s,t \colon \sum_{\substack{\ora{xy} \in E}} F\left(\ora{xy}\right)
+      = \sum_{\substack{\ora{yx} \in E}} F\left(\ora{yx}\right) \label{conservacion}
+    \end{align}
+
+  \item La fuente ($s$) es productora:
+    \begin{align}
+      \sum_{x \in V} F(\ora{sx}) - \sum_{x \in V} F\left(\ora{xs}\right) \ge 0 \label{fuente}
+    \end{align}
+
+  \item El resumidero ($t$) es consumidor:
+    \begin{align}
+      \sum_{x \in V} F(\ora{xt}) - \sum_{x \in V} F(\ora{tx}) \ge 0 \label{resumidero}
+    \end{align}
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+Sean $A \subseteq V$, $B \subseteq V$ y $F$ un flujo, definimos:
+\begin{align}
+  F(A, B) = \sum_{\substack{x \in A \\ y \in B \\ \ora{xy} \in E}} F(\ora{xy}) \nonumber
+\end{align}
+\end{definition}
+
+\begin{proposition}
+  Sean un network $(V,E,C)$, conjuntos $A, B, C \subseteq V$ con $B$ y $C$ disjuntos,
+  y $F$ un flujo. Entonces
+  \begin{enumerate}
+    \item $F(A, B \cup C) = F(A,B) + F(A,C)$
+    \item $F(B \cup C, A) = F(B,A) + F(C,A)$   
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  Veamos los dos casos:
+  \begin{enumerate}
+  \item
+    \begin{align}
+      F(A, B \cup C)
+      &= \sum_{\substack{x \in A \\ y \in B \cup C \\ \ora{xy} \in E}} F(\ora{xy})\\
+      &= \sum_{\substack{x \in A \\ y \in B \\ \ora{xy} \in E}} F(\ora{xy})
+      + \sum_{\substack{x \in A \\ y \in C \\ \ora{xy} \in E}} F(\ora{xy}) && \text{pues son disjuntos}\\
+      &= F(A,B) + F(A,C)
+    \end{align}
+
+  \item
+    \begin{align}
+      F(B \cup C, A)
+      &= \sum_{\substack{x \in B \cup C \\ y \in A \\ \ora{xy} \in E}} F(\ora{xy})\\
+      &= \sum_{\substack{x \in B \\ y \in A \\ \ora{xy} \in E}} F(\ora{xy})
+      + \sum_{\substack{x \in C \\ y \in A \\ \ora{xy} \in E}} F(\ora{xy}) && \text{pues son disjuntos}\\
+      &= F(B,A) + F(C,A)
+    \end{align}
+  \end{enumerate}
+\end{proof}
+
+\begin{definition}\label{in/out}
+  Para un vértice $x \in V$, definimos
+\begin{align}
+  out_{F}(x) &= F(\{x\}, V)\\
+  in_{F}(x) &= F(V, \{x\})
+\end{align}
+\end{definition}
+
+Podemos usar esto y redefinir las propiedades:
+\begin{itemize}
+  \item[\ref{conservacion}] $\forall x \neq s,t \colon out(x) = in(x)$
+  \item[\ref{fuente}] $out(s) - in(s) \ge 0$
+  \item[\ref{resumidero}] $in(t) - out(t) \ge 0$
+\end{itemize}
+
+En muchos casos, ocurrirá que $in(s) = 0$ y $out(t) = 0$.
+
+\begin{proposition}
+Si $F$ es flujo de $s$ a $t$ en un network $(V, E, C)$, entonces
+\begin{align}
+    in(t) - out(t) = out(s) - in(s)
+\end{align}
+\end{proposition}
+
+\begin{proof}
+\begin{align}
+  0
+  &= F(V,V) - F(V,V)\\
+  &= \sum_{x \in V} F(V, \{x\}) - \sum_{x\in V} F(\{x\}, V)\\
+  &= \sum_{x \in V} F(V, \{x\}) - F(\{x\}, V)\\
+  &= \sum_{x \in V} out(x) - in(x)\\
+  &= \sum_{\substack{x \in V \\ x \neq s,t}} out(x) - in(x) + \sum_{\substack{x \in \{s,t\}}} out(x) - in(x)\\
+  &= \sum_{\substack{x \in \{s,t\}}} out(x) - in(x) &&\text{por \ref{conservacion}}\\
+  &= out(s) - in(s) + out(t) - in(t)
+\end{align}
+Concluimos,
+\begin{align}
+  in(t) - out(t) &= out(s) - in(s)
+\end{align}
+\end{proof}
+
+\begin{definition}
+  El \emph{valor del flujo} F de $s$ a $t$ se define $V(F) = out(s) - in(s)$.
+\end{definition}
+
+\begin{proposition}
+  Dado un flujo $F$, $V(F) \ge 0$.
+\end{proposition}
+\begin{proof}
+  Por \ref{fuente}: $V(F) = out(s) - in(s) \ge 0$.
+\end{proof}
+
+\begin{definition}
+  Un flujo F es \emph{maximal} si su valor es maximal. Es decir, si
+  $\forall G \text{ flujo} \colon V(G) \le V(F)$.
+\end{definition}
+
+\begin{definition}
+  Sea $N = (V,E,C)$ un network, y $F$ un flujo. Un lado $\ora{xy} \in E$ se dice
+  saturado si $F(\ora{xy})$ = $C(\ora{xy})$.
+\end{definition}
+
+\begin{definition}
+  Dado un network $N = (V, E, C)$, un \emph{corte} $S$ es un subcojunto de $V$
+  que contiene a $s$ y no contiene a $t$. Es decir, $S \subseteq V$,
+  $s \in S$, y $t \not\in S$.
+\end{definition}
+
+\begin{definition}
+  Sea $N = (V, E, C)$ un network. La \emph{capacidad} de un corte S se define:
+  \begin{align}
+    cap(S) = C(S, S^c) = \sum_{\substack{x\in S \\ y \not\in S \\ xy \in E}} C(\ora{xy})
+  \end{align}
+\end{definition}
+
+\begin{definition}
+  Un corte $S$ de un network $(V, E, C)$ se dice \emph{minimal} si su
+  capacidad es minimal. Es decir, si
+  $\forall T \text{ corte} \colon cap(S) \le cap(T)$.
+\end{definition}

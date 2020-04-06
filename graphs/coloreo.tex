@@ -1,0 +1,254 @@
+\subsection{Coloreo}
+
+\begin{definition}
+  Un \emph{coloreo} de los vértices de $G = (V,E)$ es una función
+  $C \colon V \to S$ con $S$ un conjunto de colores. Un \emph{$k$-coloreo} es
+  un coloreo tal que $|S| = k$.
+\end{definition}
+
+\begin{definition}
+  Un coloreo se dice \emph{propio} si $xy \in E \implies C(x) \neq C(y)$.
+  En ciertos casos abusaremos de la notación y cuando nos refiramos a un
+  coloreo será uno propio.
+\end{definition}
+
+\begin{definition}
+  El \emph{número cromático} de $G = (V,E)$:
+  \begin{align}
+    \chi(G) = min\left\{k \mid \text{existe un $k$-coloreo propio de los
+      vértices de G}\right\}
+  \end{align}
+  Para demostrar que un grafo tiene número cromático $k$, es necesario
+  probar que es $k$-coloreable, y que es imposible colorearlo con $k-1$ colores.
+\end{definition}
+
+\begin{proposition}
+  $0 \le \chi(G) \le n$.
+\end{proposition}
+\begin{proof}
+  Obvio.
+\end{proof}
+
+\begin{definition}
+  Un grafo $G$ se dice \emph{bipartito} si $\chi(G) = 2$.
+\end{definition}
+
+\begin{proposition}\label{graph_cyclic_color}
+  Un grafo cíclico $C_n$ con $n \ge 2$ es bipartito si $n$ es par y es
+  $3$-coloreable si $n$ es impar. Es decir,
+  \begin{align}
+    \chi(C_n) = 
+    \begin{cases}
+      2 & |\ \text{n es par} \\
+      3 & |\ \text{n es impar}
+    \end{cases}
+  \end{align}
+\end{proposition}
+
+\begin{proof}
+  Sean $v_1, \mathellipsis, v_n$ los vértices de $G$. Por casos:
+  \begin{itemize}
+  \item Caso $n$ par. Sea $C$ el coloreo tal que: 
+    \begin{align}
+      C(v_i) =
+      \begin{cases}
+        0 & |\ \text{$i$ es par}\\
+        1 & |\ \text{$i$ es impar}
+      \end{cases}
+    \end{align}
+    
+    Veamos que este coloreo es propio. Para todo vértice $v_{i}$, $i$ tiene la
+    misma paridad que $C(v_{i})$. Como $n$ es par, la paridad de $i$ es
+    distinta a la de $i-1 \mod{n}$ y a la de $i+1 \mod{n}$. Los vecinos de
+    $v_{i}$ son $v_{i-1 \% n}$ y $v_{i+1 \% n}$, y su color debe ser distinto
+    al de $v_{i}$.
+
+    Ahora, como $E \neq \varnothing$, se sigue que $\chi(C_n) \ge 2$.
+    Concluimos que $\chi(C_n) = 2$
+
+  \item Caso $n$ impar. Sea $C$ el coloreo tal que
+    \begin{align}
+      C(v_i) =
+      \begin{cases} 
+        0  & |\ \text{$i$ es par}\\
+        1  & |\ \text{$i \neq n$ es impar}\\
+        2  & |\ i = n 
+      \end{cases}
+    \end{align}
+
+    Este coloreo es propio por el mismo análisis del caso anterior para
+    $2 \le i < n$, y como $C(v_{n}) = 2$, claramente no hay problemas
+    entre $v_{n}$ y sus vecinos.
+
+    Intentemos colorear a $ C_{n}$ con 2 colores y veamos que es imposible.
+    Llamemos $1$ al color de $v_{1}$. Como $v_{2}$ es su vecino, debe
+    colorearse con el otro color, al que llamaremos $2$. Pero entonces
+    $v_{3}$ debe colorearse con 1, pues es vecino de $v_{2}$. De esta manera,
+    los vértices impares deben tener el mismo color que $v_{1}$, y los pares
+    el de $v_{2}$. Como $n$ es impar, debe colorearse con el color $1$.
+    Esto da lugar a un coloreo impropio, pues $v_{n}$ es vecino de $v_{1}$.
+    Así, $\chi(C_{n}) \ge 3$. Concluimos $\chi(C_n) = 3$.
+  \end{itemize}
+\end{proof}
+
+\begin{lemma}\label{chi_subgrafo}
+  Sea $H$ un subgrafo de $G$ entonces el número cromático de $H$ es menor
+  o igual al numero cromático de $G$, esto es:
+  \begin{align}
+    H \subseteq G \implies \chi(H) \le \chi(G)
+  \end{align}
+\end{lemma}
+
+\begin{proof}
+  Si no es posible colorear a $H$ con menos de $\chi(H)$ colores, entonces
+  claramente un coloreo de $G$ utiliza al menos esa cantidad de colores.
+\end{proof}
+
+\begin{lstinputlisting}[language=python]{graphs/bipartito.py}
+\end{lstinputlisting}
+
+\begin{lemma}\label{3colores_cicloimpar}
+  Un grafo $3$-coloreable tiene a un grafo ciclo impar como subgrafo:
+  \begin{align}
+    3 \le \chi(G) \implies \exists k \colon C_{2k+1} \subseteq G 
+  \end{align}
+\end{lemma}
+
+\begin{proof}
+  Corriendo $bipartito$ veremos que ese coloreo no es propio. Esto es,
+  $\exists yz \in E : C(y) = C(z)$. Como $yz \in E$, $y$ y $z$ están
+  en la misma componente conexa.
+  
+  $BFS$ determinó los colores de $y$ y $z$ según niveles:
+  \begin{align}
+    C(y) = C(z) \implies nivel(y) \equiv nivel(z)\ mod\ 2
+  \end{align}
+  
+  Llamemos $x$ a la raíz de la componente conexa de $y$ y $z$. Como $y \in BFS(x)$, existe un camino $x = y_0, \mathellipsis, y_r = y$ entre $x$ e $y$. A su vez, como $z \in BFS(x)$, existe un camino $x = z_0, \mathellipsis, z_t = z$ entre $x$ y $z$. Se sigue que $r \equiv t \mod{2}$.
+  
+  Vemos así que hay dos caminos que comienzan en $x$ pero que terminan en vértices distintos $y$ y $z$. Por lo tanto, estos caminos se separan en algún punto:
+  \begin{align}
+    \exists 0 \le j \le min\{r,t\} \colon y_j = z_j \wedge y_{j+1} \neq z_{j+1}
+  \end{align}
+  Aquí vemos que $y_j, y_{j+1}, \mathellipsis, y_r, z_t, z_{t-1}, \mathellipsis, z_{j+1}, z_{j}$ es un ciclo.
+  Consideremos los lados:
+  
+  \begin{itemize}
+  \item Hay $r-j$ lados en $y_j, y_{j+1}, \mathellipsis, y_{r-1}, y_r$.
+  \item Hay $t-j$ lados en $z_t, z_{t-1}, \mathellipsis, z_{j+1}, z_j$.
+  \item Hay $1$ lado en $y_r,z_t$.
+  \end{itemize}
+  
+  Por lo tanto, hay $(r-j)+(t-j)+1 = r+t-2j+1$ lados en el ciclo. Vemos que hay una cantidad impar de lados en el ciclo, ya que:
+  \begin{align}
+    r \equiv t \pmod{2}\\
+    r + t + 1 \equiv 1 \pmod{2}\\
+    r + t + 1 \equiv r + t - 2j + 1 \pmod 2\\
+    1 \equiv r + t - 2j + 1 \pmod 2\\
+  \end{align}
+  $\therefore$ El ciclo es impar.
+\end{proof}
+
+\begin{proposition}\label{chi_es_completo}
+  $\chi(K_{n}) = n$
+\end{proposition}
+\begin{proof}
+  Obvio.
+\end{proof}
+
+\begin{lemma}\label{cicloimpar_3colores}
+  Si un grafo G tiene un subgrafo ciclo impar entonces tengo que colorearlo como mínimo con 3 colores.
+  Así mismo, si un grafo G que tiene a un subgrafo completo de r vértices, entonces necesito como mínimo r colores para colorearlo. Es decir $\forall r \in \N$,
+  \begin{align}
+    C_{2r+1} \subseteq G &\implies 3 \le \chi(G)\\
+    K_r \subseteq G      &\implies r \le \chi(G)
+  \end{align}
+\end{lemma}
+\begin{proof}
+  Usando el lema [\ref{chi_subgrafo}] y las proposiciones [\ref{3colores_cicloimpar}] y [\ref{chi_es_completo}].
+\end{proof}
+
+\begin{proposition}
+  Un grafo $G$ necesita como mínimo 3 colores para colorearse si y solo si hay un ciclo impar en $G$.
+  
+  \begin{align}
+    3 \le \chi(G) \iff \exists k \in \N \colon C_{2k+1} \subseteq G
+  \end{align}
+\end{proposition}
+
+\begin{proof}
+  Es consecuencia directa de los lemas [\ref{3colores_cicloimpar}] y [\ref{cicloimpar_3colores}].
+\end{proof}
+
+
+\begin{algorithm}
+  \caption{Algoritmo greedy de coloreo de vértices}
+  \begin{algorithmic}
+    \Function{greedy}{$graph\ G, vertex\ [v_0,\mathellipsis,v_n]$}
+    \State Colorear $v_0$ con $1$;
+    \For{$i = 1, \mathellipsis, n$}
+    \LeftComment{Inv: El coloreo parcial es propio.}
+    \State Colorear $v_i$ con $\min \{k \mid v_i $ no tiene vecinos color $k$\}
+    \EndFor
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{proposition}
+  El algoritmo greedy de coloreo de vértices es correcto.
+\end{proposition}
+\begin{proof}
+  Por construcción, dado que el invariante de greedy es que el coloreo parcial es propio, cuando termina, el coloreo es propio.
+\end{proof}
+
+\begin{proposition}
+  El algoritmo greedy de coloreo de vértices colorea a $G$ con a lo sumo $\Delta + 1$ colores.
+\end{proposition}
+
+\begin{proof}
+  Greedy elige el menor color posible para todo $x\in V$.
+  Como $d(x) \le \Delta$, al colorear $x$ habrá  a lo sumo $\Delta$ colores no disponibles. Así, puedo colorear a $x$ con el color $\Delta$+$1$-ésimo.
+\end{proof}
+
+\begin{definition}
+  Sea $G = (V, E)$ un grafo, y  $C$ un coloreo propio con $r$ colores. Podemos particionar $V$ en $r$ conjuntos disjuntos:
+  \begin{align}
+    V = \bigcup_{1\le i \le r} V_i = \mathit{V_1} \cup \mathellipsis \cup \mathit{V_r}
+  \end{align}  
+  tales que cada uno tenga vértices de un color
+  \begin{align}
+    \mathit{V_i} = \left\{x \in V \mid C(x) = i\right\}
+  \end{align}
+  Usaremos a estos $V_i$ en sucesivas demostraciones.
+\end{definition}
+
+\begin{theorem}
+  Sea $G = (V, E)$ un grafo y $C$ un coloreo propio de los vértices de $G$ con $r$ colores. Sean $j_1, \mathellipsis, j_r$ una permutación de los $r$ colores. Consideremos el siguiente orden: primero los vértices en $V_{j_1}$ (en cualquier orden), luego aquellos en $V_{j_2}$ (en cualquier orden), $\mathellipsis$, y por último aquellos en $V_{j_r}$ (en cualquier orden). Entonces el coloreo resultante al correr greedy con el orden anterior es de a lo sumo $r$ colores.
+\end{theorem}
+
+\begin{proof}
+  Por inducción sobre la propiedad $P(i)$ = ``greedy colorea a $V_{j_1} \cup \mathellipsis \cup V_{j_i}$ con a lo sumo $i$ colores".
+  \begin{itemize}
+  \item Caso base: $i = 1$. $P(1)$ = ``greedy colorea a $V_{j_1}$ con un único color".
+    
+    Es obvio que greedy colorea a estos vértices con un color (no hay lados entre ellos por la definición de $V_{j_1}$).
+    
+  \item Caso inductivo: Supongamos que $P(i)$ vale.
+    
+    Asumamos que $P(i+1)$ no vale, y lleguemos a un absurdo. Es decir, greedy colorea a $V_{j_1} \cup \mathellipsis \cup V_{j_i}$ con $i$ colores, pero a $V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}}$ con más de $i + 1$ colores. Se sigue que $\exists x \in V_{j_1} \cup \mathellipsis \cup V_{j_{i+1}} \colon C(x) = i + 2$. Considerando la definición de greedy, como $C(x) = i + 2$ se sigue que  $\exists y \in \Gamma(x) \colon C(y) = i + 1$ e $y$ se colorea antes de $x$. Como $y$ es vecino de $x$, $y \not\in V_{j_{i+1}}$ (definición de $V_{j_{i+1}}$) y entonces $y \in V_{j_1} \cup \mathellipsis \cup V_{j_i}$. Pero como $P(i)$ vale, $y \not\in V_{j_1} \cup \mathellipsis \cup V_{j_i}$, ya que $C(y) > i$.
+  \end{itemize}
+\end{proof}
+
+\begin{corollary}
+  Dado un grafo $G$, existe un orden en el que greedy lo colorea con $\chi(G)$ colores.
+\end{corollary}
+\begin{proof}
+  Sea $C$ un coloreo de $G$ con $\chi(G)$ colores. Utilizando el orden anterior, greedy colorea a $G$ con a lo sumo $\chi(G)$ colores. Y por definición de $\chi$, lo colorea con exactamente $\chi(G)$.
+\end{proof}
+
+\begin{definition}
+  Dado un grafo $G=(V,E)$, llamamos órden \emph{Welsh-Powell} a la sucesión de vértices $x_1, \mathellipsis, x_n \in V$ tal que están ordenados decrecientemente según su grado:
+  \begin{align}
+    \Delta = d(x_1) \ge d(x_2) \ge \mathellipsis \ge d(x_n) = \delta
+  \end{align}
+\end{definition}

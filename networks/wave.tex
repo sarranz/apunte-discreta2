@@ -1,0 +1,174 @@
+\subsection{Wave}
+En Edmonds-Karp y Dinic el invariante es que $F$ es flujo, el algoritmo transforma un flujo en otro, y se detiene cuando no hay mas caminos aumentantes (E-K) o no hay mas caminos bloqueantes (Dinic).
+Varios algoritmos invierten el esquema: se parte de un pseudo-flujo bloqueante, se lo va transformando en otros pseudo-flujos bloqueantes, hasta obtener un flujo propiamente dicho.
+
+Wave: como $MKM$ pero desde $s$.
+Veamos el paso bloqueante:
+Sea $(x_0 = s, x_1, \mathellipsis, x_r = t)$ es el orden $BFS$ de la construcción de este network auxiliar.
+\begin{algorithm}
+\begin{algorithmic}
+\Function{Paso bloqueante de Wave}{network N}
+\State $G  = 0$
+\For{$x\in V$}
+\State $D(x) = 0$ \Comment{desbalance in-out}
+\EndFor
+\For{$x \neq s \wedge x\in V$}
+\State $D(x) = 0$
+\EndFor
+\For{$x \neq s \wedge x \in V$} 
+\State $B(x) = false$ \Comment{vértice bloqueado}
+\State $A(x) = \varnothing$ \Comment{vértices que le mandan}
+\EndFor
+\For{$x \in \Gamma^+(s)$}
+\State $G(\ora{sx}) = C(\ora{sx})$
+\State $D(x)$ += $C(\ora{sx})$
+\State $D(s)$ -= $C(\ora{sx})$
+\State $A(x) = \{s\}$
+\EndFor
+\While{$D(s) + D(t) \neq 0)$}
+\For{$x \in [x_1,\mathellipsis,x_{r-1}]$} \Comment{forward wave}
+\If{$D(x) > 0$}
+\State{$\Call{forwardBalance}{x}$}
+\EndIf
+\EndFor
+\For{$x \in [x_{r-1} \mathellipsis, x_1]$} \Comment{backward wave}
+\If{$D(x) < 0 \wedge B(x)$}
+\State{$\Call{backwardBalance}{x}$}
+\EndIf
+\EndFor
+\EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\begin{algorithmic}
+\Function{forwardBalance}{vertex x}
+\While{$D(x) > 0 \wedge \Gamma^+(x) \neq \varnothing$}
+\State elegimos $z \in \Gamma^+(x)$
+\If{B(z)}
+\State{$\Gamma^+(x) := \Gamma^+(x) - \{z\}$}
+\Else
+\State $m = min\{D(x), C(\ora{xz}) - G(\ora{xz})\}$
+\State $G(\ora{xz}$ += $m$
+\State $D(x)$ -= $m$
+\State $D(z)$ += $m$
+\State $A(z) = A(z) \cup \{x\}$
+\If{$G(\ora{xz}) == C(\ora{xz})$}
+\State $\Gamma^+(x) := \Gamma^+(x) - \{z\}$
+\EndIf
+\If{$D(x) > 0$}
+\State $B(x) := true$
+\EndIf
+\EndIf
+\EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\begin{algorithmic}
+\Function{backwardBalance}{vertex x}
+\While{$D(x) > 0$}
+\State elegimos $z \in A(x)$
+\State $m = min\{D(x), G(\ora{zx})\}$
+\State $G(\ora{zx}$ -= $m$
+\State $D(x)$ -= $m$
+\State $D(z)$ -= $m$
+\If{$G(\ora{zx}) == 0$}
+\State $A(x) := A(x) - \{z\}$
+\EndIf
+\EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+La complejidad del algoritmo de Wave es $\mathcal{O}(n^3)$
+\end{theorem}
+
+\begin{proof}
+Wave es de tipo Dinic. Tiene $\mathcal{O}(n)$ networks auxiliares. Probemos que el paso bloqueante es $\mathcal{O}(n^2)$
+Al correr el paso bloqueante hacemos una serie de \Call{forwardBalance}{x} y \Call{backwardBalance}{x}.
+Al hacer \Call{ForwardBalance}{x} procesamos lados $\ora{xz}$ de dos categorias posibles:
+\begin{itemize}
+    \item Categoría T(otal): al procesarlo, $G(\ora{xz}) = C(\ora{xz})$. Es decir, se satura o vacía el lado.
+    \item Categoría P(arcial): al procesarlo, $G(\ora{xz}) < C(\ora{xz})$
+\end{itemize}
+En los T se remueve de $\Gamma^+(x)$. Solo se entra una vez a T.
+El total de lados de categoria T sobre todos los \Call{forwardBalance} sobre todos las olas es $\mathcal{O}(m)$.
+De los de categoría P hay a lo sumo uno en cada \Call{forwardBalance}{x}:
+
+$\#$ lados en cat P $\le \#FB$ totales.\\
+En una ola hacia adelante hay a lo sumo $(n-2)$ FB(x).
+En una de estas olas, puede pasar:
+\begin{itemize}
+    \item Todos los vértices quedan balanceados.
+    \item Queda alguno no balanceado.
+\end{itemize}
+Toda ola bloquea al menos un vértice.
+Como los vértices nunca se desbloquean, hay $\mathcal{O}(n)$ olas hacia adelante.\\
+Entonces:
+\begin{align}
+\#FB &\le (n-2) \# olas
+     \le (n-2) \mathcal{O}(n) = \mathcal{O}(n^2)
+\end{align}
+
+\text{Complejidad de todos las olas hacia adelante} = \# lados tipo T + \# lados tipo P\\
+= $\mathcal{O}(m) + \mathcal{O}(n^2) = \mathcal{O}(n^2)$
+
+Olas hacia atrás:
+En los BB(x) también hay dos categorias:\begin{itemize}
+    \item T: $G(\ora{zx})  = 0$
+    \item P: $G(\ora{zx}) > 0$
+\end{itemize}
+Hay a lo sumo uno de tipo $P$ en cada BB(x).\\
+$\#$ tipo P $\le \#$ BB(x)
+$\le \mathcal{O}(n) \cdot \#$ olas hacia atras \\
+$\le \mathcal{O}(n) \cdot \#$ olas hacia adelante
+$\le \mathcal{O}(n) \cdot \mathcal{O}(n)$\\
+
+Tipo T:
+Si $\ora{zx}$ es de tipo T, $z$ se remueve de $A(x)$
+¿Cuántas veces puedo agregar a $z$ a $A(x)$ luego de esto?
+Necesito que $z$ le mande flujo a $x$ para que pase.
+Pero solo hacemos BB(x) si $x$ está bloqueado y si $x$ está bloqueado, como nunca se desbloquea, $z$ no le puede mandar flujo.\\
+Así, hay a lo sumo $m$ lados de tipo T y $\#$ olas hacia atrás $\le \#$ tipo T $+ \#$ tipo P
+$\le \mathcal{O}(m) + \mathcal{O}(n^2)
+\le \mathcal{O}(n^2)$
+\end{proof}
+
+\begin{lstlisting}[language=Python]
+# levels = [lvl_1, ...., lvl_r]
+# where lvl_k contains vertices in the k-th level
+# and lvl_0 = [s], lvl_r = [t]
+def blockingFlow(AN):
+    vs = concat(levels)
+    D(s) = CAP({s})
+    FB(s)
+    while D(s) + D(t) is not 0:
+        for v in vs if not B(v):
+            FB(v)
+        for v in reverse(vs) if B(v):
+            BB(v)
+
+def FB(v):
+    for w in FNeighbours(v) if D(v) > 0:
+        if B(w) or g(v,w) is c(v,w):
+            continue
+        m = min(D(v), c(v,w)-g(v,w))
+        g(v,w) += m
+        D(v) -= m
+        D(w) += m
+    if D(v) > 0:
+        B(v) = true
+        
+def BB(v):
+    for w in BNeighbours(v) if D(v) > 0:
+        if g(w,v) is 0:
+            continue
+        m = min(D(v), g(w,v))
+        g(w,v) -= m
+        D(v) -= m
+        D(w) += m
+\end{lstlisting}

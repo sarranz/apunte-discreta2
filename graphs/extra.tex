@@ -1,0 +1,64 @@
+\subsection{Extra}
+
+\begin{definition}
+Sea G = (V,E) un grafo, un \emph{clique} C es un subconjunto de vértices de G tal que el grafo inducido por C es un grafo completo. Esto es 
+\begin{align}
+    C \subseteq V \text{es clique} &\iff G[C] = K_{|C|}
+\end{align}
+Una \emph{clique máxima} C es un clique tal que no existe otra clique en G que tenga más vértices. \begin{align}
+    C \text{ clique máxima} \iff \forall D \text{ clique} \subseteq V \colon |D| \le |C|
+\end{align}
+Dado un grafo $G = (V,E)$ y $C$ una clique máxima de $G$, definimos el \emph{número de clique} $\omega(G)$ como el número de vértices en $C$.
+\end{definition}
+
+\begin{definition}
+Sea $G = (V_G, E_G)$ un grafo, con $V_G = \{v_i \mid 1 \le i \le n\}$, llamamos $\mu(G) = (V_\mu, E_\mu)$ al \emph{grafo de Mycielski} de $G$. Este grafo es tal que contiene a $G$ como subgrafo, tiene un vértice $u_i$ extra por cada $v_i$ y un vértice extra $w$. Cada vértice $u_i$ es vecino de $w$ (formando una \emph{estrella}), y por cada lado $v_iv_j$ hay lados $u_iv_j$ y $v_iu_j$.
+En símbolos:
+\begin{align}
+V_\mu &= V_G \cup \{u_i \mid 1 \le i \le n \} \cup \{w\}\\
+E_\mu &= E_G \cup \{ u_i w \mid 1 \le i \le n\} \cup \{u_i v_j \mid v_i v_j \in E_G \} \cup \{v_i u_j \mid v_i v_j \in E_G \}
+\end{align}
+Es claro que $\mu(G)$ tiene $2n+1$ vértices y $3m+n$ lados.
+\end{definition}
+\begin{proposition}\label{Mycielski_triangle_free}
+$G$ no tiene triángulos $\implies$ $\mu(G)$ no tiene triángulos.
+\end{proposition}
+\begin{proof}
+Por construcción, los nuevos triángulos en $\mu(G)$ deben ser de la forma $v_i v_j u_k$, y esto solo puede pasar si hay triángulos $v_i v_j v_k$ en $G$. Como $G$ no tiene triángulos, tampoco hay ninguno en $\mu(G)$.
+\end{proof}
+
+\begin{proposition}\label{Mycielski_aumenta_chi}
+Sea $G$ un grafo, al construir su grafo de Mycielski aumenta en 1 su numero cromático. En símbolos,
+$\chi({\mu(G)}) = \chi(G) + 1$
+\end{proposition}
+
+\begin{proof}
+Sea $\chi(G) = k$. Para probar que el número cromático de un grafo es $k+1$, debemos dar:
+\begin{itemize}
+    \item Un coloreo con $k+1$ colores.\\
+    Sea $C$ un coloreo de $G$ con $k$ colores. Vemos que $v_i$ y $u_i$ no son vecinos, y que los vecinos de $u_i$ son exactamente los de $v_i$. Esto significa que los colores bloqueados para $u_i$ son los mismos que para $v_i$. Extendamos entonces $C(u_i) = C(v_i)$. Por último, coloreemos $C(w) = k+1$. Es fácil ver que este coloreo es propio.
+    
+    \item Una prueba de que no se puede colorear con menos de $k+1$ colores.\\
+    Por absurdo: Supongamos que tenemos $C$ un coloreo de $\mu(G)$ con $k$ colores. Notemos que $\forall i \colon C(w) \neq C(u_i)$. Es decir, que los $u_i$ deben colorearse con \emph{menos} de $k$ colores, para dejar el de $w$ libre. Si esto fuese así, podríamos definir $C'$ un $k$-$1$-coloreo de $G$ de la siguiente forma
+    \begin{align}
+           C'(v_i) =
+        \begin{cases}
+            C(u_i) & |\ C(v_i) = k\\
+            C(v_i) & |\ C(v_i) \neq k
+        \end{cases}
+    \end{align}
+    Este coloreo es propio, considerando que $v_i$ y $u_i$ no son vecinos, y que los vecinos de $u_i$ son exactamente los de $v_i$, como antes.
+    Además, este es un $k$-$1$-coloreo, ya que por construcción no usa el color $k$. Por hipótesis $\chi(G) = k$, así que esto es un absurdo.
+\end{itemize}
+\end{proof}
+
+\begin{proposition}
+Existen grafos con número cromático arbitrariamente grande y sin triángulos. En símbolos:
+\begin{align}
+    \forall r \colon \exists G \colon \chi(G) \ge r \wedge \omega(G) = 2.
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Simplemente partimos del grafo $M_2 = (\{\star, \circ\}, \{\star\circ\}$) (esto es $K_2$) y definimos $M_i = \mu({M_{i-1})}$ para $i \ge 3$. Por la proposición [\ref{Mycielski_aumenta_chi}] está claro que $\forall i \colon 2 \le i : \chi(M_i) = i$. Y por la proposición [\ref{Mycielski_triangle_free}], inductivamente vemos que no hay triángulos en $M_i$.
+\end{proof}
