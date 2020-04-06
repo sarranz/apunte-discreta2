@@ -1,0 +1,265 @@
+\subsection{Dinic-Even}
+
+\begin{algorithm}
+\caption{Algoritmo de Dinic-Even para encontrar flujo maximal}
+\begin{algorithmic}
+\Require network $N=(V,E,C)$
+\Ensure  $F$ un flujo maximal
+\Function{Dinic}{$network\ N$}
+\State $F = 0$
+\State $L$ = \Call{LayeredNetwork}{$N, F$} \Comment{ Construir un network auxiliar por niveles $L$ basado en $F$ y $N$}
+\While{$t \notin L$}
+    \State $F$ += \Call{BlockingFlow}{$L$}
+    \State $L$ = \Call{LayeredNetwork}{$N, F$}
+\EndWhile
+\State \Return{$F$}
+\EndFunction
+
+\State
+
+\Function{BlockingFlow}{layered network $L$}
+\State $len = d_L(s,t)$
+\State vertex path $P = [s]$
+\State $G = 0$ \Comment{Este será flujo bloqueante}
+    \While{$true$}
+    \State $i = 0$
+        \While{$i < len$}
+            \State $v = P[i]$
+            \If{$\Gamma^+(v) \neq \varnothing$}
+                \Comment{Avanzar}
+                \State $P$ += algún vecino de $v$
+                \State $i$ += $1$
+            \ElsIf{$v \neq s$}
+                \Comment{No podemos llegar a $t$: Retroceder}
+                \State $E_L$ -= $\ora{P[i-1] P[i]}$
+                \State $i$ -= $1$
+            \Else
+                \State \Return{$G$} \Comment{Solo terminamos cuando $\Gamma^+(s) = \varnothing$}
+            \EndIf
+        \EndWhile
+    
+        \Comment{Llegamos a $t$: Incrementar}
+        \State $\varepsilon = \min_{0\le i < len} \{ C(\ora{P[i] P[i+1]}) - G(\ora{P[i] P[i+1]})\}$
+        \For {$i \in \{0, \mathellipsis, len-1\}$}
+            \State $G(\ora{P[i] P[i+1]})$ += $\varepsilon$
+            \If {$C(\ora{P[i] P[i+1]}) = G(\ora{P[i] P[i+1]})$}
+                \State $E_L$ -= $\ora{P[i] P[i+1]}$
+            \EndIf
+        \EndFor
+    \EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{definition}[Network por niveles]
+Un network $N = (V,E,C)$ es un \emph{network por niveles} si:
+\begin{align}
+ V &= \bigcup_{i=0}^r V_i \\
+ E &= \{\ora{xy} \mid \forall i: 0 \le i \le r : x \in V_i \wedge y \in V_{i+1}\}
+ \end{align}
+ tal que $\forall i, j : 0 \le i < j \le r \wedge i \neq j : V_i \cap V_j = \varnothing$ \\
+Y con $V_0 = \{s\} \text{ y } V_r = \{t\}$
+
+Es decir, solo hay lados entre vértices de distintos niveles siendo el primer nivel el de $s$ y el último el de $t$.
+\end{definition}
+
+\begin{definition}[Network residual]
+Dado un network $N = (V_N, E_N, C_N)$ y un flujo $F_N$, el \emph{network residual} $R$ = $R_F$ = $R_{F_N} = (V_R, E_R, C_R)$ es el network tal que:
+\begin{itemize}
+    \item $V_R = V_N$
+    \item $(\ora{xz}) \in E_R \iff 
+    \left\{ 
+    \begin{array}{cc}
+    \ora{xz} \in E_N \wedge F_N(\ora{xz}) < C_N(\ora{xz})     & \text{caso \textit{forward}} \\
+    \text{o bien}  & \\
+    \ora{zx} \in E_N \wedge F_N(\ora{zx}) > 0 & \text{caso \textit{backward}}
+    \end{array}
+    \right.$
+    \item $C_R(\ora{xz}) = \left\{
+    \begin{array}{cc}
+        C_N(\ora{xz}) -
+        F_N(\ora{xz})   & \text{caso \textit{forward}}\\
+        F_N(\ora{zx})   & \text{caso \textit{backward}}
+    \end{array}
+    \right.
+    $
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Network auxiliar por niveles o \textit{level graph}]
+Dado un network residual $R = R_F = R_{F_N} = (V_R, E_R, C_R)$ definimos al \emph{network auxiliar por niveles} o $\boldsymbol{level}$  $\boldsymbol{graph}\ L = L_F = (V_L, E_L, C_L)$ de la siguiente forma:
+\begin{itemize}
+    \item $V_L = \{ x\in V_R \mid d_F(x) < d_F(t)\} \cup \{t\}$
+    \item $E_L = \{\ora{xy} \in E_R \mid d_F(x) + 1 = d_F(y)$\}
+    \item $C_L = C_R$
+\end{itemize}
+
+\end{definition}
+
+\begin{definition}[Flujo bloqueante]
+Un \emph{flujo bloqueante} o $\boldsymbol{blocking}$  $\boldsymbol{flow}$ es un flujo tal que todos los caminos dirigidos de $s$ a $t$ tienen al menos un lado saturado.
+\end{definition}
+
+\begin{algorithm}
+\caption{Pseudocódigo de Algoritmos tipo Dinic}
+\begin{algorithmic}
+\State $F = 0$
+\While{$d_F(t) < \infty$}
+    \State Construir un \textit{level graph} $L = L_F$
+    \State Hallar flujo bloqueante $G$ en $L$
+    \State Modificar $F$ en $N$ de acuerdo a $G$
+\EndWhile
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+Entre dos level graphs consecutivos la distancia entre $s$ y $t$ aumenta.
+\end{theorem}
+
+\begin{proof}
+Sean $A$ y $B$ dos networks auxiliares consecutivos. Probaremos que $d_A(t) < d_B(t)$. 
+Sabemos que $d_A(t) \le d_B(t)$ por el lema [\ref{distancias_no_decrecen_EK}] de Edmonds-Karp (seguimos utilizando el camino más corto).
+Debemos entonces probar que $d_A(t) \neq d_B(t)$.\\
+Primero, observemos que $s, x_1, \mathellipsis, x_{r-1}, t$ es un camino dirigido no saturado en $A \iff$ no lo es en $B$, puesto que si es no saturado en $A$ el flujo bloqueante satura uno de sus lados, y si no lo es en $B$ entonces no estaba en $A$ (el flujo bloqueante lo hubiera saturado).\\
+Sea $s, x_1, \mathellipsis, x_{r-1}, t$ el mínimo camino dirigido no saturado en $B$. Como dijimos, este camino no estaba en $A$. Esto puede darse por dos razones:
+
+\begin{enumerate}
+    \item Caso 1: $\exists i : x_i \in V_B : x_i \notin V_A$: Falta un vértice $x_i$ en $A$ que si está en el $B$ (notar que $x_i \neq s,t$).\\
+    Entonces $d_A(t) \le d_A(x_i)$, ya que si la distancia fuese menor hubiera estado en $A$. Por el lema de E-K [\ref{distancias_no_decrecen_EK}], $d_A(x_i) \le d_B(x_i)$.\\
+    Así, $d_{A}(t) \le d_{A}(x_i) \le d_{B}(x_i) < d_{B}(t)$ ($x_i$ está antes de $t$ en el camino en $B$). Así, $d_A(t) < d_B(t)$.
+    
+    \item Caso 2: $\exists i : \ora{x_{i-1} x_i} \notin E_A$: falta un lado $\ora{x_{i-1} x_{i}}$ pero ningún vértice. 
+    Esto puede pasar por dos razones (correspondientes a la definición de $E_R$ y $E_A$). \\
+    Tomemos el mínimo $i$ tal que $\ora{x_{i-1} x_{i}} \notin E_A$:
+    
+    \begin{enumerate}
+    \item Caso A: El lado está saturado o vacío (en $N$).\\
+    Como en $E_B$ este lado si está, al incrementar el flujo en $A$ debimos usarlo en el otro sentido: con un camino $s, \mathellipsis, x_i, x_{i-1}, \mathellipsis, t$. Así,
+    \begin{align}
+        d_B(t)
+        &= d_B(x_i) + b_B(x_i)\\
+        &= d_B(x_{i-1}) + 1 + b_B(x_i)\\
+        &\ge d_A(x_{i-1}) + 1 + b_A(x_i)\\
+        &\ge d_A(x_{i-1}) + 1 + b_A(x_{i-1}) + 1\\
+        &\ge d_A(t) + 2\\
+        &> d_A(t)
+    \end{align}
+    Como en E-K.
+    %$\left.
+    %\begin{array}{cc}
+    %(\ora{x_{i-1} x_{i}}) \notin  E_{R_{A}}     &  \\
+    %(\ora{x_{i-1} x_{i}}) \in E_{R^*_{B}}     & 
+    %\end{array}
+    %\right\}$
+    %solo puede ocurrir si $(\ora{x_{i} x_{i-1}}) \in E_L$\\
+    %Veamos lo anterior:\\
+    %Supongamos que 
+    %$(\ora{x_{i+1} x_i}) \in E_L$, luego $d_A(x_{i+1}) + 1 = d_A(x_i)$\\
+    %Entonces, $d_A(t) = d_A(x_i) + b_A(x_i)$. Pero $\ora{(x_i x_{i+1}})$ es el primer %lado que no está en $E_L$
+    %\begin{align}
+    %\forall k : 0 \le k < i &: (\ora{x_{k-1} x_{k}}) \in E_L \implies \\
+    %\forall j : j < i &: d_A(x_j) = j 
+    %\end{align}
+    %Entonces, $(\ora{x_{i-1} x_{i}}) \notin E_{R_A} \wedge (\ora{x_{i-1} x_{i}}) \in E_{R^{*}_B}$
+         
+    \item Caso B: El lado no está saturado ni vacío: $d_A(x_i) + 1 \neq d_A(x_{i-1})$\\
+    Esto significa que $d_A(x_{i}) \le d_A(x_{i-1}) + 1$ (si no, como el lado no esta saturado ni vacío, estaría en $E_A$).
+    $\therefore d_A(x_i) < d_A(x_{i-1}) + 1$. Como el camino es mínimo en $B$,
+    \begin{align}
+        d_B(t)
+        &= d_B(x_i) + b_B(x_i)\\
+        &= d_B(x_{i-1}) + 1 + b_B(x_i)\\
+        &\ge d_A(x_{i-1}) + 1 + b_A(x_i)\\
+        &\ge d_A(x_i) + 1 + b_A(x_i)\\
+        &\ge d_A(t) + 1\\
+        &> d_A(t)
+    \end{align}
+    %Pero $d_A(x_{i-1}) = i-1$ (pues $\forall j < i : d_A(x_j) = j$\\
+    %Por lo tanto, $d_A(x_{i}) \neq  i-1 +1 = i$, pero como $d_A(x_{i}) \le d_B(x_{i}) = i$, 
+    %tenemos que $d_A(x_{i}) < i$\\
+    %$\therefore d_A(t) = d_A(x_{i}) + b_A(x_{i}) < i + b_A(x_{i}) \le i + b_B(x_{i}) = d_B(x_{i}) + b_B(x_{i}) = d_B(t)$\\
+    %$\therefore d_A(t) < d_B(t)$
+    \end{enumerate}
+    %Volviendo al caso $A$, tenemos que $d_A(x_i) + 1 = d_A(x_{i-1}) = i-1$\\
+    %$\therefore d_A(x_i) = i - 2 < i$ y vale la prueba de 2B.
+\end{enumerate}
+\end{proof}
+
+\begin{theorem}
+La complejidad del paso de flujo bloqueante en el algoritmo de Dinic-Even es $\mathcal{O}(nm)$
+\end{theorem}
+\begin{proof}
+Sean \begin{itemize}
+    \item A := 'Avanzar'
+    \item R := 'Retroceder'
+    \item I := 'Incrementar $G$'
+\end{itemize}
+Una corrida se corresponde a:
+$A^*(A^*R^*)^*I$.\\
+Consideremos entonces las palabras de la forma $A^*x$ (con $x \in \{ R, I \}$).
+Necesitamos saber cuántas palabras hay y cuál es la complejidad de cada una.
+Tengamos en cuenta lo siguente:
+\begin{itemize}
+    \item $compl$(A) = $\mathcal{O}(1)$
+    \item $compl$(R) = $\mathcal{O}(1)$
+    \item $compl$(I) = $\mathcal{O}(n)$. 
+\end{itemize}
+
+Teniendo en cuenta que R borra un lado del \textit{level graph} y que I también borra al menos un lado (pues al incrementar el flujo se satura al menos un lado) tenemos que:
+\begin{align}
+    \#palabras(A^*x) \le m
+\end{align}
+
+Veamos ahora la complejidad de cada palabra:
+\begin{align}
+\underbrace{A\mathellipsis A}_j R &\rightarrow \underbrace{\mathcal{O}(1)+\mathellipsis+\mathcal{O}(1)}_j+ \mathcal{O}(1) = \mathcal{O}(j)\\
+\underbrace{A\mathellipsis A}_j I &\rightarrow \mathcal{O}(j) + \mathcal{O}(n)
+\end{align}
+Estamos en un \textit{level graph} y A mueve el pivot $p$ desde $p$ hasta un vecino de $p$. Por lo tanto, A incrementa en 1 el nivel de $p$. Luego de a lo sumo $n$ Avanzar debo llegar a $t$ (o se produce un I o bien hay que Retroceder). Luego $j \le n$
+
+\begin{align}
+    \therefore compl(\text{A...AR}) &= \mathcal{O}(j) = \mathcal{O}(n)\\
+    compl(\text{A...AI}) &= \mathcal{O}(j) + \mathcal{O}(n)\\
+    &= \mathcal{O}(n) + \mathcal{O}(n)\\
+    &= \mathcal{O}(n)
+\end{align}
+
+Conclusión: $\# palabras \in \mathcal{O}(m)\ \wedge \  compl(palabra) \in \mathcal{O}(n) \implies$
+Complejidad del paso de flujo bloqueante del algoritmo de Dinic-Even es $\mathcal{O}(nm)$
+
+\end{proof}
+
+\begin{theorem}
+La complejidad del algoritmo de Dinic-Even es $\mathcal{O}(n^2 m)$
+\end{theorem}
+\begin{proof}
+En [ref] vimos que la distancia de $s$ a $t$ en level graphs consecutivos aumenta.\\
+$\therefore$ Hay a lo sumo $n-1$ \textit{level graphs}.\\
+Tambien vimos que la complejidad del paso bloqueante es $\mathcal{O}(nm)$.
+\end{proof}
+
+\begin{definition}
+Un network $N = (V,E,C)$ se dice unitario si tiene capacidad $1$ en todos sus lados.\\
+$\forall \ora{xy} \in E : C(\ora{xy}) = 1$ \\
+$\forall x \neq s,t : |\Gamma^+(x)| = 1 \veebar |\Gamma^-(x)| = 1$
+\end{definition}
+\begin{theorem}
+Dinic en un network unitario tiene complejidad $\mathcal{O}(m\sqrt{n})$
+\end{theorem}
+
+\begin{proof}
+Supongamos que hago $\sqrt{n}$ flujos bloqueantes y el algoritmo aún no termina.
+Sea $F$ el flujo que tenemos. Notemos que $F \in \mathbb{Z}$ y que $R_F$ es unitario:
+\begin{itemize}
+    \item Si $F < C$, $C' = 1$
+    \item Si no, $C' = F = 1$
+\end{itemize}
+Sea $G$ el flujo maximal en $R_F$ obtenido por Dinic.
+Como es flujo, $\forall x \neq s,t : out_G(x) = in_G(x)$
+Como $C' \le 1$:
+\begin{itemize}
+    \item si $|\Gamma^-(x)| = 1, in_G(x) \le 1$, es decir $in_G(x) = 0$
+\end{itemize}
+\end{proof}
+
