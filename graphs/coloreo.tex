@@ -181,18 +181,8 @@
 \end{proof}
 
 
-\begin{algorithm}
-  \caption{Algoritmo greedy de coloreo de vértices}
-  \begin{algorithmic}
-    \Function{greedy}{$graph\ G, vertex\ [v_0,\mathellipsis,v_n]$}
-    \State Colorear $v_0$ con $1$;
-    \For{$i = 1, \mathellipsis, n$}
-    \LeftComment{Inv: El coloreo parcial es propio.}
-    \State Colorear $v_i$ con $\min \{k \mid v_i $ no tiene vecinos color $k$\}
-    \EndFor
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
+\begin{lstinputlisting}[language=python]{graphs/greedy.py}
+\end{lstinputlisting}
 
 \begin{proposition}
   El algoritmo greedy de coloreo de vértices es correcto.

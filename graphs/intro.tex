@@ -97,28 +97,3 @@ solo si existe un camino de $x$ a $y$.
 \begin{lstinputlisting}[language=python]{graphs/bfs.py}
 \end{lstinputlisting}
 \end{definition}
-
-% Código viejo:
-%\begin{algorithm}
-%  \caption{Breadth-First Search}
-%  \begin{algorithmic}
-%    \Procedure{BFS}{$graph\ G$}
-%    \State $q = make\_queue()$;
-%    \For{$r \in V$}
-%      \If{not $r.visited()$}
-%        \State $q.enqueue(r)$;
-%        \State $r.visit()$;
-%        \While{not $q.is\_empty()$}
-%          \State $v = q.dequeue()$\;
-%          \For{$w \in \Gamma(v)$}
-%            \If{not $w.visited()$}
-%              \State $q.enqueue(w)$;
-%              \State $w.visit()$;
-%            \EndIf
-%          \EndFor
-%        \EndWhile
-%      \EndIf
-%    \EndFor
-%    \EndProcedure
-%  \end{algorithmic}
-%\end{algorithm}
