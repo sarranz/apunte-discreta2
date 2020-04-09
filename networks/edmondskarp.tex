@@ -215,15 +215,60 @@
   \end{lstinputlisting}
 \end{definition}
 
-\begin{theorem}[\textit{Max-flow min-cut}]
-  Sea $N = (V,E,C)$ un network, $F$ un flujo de $s$ a $t$ en $N$ y $S$ un corte minimal de $V$ entonces
-  \begin{align}
-    \underbrace{F \text{ es maximal}}_{A} \iff 
-    \underbrace{\nexists \text{ caminos } F\text{-aumentantes entre $s$ y $t$}}_{B} \iff
-    \underbrace{V(F) = mincutcap_S}_{C}
-  \end{align}
+\begin{theorem}[Max flow - Min cut]
+  Sean $N = (V,E,C)$ un network, $F$ un flujo de $s$ a $t$ en $N$ y
+  $S$ un corte minimal de $V$. Entonces
+  \begin{enumerate}
+    \item $F$ es maximal.
+    \item No hay caminos $F$-aumentantes entre $s$ y $t$.
+    \item $V(F) = cap(S)$.
+  \end{enumerate}
+  son equivalentes.
 \end{theorem}
+
 \begin{proof}
+  Probaremos $1 \implies 3 \implies 2 \implies 1$.
+  \begin{itemize}
+  \item [$1 \implies 3$.]
+    Sea $S = \{s\} \cup \{x \in V \mid$ hay un camino $F$-aumentante de $s$ a $x\}$.
+    Es claro que $t \notin S$ pues por hipótesis no hay caminos $F$-aumentantes
+    de $s$ a $t$. Es decir, $S$ es un corte.
+
+    Como $S$ es corte,
+    \begin{align}
+      V(F) = F(S, S^c) - F(S^c, S)
+    \end{align}
+
+    Sean $x \in S$, $y \not\in S$ tales que $\ora{xy} \in E$.
+    Consideremos $F(\ora{xy})$:
+    \begin{itemize}
+    \item Hay un camino F-aumentante $x_0, x_1, \mathellipsis, x_r$ entre $s$ y $x$.
+    \item No hay caminos $F$-aumentantes entre $s$ e $y$.
+    \end{itemize}
+
+    Esto es, $x_0, \mathellipsis, x_r, y$ no es un camino $F$-aumentante.
+    Como $x_0, x_1, \mathellipsis, x_r$ si lo es, y $\ora{xy} \in E$, concluimos
+    que $\ora{xy}$ está saturado, es decir $F(\ora{xy}) = C(\ora{xy})$.
+    \\\\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      \begin{align}
+        \therefore \forall x,y: x \in S \wedge y \in S^c \wedge xy \in E : F(\ora{xy}) = C(\ora{xy})\\
+        F(S, S^c) = \sum_{\substack{x\in S\\ y \notin S \\\ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\in S\\ y \notin S\\ \ora{xy} \in E}} C(\ora{xy}) = C(S, S^c) = cap(S)\\
+      \end{align}
+      Ahora, veamos el otro caso. Sea $x \in S^c, y \in S, \ora{xy} \in E$. Buscamos $F(\ora{xy})$. Con un análisis similar al anterior, teniendo en cuenta que ahora $x\in \Gamma^-(y)$, concluimos $xy$ está vacio ie. $F(\ora{xy}) = 0$.
+      \begin{align}
+        \therefore \forall x, y : x \in S^c \wedge y \in S \wedge xy \in E : F(\ora{xy}) = 0\\
+        F(S^c, S) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} 0 = 0
+      \end{align}
+      Así,
+      \begin{align}
+        V(F) = F(S, S^c) - F(S^c, S) = cap(S) - 0 = cap(S) = mincutcap_S
+      \end{align}
+      Por último, $S$ es claramente minimal.
+    \item [$3 \implies 2$.]
+    \item [$2 \implies 1$.]
+  \end{itemize}
+
   $C \implies A:$\\
   Asumamos $C)$. Sea $S$ un corte con $cap(S) = V(F)$\\
   Sea $G$ otro flujo. Tenemos por [ref] que
@@ -233,35 +278,7 @@
   Notar que así mismo, $S$ es minimal pues dado un corte cualquiera $T$\begin{align}
     cap(T) \ge V(F) = cap(S)
   \end{align}
-  $B \implies C:$\\
-  Sea $S = \{s\} \cup \{x \in V \mid \exists \text{ camino $F$-aumentante de $s$ a $x$}$\}.
-  Es claro que $t \notin S$ pues por hipótesis \\$\nexists$ caminos $F$-aumentantes de $s$ a $t$.\\
-  $\therefore S$ es corte.\\
-  Como $S$ es corte,
-  \begin{align}
-    V(F) = F(S, S^c) - F(S^c, S)
-  \end{align}
-  Sea $x \in S$, $y \in S^c$, $\ora{xy} \in E$. Buscamos $F(xy)$, y vemos que:
-  \begin{itemize}
-  \item $\exists$ un camino F-aumentante $(x_0, x_1,\mathellipsis, x_r)$ entre $s$ y $x$
-  \item $\nexists$ un camino $F$-aumentante entre $s$ e $y$
-  \end{itemize}
-  Esto es, $(x_0, \mathellipsis, x_r, y)$ no es un camino $F$-aumentante.\\
-  Como $(x_0, x_1, \mathellipsis, x_r)$ si lo es, y $\ora{xy} \in E$, concluimos que $\ora{xy}$ está saturado, ie. \\$F(\ora{xy}) = C(\ora{xy})$.
-  \begin{align}
-    \therefore \forall x,y: x \in S \wedge y \in S^c \wedge xy \in E : F(\ora{xy}) = C(\ora{xy})\\
-    F(S, S^c) = \sum_{\substack{x\in S\\ y \notin S \\\ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\in S\\ y \notin S\\ \ora{xy} \in E}} C(\ora{xy}) = C(S, S^c) = cap(S)\\
-  \end{align}
-  Ahora, veamos el otro caso. Sea $x \in S^c, y \in S, \ora{xy} \in E$. Buscamos $F(\ora{xy})$. Con un análisis similar al anterior, teniendo en cuenta que ahora $x\in \Gamma^-(y)$, concluimos $xy$ está vacio ie. $F(\ora{xy}) = 0$.
-  \begin{align}
-    \therefore \forall x, y : x \in S^c \wedge y \in S \wedge xy \in E : F(\ora{xy}) = 0\\
-    F(S^c, S) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} 0 = 0
-  \end{align}
-  Así,
-  \begin{align}
-    V(F) = F(S, S^c) - F(S^c, S) = cap(S) - 0 = cap(S) = mincutcap_S
-  \end{align}
-  Por último, $S$ es claramente minimal.
+
   
   $A \implies B$:\\
   Suponiendo $F$ maximal, supongamos que $B$ es falso, es decir, que existe un camino $F$-aumentante entre $s$ y $t$.\\
