@@ -185,3 +185,22 @@ Concluimos,
   capacidad es minimal. Es decir, si
   $\forall X$ corte $ \colon cap(S) \le cap(X)$.
 \end{definition}
+
+\begin{definition}
+  Un primer intento de conseguir un flujo maximal algorítmicamente es
+  similar al algoritmo greedy de coloreo:
+
+  \begin{lstinputlisting}[language=python]{networks/greedy.py}
+  \end{lstinputlisting}
+\end{definition}
+
+\begin{theorem}
+  El algoritmo greedy siempre termina y devuelve un flujo.
+\end{theorem}
+
+\begin{proof}
+  Es obvio que lo devuelto es un flujo. Y siempre termina ya que en cada camino
+  dirigido no saturado al menos un lado se satura. Como los lados nunca se
+  des-saturan, greedy puede hacer a lo sumo $\bigO(m)$ incrementos de flujo antes
+  de que forzosamente deba terminar.
+\end{proof}

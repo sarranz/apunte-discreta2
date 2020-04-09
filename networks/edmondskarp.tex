@@ -1,8 +1,5 @@
 \subsection{Edmonds-Karp}
 
-\begin{lstinputlisting}[language=python]{networks/greedy.py}
-\end{lstinputlisting}
-
 \begin{definition}
   Sea $N = (V,E,C)$ un network y $F$ un flujo de $s$ a $t$, definimos a un
   \emph{camino $F$-aumentante} como una sucesión de vértices
@@ -209,6 +206,14 @@
     &\le cap(S)
   \end{align}
 \end{proof}
+
+\begin{definition}
+  Utilizando el concepto de camino aumentante, podemos mejorar el
+  algoritmo greedy de la siguiente manera:
+  
+  \begin{lstinputlisting}[language=python]{networks/ford_fulkerson.py}
+  \end{lstinputlisting}
+\end{definition}
 
 \begin{theorem}[\textit{Max-flow min-cut}]
   Sea $N = (V,E,C)$ un network, $F$ un flujo de $s$ a $t$ en $N$ y $S$ un corte minimal de $V$ entonces
