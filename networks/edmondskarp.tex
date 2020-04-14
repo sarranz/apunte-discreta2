@@ -215,7 +215,7 @@
   \end{lstinputlisting}
 \end{definition}
 
-\begin{theorem}[Max flow - Min cut]
+\begin{theorem}[Max flow - Min cut]\label{maxflowmincut}
   Sean $N = (V,E,C)$ un network, $F$ un flujo de $s$ a $t$ en $N$ y
   $S$ un corte de $V$. Entonces
   \begin{enumerate}
@@ -295,6 +295,68 @@
     \end{align}
 \end{proof}
 
+\begin{corollary}
+  Si el algoritmo de Ford-Fulkerson termina, devuelve un flujo maximal.
+\end{corollary}
+
+\begin{proof}
+  Ford-Fulkerson termina cuando no hay mas caminos aumentantes, y entonces
+  el flujo devuelto es maximal (por \ref{maxflowmincut}).
+\end{proof}
+
+\begin{definition}
+  Diremos que un network $N=(V,E,C)$ tiene capacidades enteras cuando
+  $\forall \ora{xy} \in E : C(\ora{xy}) \in \mathbb{Z}$.
+  Además, diremos que un flujo sobre un network es entero cuando
+  $\forall \ora{xy} \in E : F(\ora{xy}) \in \mathbb{Z}$.
+\end{definition}
+
+\begin{theorem}[Teorema de integralidad]\label{integrality}
+  Sea un network con capacidades enteras, entonces el algoritmo de
+  Ford-Fulkerson termina y devuelve un flujo maximal entero.
+\end{theorem}
+
+\begin{proof}
+  Probaremos la integralidad por inducción corriendo el algoritmo de
+  Ford-Fulkerson, con $F_0, \mathellipsis, F_k$ los sucesivos flujos
+  obtenidos.
+  \begin{itemize}
+    \item[] Caso base: $F_0 \in \mathbb{Z}$ ya que $F_0(\ora{xy}) = 0 \forall x, y$.
+    \item[] Caso inductivo: Asumamos $F_k \in \mathbb{Z}$, y probemos
+      $F_{k+1} \in \mathbb{Z}$
+
+      $F_{k+1}$ se construye a partir de $F_k$, cambiando en algunos lados el valor
+      $F_k$ por $F_k \pm \varepsilon$. Por lo tanto, si probamos que
+      $\varepsilon \in \mathbb{Z}$, también tendremos que $F_{k+1} \in \mathbb{Z}$.
+      Vemos que $\varepsilon = \min\{\epsilon_i\}$ y que
+      \begin{align}
+        \epsilon_i =
+        \begin{cases}
+          C(\ora{x_ix_{i+1}}) - F(\ora{x_ix_{i+1}}) & |\ x_ix_{i+1} \text{ es forward}\\
+          F(\ora{x_{i+1} x_i}) & |\ x_{i+1}x_i \text{ es backward}
+        \end{cases}
+      \end{align}
+
+      Como las capacidades son todas enteras, es claro que $\epsilon_i$ es entero,
+      $\varepsilon$ es entero y por lo tanto $F_{k+1}$ es entero.
+  \end{itemize}
+
+  Ahora probemos que el algoritmo termina. Es claro que $\varepsilon$ es un
+  entero positivo, por lo que en cada paso el valor del flujo intermedio se
+  aumenta en al menos $1$. Y como el valor de un flujo está acotado por la
+  capacidad de cualquier corte, se sigue que debe terminar.
+\end{proof}
+
+\begin{corollary}
+  Si un network tiene capacidades enteras, existe un flujo maximal entero en ese
+  network.
+\end{corollary}
+
+\begin{proof}
+  Se sigue de \ref{integrality}.
+\end{proof}
+
+\begin{comment}
 \begin{algorithm}
   \caption{Algoritmo de Edmonds-Karp para hallar flujo maximal}
   \begin{algorithmic}
@@ -344,32 +406,6 @@
   \end{algorithmic}
 \end{algorithm}
 
-\begin{theorem}[Teorema de integralidad]\label{integrality}
-  Sea $N=(V,E,C)$ un network tal que $\forall xy \in E : C(xy) \in \mathbb{Z}$ entonces existe flujo maximal entero.
-  
-  En otras palabras, en un network con capacidades enteras encontraremos siempre un flujo maximal entero.
-\end{theorem}
-
-\begin{proof}
-  Lo probaremos por inducción, corriendo el algoritmo de Ford-Fulkerson en $n+1$ pasos, sean $F_0, \mathellipsis, F_n$ los sucesivos flujos obtenidos:\\
-  Caso base: $F_0 = 0 \in \mathbb{Z}$.\\
-  Caso inductivo:
-  $F_k \in \mathbb{Z} \implies F_{k+1} \in \mathbb{Z}$\\
-  $F_{k+1}$ se construye a partir de $F_k$, cambiando en algunos lados el valor $F_k$ por $F_k \pm \varepsilon$. Por lo tanto, si probamos que $\varepsilon \in \mathbb{Z}$, también tendremos que $F_{k+1} \in \mathbb{Z}$. Luego,
-  \begin{align}
-    \varepsilon = \min\{\epsilon_i\}
-  \end{align}
-  y \begin{center}
-    $\epsilon_i = \begin{cases} 
-        C(\ora{x_i x_{i+1}}) - F(\ora{x_i x_{i+1}}) & |\ \ora{x_i x_{i+1}} \text{ es lado forward}\\
-        F(\ora{x_{i+1} x_i}) & |\ \ora{x_i x_{i+1}} \text{ es lado backward}
-    \end{cases}$
-  \end{center}
-  Como las capacidades son todas enteras, $\epsilon_i$ es entero, $\varepsilon$  es entero y por lo tanto $F_{k+1}$.
-  Esto prueba que si Ford-Fulkerson termina, obtenemos un flujo maximal entero.
-  Como $v_{F_{k+1}} - v_{F_k} = \varepsilon \in \mathbb{Z} > 0$, por lo tanto $\varepsilon \ge 1$. Esto es, el ``salto" que se produce entre un flujo y el siguiente es discreto.
-  Como existe una cota superior para el conjunto de valores de flujos posibles (por ej. $cap(S)$), esta sucesión de flujos debe ser finita. 
-\end{proof}
 
 \begin{definition}
   Dados $a,b\in V$ y un flujo $F$ en un network $N = (V,E,C)$. Definimos a la 
@@ -502,3 +538,4 @@
   $\therefore$ La complejidad del algoritmo Edmonds-Karp es $\mathcal{O}(m) * \mathcal{O}(nm) = \mathcal{O}(nm^2)$
 \end{proof}
 
+\end{comment}
