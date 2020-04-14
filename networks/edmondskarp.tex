@@ -191,9 +191,9 @@
   \end{align}
 \end{proof}
 
-\begin{corollary}
-  El valor de un flujo es una cota inferior de la capacidad de un corte.
-  Esto es: $\forall F, S \colon V(F) \le cap(S)$.
+\begin{corollary}\label{cutcapbound}
+  Dados $F$ un flujo y $S$ un corte de un network,
+  $\forall F, S \colon V(F) \le cap(S)$.
 \end{corollary}
 
 \begin{proof}
@@ -217,11 +217,11 @@
 
 \begin{theorem}[Max flow - Min cut]
   Sean $N = (V,E,C)$ un network, $F$ un flujo de $s$ a $t$ en $N$ y
-  $S$ un corte minimal de $V$. Entonces
+  $S$ un corte de $V$. Entonces
   \begin{enumerate}
     \item $F$ es maximal.
-    \item No hay caminos $F$-aumentantes entre $s$ y $t$.
     \item $V(F) = cap(S)$.
+    \item No hay caminos $F$-aumentantes entre $s$ y $t$.
   \end{enumerate}
   son equivalentes.
 \end{theorem}
@@ -230,6 +230,12 @@
   Probaremos $1 \implies 3 \implies 2 \implies 1$.
   \begin{itemize}
   \item [$1 \implies 3$.]
+    Dado $F$ maximal, supongamos que existe un camino $F$-aumentante entre
+    $s$ y $t$. Por el lema \ref{flujo_camino_aumentante}, es posible enviar
+    $\varepsilon$ unidades de flujo por ese camino y aumentar el valor del
+    flujo en $\varepsilon$. Esto es absurdo pues $F$ es maximal.
+
+  \item[$3 \implies 2$.]
     Sea $S = \{s\} \cup \{x \in V \mid$ hay un camino $F$-aumentante de $s$ a $x\}$.
     Es claro que $t \notin S$ pues por hipótesis no hay caminos $F$-aumentantes
     de $s$ a $t$. Es decir, $S$ es un corte.
@@ -239,7 +245,7 @@
       V(F) = F(S, S^c) - F(S^c, S)
     \end{align}
 
-    Sean $x \in S$, $y \not\in S$ tales que $\ora{xy} \in E$.
+    Veamos $F(S, S^c)$: Sean $x \in S$, $y \notin S$ tales que $\ora{xy} \in E$.
     Consideremos $F(\ora{xy})$:
     \begin{itemize}
     \item Hay un camino F-aumentante $x_0, x_1, \mathellipsis, x_r$ entre $s$ y $x$.
@@ -249,40 +255,44 @@
     Esto es, $x_0, \mathellipsis, x_r, y$ no es un camino $F$-aumentante.
     Como $x_0, x_1, \mathellipsis, x_r$ si lo es, y $\ora{xy} \in E$, concluimos
     que $\ora{xy}$ está saturado, es decir $F(\ora{xy}) = C(\ora{xy})$.
-    \\\\
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      \begin{align}
-        \therefore \forall x,y: x \in S \wedge y \in S^c \wedge xy \in E : F(\ora{xy}) = C(\ora{xy})\\
-        F(S, S^c) = \sum_{\substack{x\in S\\ y \notin S \\\ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\in S\\ y \notin S\\ \ora{xy} \in E}} C(\ora{xy}) = C(S, S^c) = cap(S)\\
-      \end{align}
-      Ahora, veamos el otro caso. Sea $x \in S^c, y \in S, \ora{xy} \in E$. Buscamos $F(\ora{xy})$. Con un análisis similar al anterior, teniendo en cuenta que ahora $x\in \Gamma^-(y)$, concluimos $xy$ está vacio ie. $F(\ora{xy}) = 0$.
-      \begin{align}
-        \therefore \forall x, y : x \in S^c \wedge y \in S \wedge xy \in E : F(\ora{xy}) = 0\\
-        F(S^c, S) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} F(\ora{xy}) = \sum_{\substack{x\not\in S\\ y \in S\\ \ora{xy} \in E}} 0 = 0
-      \end{align}
-      Así,
-      \begin{align}
-        V(F) = F(S, S^c) - F(S^c, S) = cap(S) - 0 = cap(S) = mincutcap_S
-      \end{align}
-      Por último, $S$ es claramente minimal.
-    \item [$3 \implies 2$.]
-    \item [$2 \implies 1$.]
+    Así,
+    \begin{align}
+      F(S, S^c)
+      &= \sum_{\substack{x\in S \\ y \notin S \\ \ora{xy} \in E}} F(\ora{xy})\\
+      &= \sum_{\substack{x\in S\\ y \notin S\\ \ora{xy} \in E}} C(\ora{xy})\\
+      &= cap(S)
+    \end{align}
+    
+    Y ahora $F(S^c, S)$: Sean $x \notin S$, $y \in S$ tales que $\ora{xy} \in E$.
+    Consideremos $F(\ora{xy})$. Con un análisis similar al anterior, concluimos
+    que $\ora{xy}$ está vacio, es decir $F(\ora{xy}) = 0$.
+    \begin{align}
+      F(S^c, S)
+      &= \sum_{\substack{x \notin S \\ y \in S \\ \ora{xy} \in E}} F(\ora{xy})\\
+      &= \sum_{\substack{x\notin S\\ y \in S\\ \ora{xy} \in E}} 0\\
+      &= 0
+    \end{align}
+    
+    Concluimos
+    \begin{align}
+      V(F)
+      &= F(S, S^c) - F(S^c, S)\\
+      &= cap(S) - 0\\
+      &= cap(S)
+    \end{align}
   \end{itemize}
 
-  $C \implies A:$\\
-  Asumamos $C)$. Sea $S$ un corte con $cap(S) = V(F)$\\
-  Sea $G$ otro flujo. Tenemos por [ref] que
-  \begin{align} V(G) \le cap(S) = V(F) \end{align}
-  de lo que se sigue que $F$ es maximal.\\
-  
-  Notar que así mismo, $S$ es minimal pues dado un corte cualquiera $T$\begin{align}
-    cap(T) \ge V(F) = cap(S)
-  \end{align}
+  \item [$2 \implies 1$.]
+    Asumamos $2$. Sea $G$ otro flujo en $N$. Tenemos por \ref{cutcapbound} que
+    \begin{align}
+      V(G) \le cap(S) = V(F)
+    \end{align}
+    de lo que se sigue que $F$ es maximal.
 
-  
-  $A \implies B$:\\
-  Suponiendo $F$ maximal, supongamos que $B$ es falso, es decir, que existe un camino $F$-aumentante entre $s$ y $t$.\\
-  Por el lema [\ref{flujo_camino_aumentante}], es posible enviar $\varepsilon$ unidades de flujo por ese camino y obtener un flujo $F^*$ con $V({F^*}) = V(F) + \varepsilon$. Esto es absurdo pues $F$ es maximal.
+    Notar que $S$ es minimal, pues dado un corte cualquiera $T$,
+    \begin{align}
+      cap(T) \ge V(F) = cap(S)
+    \end{align}
 \end{proof}
 
 \begin{algorithm}

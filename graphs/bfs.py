@@ -1,16 +1,16 @@
 def bfs(graph):
-    visited = []
+    visited = set()
     queue = []
 
     for r in graph.vertices():
         queue.append(r)
-        visited.append(r)
+        visited.add(r)
 
         while queue != []:
             v = queue.pop(0)
             for w in v.neighbours():
-                if v not in visited:
-                    visited.append(v)
+                if w not in visited:
+                    visited.add(w)
                     queue.append(w)
 
     return visited
