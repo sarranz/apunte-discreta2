@@ -7,17 +7,18 @@ def bipartito(graph):
     colouring = {}
 
     for r in graph.vertices():
-        queue.append(r)
-        visited.append(r)
-        colouring[r] = 0
+        if r not in visited:
+            queue.append(r)
+            visited.append(r)
+            colouring[r] = 0
 
-        while queue != []:
-            v = queue.pop(0)
-            for w in v.neighbours():
-                if v not in visited:
-                    visited.append(v)
-                    queue.append(w)
-                    colouring[w] = 1 - colouring[v]
+            while queue != []:
+                v = queue.pop(0)
+                for w in v.neighbours():
+                    if v not in visited:
+                        visited.append(v)
+                        queue.append(w)
+                        colouring[w] = 1 - colouring[v]
 
     if is_proper(G, colouring):
         # El coloreo es propio.
