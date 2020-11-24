@@ -2,27 +2,42 @@ on: [push]
 name: build
 jobs:
   runhaskell:
-    name: Hello World
-    runs-on: ubuntu-latest # or macOS-latest, or windows-latest 
+    name: Run tests
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-haskell@v1.1
+
+      - uses: actions/cache@v2
         with:
-          ghc-version: '8.8.3' # Exact version of ghc to use
-          # cabal-version: 'latest'. Omitted, but defalts to 'latest'
+          path: |
+            ~/.stack
+            .stack-work
+          key: ${{ runner.os }}-${{ matrix.ghc }}-stack
+
+      - uses: actions/setup-haskell@v1
+        with:
           enable-stack: true
-          stack-version: 'latest'
+
+      - run: stack setup
+      - run: stack build
       - run: stack test
+
   runhlint:
     name: Run HLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-${{ matrix.ghc }}-stack
+
       - uses: actions/setup-haskell@v1
         with:
-          ghc-version: '8.10.2' # Exact version of ghc to use
-          cabal-version: '3.4.0.0'
           enable-stack: true
-          stack-version: '2.5.1'
+
+      - run: stack setup
+      - run: stack build
       - run: stack install hlint
       - run: stack exec hlint src
